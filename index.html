@@ -1,0 +1,4306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Theory Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: {
+                            950: '#0a0a0a',
+                            900: '#121212',
+                            800: '#1a1a1a',
+                            700: '#252525',
+                            600: '#333333',
+                            500: '#4a4a4a',
+                            400: '#666666',
+                            300: '#888888',
+                        },
+                        blood: {
+                            400: '#dc2626',
+                            500: '#b91c1c',
+                            600: '#991b1b',
+                        },
+                        brass: {
+                            400: '#d4a574',
+                            500: '#c4956a',
+                            600: '#a67c52',
+                        },
+                        chalk: {
+                            100: '#fafafa',
+                            200: '#e5e5e5',
+                            300: '#cccccc',
+                        }
+                    },
+                    fontFamily: {
+                        'display': ['Bebas Neue', 'sans-serif'],
+                        'heading': ['Archivo Black', 'sans-serif'],
+                        'body': ['Barlow Condensed', 'sans-serif'],
+                        'mono': ['IBM Plex Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Barlow Condensed', sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            letter-spacing: 0.02em;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.035;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom scrollbar - industrial */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+            border-left: 1px solid #252525;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+            border: 1px solid #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+        }
+
+        /* Fretboard styles - dark rosewood industrial with rounded */
+        .fretboard-container {
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #333;
+            box-shadow:
+                inset 0 0 60px rgba(0,0,0,0.8),
+                0 0 0 1px #0a0a0a,
+                0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        .fretboard-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 41px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .string {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 42px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .string::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                rgba(200, 180, 160, 0.2) 0%,
+                rgba(220, 200, 180, 0.7) 8%,
+                rgba(200, 180, 160, 0.5) 50%,
+                rgba(180, 160, 140, 0.3) 100%
+            );
+            transform: translateY(-50%);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .string:nth-child(1)::before { height: 1px; opacity: 0.85; }
+        .string:nth-child(2)::before { height: 1.5px; opacity: 0.8; }
+        .string:nth-child(3)::before { height: 2px; opacity: 0.75; }
+        .string:nth-child(4)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 8%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
+        .string:nth-child(5)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 8%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
+        .string:nth-child(6)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 8%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+
+        .fret {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 3px solid #555;
+            box-shadow: inset -2px 0 6px rgba(0,0,0,0.4), inset 2px 0 4px rgba(255,255,255,0.02);
+        }
+
+        .fret:first-child {
+            flex: 0.6;
+            background: linear-gradient(90deg, #f0ead6 0%, #d8cdb8 50%, #c4b89a 100%);
+            border-right: 6px solid #1a1a1a;
+            box-shadow: inset -4px 0 10px rgba(0,0,0,0.5), 4px 0 12px rgba(0,0,0,0.4);
+        }
+
+        .fret-marker {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #e8e0d0 0%, #b8a888 100%);
+            border-radius: 50%;
+            opacity: 0.8;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .note-bubble {
+            position: relative;
+            z-index: 10;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: scale(0);
+            text-transform: uppercase;
+        }
+
+        .note-bubble.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .note-bubble.tonic {
+            background: #dc2626;
+            color: #fafafa;
+            box-shadow:
+                0 0 0 3px #0a0a0a,
+                0 0 20px rgba(220, 38, 38, 0.6),
+                0 4px 15px rgba(0,0,0,0.4);
+            border: none;
+        }
+
+        .note-bubble.interval {
+            background: #fafafa;
+            color: #0a0a0a;
+            box-shadow:
+                0 0 0 2px #0a0a0a,
+                0 4px 12px rgba(0,0,0,0.4);
+            border: none;
+        }
+
+        .note-bubble.other {
+            background: #444;
+            color: #bbb;
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.3);
+            border: none;
+        }
+
+        .note-bubble:hover {
+            transform: scale(1.2);
+            z-index: 20;
+        }
+
+        /* Level cards - industrial with rounded */
+        .level-card {
+            background: #121212;
+            border: 2px solid #252525;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .level-card:hover {
+            border-color: #444;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .level-card.active {
+            border-color: #dc2626;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.2);
+        }
+
+        .level-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .level-header:hover {
+            background: rgba(255,255,255,0.03);
+            border-left-color: #dc2626;
+        }
+
+        .level-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .level-card.expanded .level-content {
+            max-height: 800px;
+        }
+
+        .level-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        /* Buttons - industrial with rounded */
+        .btn-primary {
+            background: #dc2626;
+            color: #fafafa;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 2px solid #dc2626;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #e5e5e5;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 2px solid #444;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        /* Select dropdown - industrial with rounded */
+        .custom-select {
+            appearance: none;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 12px 44px 12px 16px;
+            color: #fafafa;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dc2626'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            transition: all 0.15s ease;
+        }
+
+        .custom-select:hover {
+            border-color: #555;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+        }
+
+        /* Toggle switch - industrial with rounded */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: #252525;
+            border-radius: 13px;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-switch.active {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: #fafafa;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        /* Interval buttons - industrial with rounded */
+        .interval-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid #333;
+            background: #1a1a1a;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .interval-btn:hover {
+            border-color: #666;
+            color: #fafafa;
+            background: #252525;
+        }
+
+        .interval-btn.active {
+            background: #fafafa;
+            color: #0a0a0a;
+            border-color: #fafafa;
+            font-weight: 700;
+        }
+
+        /* Chord button - industrial with rounded */
+        .chord-btn {
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            border: 2px solid #333;
+            background: #151515;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .chord-btn:hover {
+            border-color: #dc2626;
+            color: #fafafa;
+            background: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .chord-btn.active {
+            background: #dc2626;
+            color: #fafafa;
+            border-color: #dc2626;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .chord-btn .roman {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            font-weight: 400;
+            display: block;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .chord-btn .name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mode button - industrial with rounded */
+        .mode-btn {
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            border-left: 4px solid #444;
+            background: #151515;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .mode-btn:hover {
+            border-color: #d4a574;
+            border-left-color: #d4a574;
+            background: #1a1a1a;
+            transform: translateX(4px);
+        }
+
+        .mode-btn.active {
+            border-color: #d4a574;
+            border-left-color: #d4a574;
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .mode-btn .mode-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            color: #d4a574;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .mode-btn .mode-degree {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations - sharper, more industrial */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow:
+                    0 0 0 2px #0a0a0a,
+                    0 0 0 4px #dc2626,
+                    0 4px 20px rgba(220, 38, 38, 0.5);
+            }
+            50% {
+                box-shadow:
+                    0 0 0 2px #0a0a0a,
+                    0 0 0 6px #dc2626,
+                    0 4px 30px rgba(220, 38, 38, 0.7);
+            }
+        }
+
+        .note-bubble.tonic.pulse {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fade-in-up 0.3s ease-out forwards;
+        }
+
+        @keyframes slide-in-left {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slide-in-left 0.25s ease-out forwards;
+        }
+
+        /* Theory text - improved readability */
+        .theory-text {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #bbb;
+            font-weight: 400;
+        }
+
+        .theory-text strong {
+            color: #fafafa;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theory-text em {
+            color: #dc2626;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .formula-box {
+            background: #121212;
+            border: 2px solid #333;
+            border-left: 4px solid #dc2626;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fafafa;
+            letter-spacing: 3px;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        /* Header glow effect - industrial */
+        .header-glow {
+            position: relative;
+        }
+
+        .header-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #dc2626 50%, transparent 100%);
+            opacity: 0.6;
+        }
+
+        /* String labels */
+        .string-label {
+            width: 32px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Progression button - industrial with rounded */
+        .progression-btn {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background: #151515;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .progression-btn:hover {
+            border-color: #fafafa;
+            background: #1a1a1a;
+            color: #fafafa;
+        }
+
+        .progression-btn.active {
+            border-color: #fafafa;
+            background: #fafafa;
+            color: #0a0a0a;
+        }
+
+        /* Circle of fifths - industrial with rounded */
+        .circle-note {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #252525;
+            color: #ccc;
+            border: 2px solid #333;
+        }
+
+        .circle-note:hover {
+            transform: scale(1.15);
+            border-color: #dc2626;
+            color: #fafafa;
+        }
+
+        .circle-note.active {
+            background: #dc2626;
+            color: #fafafa;
+            border-color: #dc2626;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+        }
+
+        .circle-note.minor {
+            font-size: 10px;
+            width: 30px;
+            height: 30px;
+            background: #1a1a1a;
+            color: #888;
+        }
+
+        .circle-note.minor.active {
+            background: #fafafa;
+            color: #0a0a0a;
+            border-color: #fafafa;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Blue note special highlight */
+        .note-bubble.blue-note {
+            background: #d4a574;
+            color: #0a0a0a;
+            box-shadow:
+                0 0 0 2px #0a0a0a,
+                0 0 0 4px #d4a574,
+                0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        /* Chord highlight for harmonization */
+        .note-bubble.chord-highlight {
+            box-shadow:
+                0 0 0 3px #0a0a0a,
+                0 0 0 6px #d4a574,
+                0 4px 20px rgba(212, 165, 116, 0.6);
+            transform: scale(1.15);
+            z-index: 10;
+        }
+
+        /* Progression info panel - industrial with rounded */
+        .progression-info {
+            background: #121212;
+            border: 2px solid #252525;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .chord-in-progression {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            border: 2px solid #333;
+        }
+
+        .chord-in-progression.current {
+            background: #dc2626;
+            color: #fafafa;
+            border-color: #dc2626;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(220, 38, 38, 0.5);
+        }
+
+        .chord-in-progression:not(.current) {
+            background: #1a1a1a;
+            color: #888;
+        }
+
+        /* Chord Diagram Component - HORIZONTAL like fretboard */
+        .chord-diagram {
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
+            border-radius: 12px;
+            border: 2px solid #333;
+            padding: 16px;
+            display: inline-block;
+            position: relative;
+            box-shadow:
+                inset 0 0 40px rgba(0,0,0,0.6),
+                0 0 0 1px #0a0a0a,
+                0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .chord-diagram::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.1;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        .chord-diagram-grid {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chord-diagram .nut {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(90deg, #f0ead6 0%, #c4b89a 100%);
+            border-radius: 2px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.4);
+            z-index: 5;
+        }
+
+        .chord-diagram .string-row {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .chord-diagram .string-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                rgba(200, 180, 160, 0.2) 0%,
+                rgba(220, 200, 180, 0.7) 15%,
+                rgba(200, 180, 160, 0.5) 50%,
+                rgba(180, 160, 140, 0.3) 100%
+            );
+            transform: translateY(-50%);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .chord-diagram .string-row:nth-child(1)::before { height: 1px; opacity: 0.85; }
+        .chord-diagram .string-row:nth-child(2)::before { height: 1.5px; opacity: 0.8; }
+        .chord-diagram .string-row:nth-child(3)::before { height: 2px; opacity: 0.75; }
+        .chord-diagram .string-row:nth-child(4)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 15%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
+        .chord-diagram .string-row:nth-child(5)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 15%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
+        .chord-diagram .string-row:nth-child(6)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 15%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+
+        .chord-diagram .fret-cell {
+            position: relative;
+            width: 50px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 3px solid #555;
+            box-shadow: inset -2px 0 6px rgba(0,0,0,0.4), inset 2px 0 4px rgba(255,255,255,0.02);
+        }
+
+        .chord-diagram .fret-cell.nut-fret {
+            width: 35px;
+            background: linear-gradient(90deg, #f0ead6 0%, #d8cdb8 50%, #c4b89a 100%);
+            border-right: 5px solid #1a1a1a;
+            box-shadow: inset -4px 0 10px rgba(0,0,0,0.5), 4px 0 12px rgba(0,0,0,0.4);
+        }
+
+        .chord-diagram .finger-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 10;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .chord-diagram .finger-dot.root {
+            background: #dc2626;
+            color: #fafafa;
+            box-shadow:
+                0 0 0 2px #0a0a0a,
+                0 0 15px rgba(220, 38, 38, 0.6),
+                0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .chord-diagram .finger-dot.note {
+            background: #fafafa;
+            color: #0a0a0a;
+            box-shadow:
+                0 0 0 2px #0a0a0a,
+                0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .chord-diagram .open-indicator {
+            position: absolute;
+            left: -24px;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fafafa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #fafafa;
+            font-weight: 600;
+        }
+
+        .chord-diagram .muted-indicator {
+            position: absolute;
+            left: -24px;
+            font-size: 16px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .chord-diagram .barre-line {
+            position: absolute;
+            width: 20px;
+            background: #fafafa;
+            border-radius: 10px;
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .chord-diagram .fret-numbers {
+            display: flex;
+            padding-left: 35px;
+            margin-top: 6px;
+        }
+
+        .chord-diagram .fret-num {
+            width: 50px;
+            text-align: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .chord-diagram .string-labels-left {
+            position: absolute;
+            left: -28px;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chord-diagram .string-label-item {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        /* Chord name display - industrial */
+        .chord-name-display {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .chord-name-display .chord-symbol {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: #fafafa;
+            letter-spacing: 2px;
+        }
+
+        .chord-name-display .chord-type {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #888;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Position indicator - industrial with rounded */
+        .position-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-left: 4px solid #dc2626;
+            border-radius: 20px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fafafa;
+            margin: 10px 0;
+        }
+
+        /* Fretboard zone highlight */
+        .fret.in-zone {
+            background: rgba(220, 38, 38, 0.06);
+        }
+
+        .fret.zone-start {
+            border-left: 3px solid rgba(220, 38, 38, 0.6);
+        }
+
+        .fret.zone-end {
+            border-right: 3px solid rgba(220, 38, 38, 0.6);
+        }
+
+        /* Box/Position selector - industrial with rounded */
+        .box-selector {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .box-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background: #1a1a1a;
+            color: #888;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .box-btn:hover {
+            border-color: #666;
+            color: #fafafa;
+        }
+
+        .box-btn.active {
+            background: #dc2626;
+            color: #fafafa;
+            border-color: #dc2626;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+        }
+
+        /* Diagrams container */
+        .diagrams-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Interval label on fretboard */
+        .note-bubble .interval-label {
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Dimmed notes (outside current zone) */
+        .note-bubble.dimmed {
+            opacity: 0.2;
+            transform: scale(0.65);
+        }
+
+        /* Simplified Sidebar Navigation - industrial with rounded */
+        .level-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: rgba(18, 18, 18, 0.6);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .level-nav-btn:hover {
+            background: rgba(26, 26, 26, 0.9);
+            border-color: #333;
+        }
+
+        .level-nav-btn.active {
+            background: #1a1a1a;
+            border-color: #dc2626;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.15);
+        }
+
+        .level-nav-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .level-nav-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: #e5e5e5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .level-nav-sub {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .level-nav-btn.active .level-nav-title {
+            color: #dc2626;
+        }
+
+        /* Simple mode buttons - industrial with rounded */
+        .mode-btn-simple, .progression-btn-simple {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid #333;
+            background: #151515;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-btn-simple:hover, .progression-btn-simple:hover {
+            border-color: #666;
+            color: #fafafa;
+            background: #1a1a1a;
+        }
+
+        .mode-btn-simple.active, .progression-btn-simple.active {
+            background: #fafafa;
+            color: #0a0a0a;
+            border-color: #fafafa;
+            font-weight: 700;
+        }
+
+        /* Scale category buttons - industrial with rounded */
+        .scale-cat-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid #333;
+            background: #151515;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scale-cat-btn:hover {
+            border-color: #d4a574;
+            color: #d4a574;
+        }
+
+        .scale-cat-btn.active {
+            background: #d4a574;
+            color: #0a0a0a;
+            border-color: #d4a574;
+            font-weight: 700;
+        }
+
+        /* Scale list item - industrial with rounded */
+        .scale-list-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid #252525;
+            background: #151515;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .scale-list-item:hover {
+            border-color: #444;
+            background: #1a1a1a;
+        }
+
+        .scale-list-item.active {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.08);
+        }
+
+        .scale-list-item .scale-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fafafa;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .scale-list-item .scale-emotion {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* Scale info box - matching app theme */
+        .scale-info-box {
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            box-shadow:
+                inset 0 0 40px rgba(0,0,0,0.5),
+                0 0 0 1px #0a0a0a,
+                0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .scale-info-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        .scale-info-box .info-header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .scale-info-box .info-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: #dc2626;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .scale-info-box .info-emotion {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            color: #e5e5e5;
+            font-style: italic;
+        }
+
+        .scale-info-box .info-section {
+            background: #151515;
+            border: 2px solid #252525;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .scale-info-box .info-section.accent {
+            border-left: 4px solid #dc2626;
+        }
+
+        .scale-info-box .info-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .scale-info-box .info-value {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fafafa;
+        }
+
+        .scale-info-box .info-value.highlight {
+            color: #dc2626;
+        }
+
+        .scale-info-box .info-description {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            color: #e5e5e5;
+            margin-top: 6px;
+        }
+
+        .scale-info-box .brightness-bar {
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .scale-info-box .brightness-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #333 0%, #dc2626 50%, #d4a574 100%);
+            transition: width 0.5s ease;
+        }
+
+        .scale-info-box .context-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fafafa;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 20px;
+            margin: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scale-info-box .parent-scale-box {
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, transparent 100%);
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        /* Harmonization chord buttons - matching app theme */
+        .harm-chord-btn {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid #333;
+            background: #151515;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+            min-width: 64px;
+        }
+
+        .harm-chord-btn:hover {
+            border-color: #dc2626;
+            color: #fafafa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .harm-chord-btn.active {
+            background: #dc2626;
+            color: #fafafa;
+            border-color: #dc2626;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .harm-chord-btn.type-maj {
+            border-color: #22c55e30;
+        }
+        .harm-chord-btn.type-maj:hover, .harm-chord-btn.type-maj.active {
+            border-color: #22c55e;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .harm-chord-btn.type-min {
+            border-color: #3b82f630;
+        }
+        .harm-chord-btn.type-min:hover, .harm-chord-btn.type-min.active {
+            border-color: #3b82f6;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .harm-chord-btn.type-dim {
+            border-color: #dc262630;
+        }
+        .harm-chord-btn.type-dim:hover, .harm-chord-btn.type-dim.active {
+            border-color: #dc2626;
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .harm-chord-btn .chord-quality {
+            font-size: 10px;
+            opacity: 0.7;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 4px;
+        }
+
+        /* Scale comparison colors - industrial */
+        .note-common { color: #4ade80; }
+        .note-only-first { color: #dc2626; }
+        .note-only-second { color: #d4a574; }
+
+        /* Note highlight for comparison mode */
+        .note-bubble.comparison-common {
+            background: #4ade80 !important;
+            color: #0a0a0a !important;
+            box-shadow: 0 0 0 2px #0a0a0a, 0 0 15px rgba(74, 222, 128, 0.5) !important;
+        }
+
+        .note-bubble.comparison-different {
+            background: #d4a574 !important;
+            color: #0a0a0a !important;
+            box-shadow: 0 0 0 2px #0a0a0a, 0 0 15px rgba(212, 165, 116, 0.5) !important;
+        }
+
+        /* Custom selection styling */
+        ::selection {
+            background: #dc2626;
+            color: #fafafa;
+        }
+
+        /* Additional visual enhancements */
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #333 20%, #333 80%, transparent 100%);
+            margin: 20px 0;
+        }
+
+        /* Glow effects for important elements */
+        .glow-red {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .glow-white {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Border accents */
+        .border-accent-left {
+            border-left: 4px solid #dc2626;
+        }
+
+        .border-accent-top {
+            border-top: 2px solid #dc2626;
+        }
+
+        /* Text utilities */
+        .text-display {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .text-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .text-body {
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        /* Subtle hover states for interactive elements */
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 25px rgba(220, 38, 38, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-80 bg-void-900 border-r-2 border-void-700 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b-2 border-void-700 header-glow relative">
+                <div class="absolute top-0 left-0 w-full h-1 bg-blood-400"></div>
+                <h1 class="font-display text-4xl text-chalk-100 tracking-widest">GUITAR</h1>
+                <p class="font-heading text-2xl text-blood-400 -mt-1 tracking-wide">THEORY MASTER</p>
+                <p class="text-xs text-void-400 mt-3 font-mono tracking-wider">V2.0 — TEORÍA MUSICAL</p>
+            </div>
+
+            <!-- Levels Navigation - Industrial -->
+            <nav class="flex-1 overflow-y-auto p-4 space-y-1" id="levelsNav">
+                <button class="level-nav-btn active" data-level="1">
+                    <div class="level-badge bg-blood-400 text-chalk-100">01</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Intervalos</span>
+                        <span class="level-nav-sub">Distancias entre notas</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="2">
+                    <div class="level-badge bg-chalk-100 text-void-950">02</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Escalas</span>
+                        <span class="level-nav-sub">Todas las escalas y modos</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="3">
+                    <div class="level-badge bg-brass-400 text-void-950">03</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Acordes</span>
+                        <span class="level-nav-sub">Armonización y voicings</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="4">
+                    <div class="level-badge bg-blood-400 text-chalk-100">04</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Modos Griegos</span>
+                        <span class="level-nav-sub">7 colores de la escala</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="5">
+                    <div class="level-badge bg-chalk-100 text-void-950">05</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Pentatónicas</span>
+                        <span class="level-nav-sub">Las 5 posiciones</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="6">
+                    <div class="level-badge bg-brass-400 text-void-950">06</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Círculo de 5as</span>
+                        <span class="level-nav-sub">Mapa de tonalidades</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="7">
+                    <div class="level-badge bg-blood-400 text-chalk-100">07</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Progresiones</span>
+                        <span class="level-nav-sub">Secuencias famosas</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="8">
+                    <div class="level-badge bg-chalk-100 text-void-950">08</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Acordes 7ª</span>
+                        <span class="level-nav-sub">Más color armónico</span>
+                    </div>
+                </button>
+
+                <button class="level-nav-btn" data-level="9">
+                    <div class="level-badge bg-brass-400 text-void-950">09</div>
+                    <div class="level-nav-text">
+                        <span class="level-nav-title">Sistema CAGED</span>
+                        <span class="level-nav-sub">Domina el mástil</span>
+                    </div>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col bg-void-950">
+            <!-- Top Bar with Root Select - Industrial -->
+            <header class="h-16 bg-void-900 border-b-2 border-void-700 flex items-center justify-between px-6">
+                <div class="flex items-center gap-6">
+                    <div>
+                        <label class="text-xs text-void-400 block mb-1 font-mono tracking-wider uppercase">Nota Raíz</label>
+                        <select class="custom-select !py-2 !text-sm" id="rootSelect">
+                            <option value="0">C (Do)</option>
+                            <option value="1">C# / Db</option>
+                            <option value="2">D (Re)</option>
+                            <option value="3">D# / Eb</option>
+                            <option value="4">E (Mi)</option>
+                            <option value="5">F (Fa)</option>
+                            <option value="6">F# / Gb</option>
+                            <option value="7">G (Sol)</option>
+                            <option value="8">G# / Ab</option>
+                            <option value="9">A (La)</option>
+                            <option value="10">A# / Bb</option>
+                            <option value="11">B (Si)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-void-300 font-body uppercase tracking-wide">Notas</span>
+                        <div class="toggle-switch active" id="showNotesToggle"></div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-void-300 font-body uppercase tracking-wide">Grados</span>
+                        <div class="toggle-switch" id="showFunctionsToggle"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Control Panel Area (changes based on level) - Industrial -->
+            <div class="bg-void-800/50 border-b-2 border-void-700 p-5" id="controlPanel">
+                <!-- Content generated by JS based on current level -->
+            </div>
+
+            <!-- Fretboard Area - Industrial -->
+            <div class="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
+                <!-- Current Display Info -->
+                <div class="mb-6 text-center">
+                    <h2 class="font-display text-4xl text-chalk-100 tracking-widest" id="displayTitle">SELECCIONA UN NIVEL</h2>
+                    <p class="text-void-400 text-sm mt-2 font-body uppercase tracking-wider" id="displaySubtitle">Usa la barra lateral para empezar</p>
+                </div>
+
+                <!-- Chord Diagrams Container -->
+                <div class="diagrams-container mb-4 hidden" id="diagramsContainer">
+                    <!-- Generated by JS -->
+                </div>
+
+                <!-- Box/Position Selector -->
+                <div class="box-selector hidden mb-4" id="boxSelector">
+                    <!-- Generated by JS -->
+                </div>
+
+                <!-- Fretboard -->
+                <div class="w-full max-w-5xl">
+                    <!-- Fret Numbers - Industrial -->
+                    <div class="flex mb-3 pl-8">
+                        <div class="w-8"></div>
+                        <div class="flex flex-1">
+                            <div class="flex-[0.6] flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 5px;">0</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">1</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">2</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">3</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">4</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">5</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">6</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">7</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">8</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">9</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">10</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">11</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-blood-400 font-bold"><span style="margin-right: 3px;">12</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Fretboard Container -->
+                    <div class="fretboard-container p-4" id="fretboard">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <!-- Fret markers - Industrial with rounded -->
+                    <div class="flex mt-3 pl-8">
+                        <div class="w-8"></div>
+                        <div class="flex flex-1">
+                            <div class="flex-[0.6]"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center gap-2" style="margin-right: 3px;"><div class="w-3 h-3 rounded-full bg-blood-500"></div><div class="w-3 h-3 rounded-full bg-blood-500"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scale/Chord Info Panel - Industrial -->
+                <div class="mt-8 w-full max-w-5xl" id="infoPanel">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TEMPLATES FOR CONTROL PANELS -->
+    <template id="tpl-intervals">
+        <div class="flex flex-wrap items-center gap-4">
+            <span class="text-sm text-void-400 font-body uppercase tracking-wider font-semibold">Intervalo:</span>
+            <div class="flex flex-wrap gap-2">
+                <button class="interval-btn" data-interval="1">2ª m</button>
+                <button class="interval-btn" data-interval="2">2ª M</button>
+                <button class="interval-btn" data-interval="3">3ª m</button>
+                <button class="interval-btn" data-interval="4">3ª M</button>
+                <button class="interval-btn" data-interval="5">4ª J</button>
+                <button class="interval-btn" data-interval="6">Tritono</button>
+                <button class="interval-btn" data-interval="7">5ª J</button>
+                <button class="interval-btn" data-interval="8">6ª m</button>
+                <button class="interval-btn" data-interval="9">6ª M</button>
+                <button class="interval-btn" data-interval="10">7ª m</button>
+                <button class="interval-btn" data-interval="11">7ª M</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-scales">
+        <div class="space-y-4">
+            <div class="flex flex-wrap items-center gap-4">
+                <span class="text-sm text-void-400 font-body uppercase tracking-wider font-semibold">Categoría:</span>
+                <div class="flex flex-wrap gap-2" id="scaleCatBtnsMain">
+                    <button class="scale-cat-btn active" data-category="major">Mayores</button>
+                    <button class="scale-cat-btn" data-category="minor">Menores</button>
+                    <button class="scale-cat-btn" data-category="modes">Modos Griegos</button>
+                    <button class="scale-cat-btn" data-category="pentatonic">Pentatónicas</button>
+                    <button class="scale-cat-btn" data-category="exotic">Exóticas</button>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-4">
+                <span class="text-sm text-void-400 font-body uppercase tracking-wider font-semibold">Escala:</span>
+                <div class="flex flex-wrap gap-2" id="scaleListMain">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-chords">
+        <div class="space-y-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="text-sm text-slate-400">Grado:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button class="chord-btn" data-chord="1"><span class="roman">I</span><span class="name">Mayor</span></button>
+                    <button class="chord-btn" data-chord="2"><span class="roman">ii</span><span class="name">menor</span></button>
+                    <button class="chord-btn" data-chord="3"><span class="roman">iii</span><span class="name">menor</span></button>
+                    <button class="chord-btn" data-chord="4"><span class="roman">IV</span><span class="name">Mayor</span></button>
+                    <button class="chord-btn" data-chord="5"><span class="roman">V</span><span class="name">Mayor</span></button>
+                    <button class="chord-btn" data-chord="6"><span class="roman">vi</span><span class="name">menor</span></button>
+                    <button class="chord-btn" data-chord="7"><span class="roman">vii°</span><span class="name">dim</span></button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-modes">
+        <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm text-slate-400">Modo:</span>
+            <div class="flex flex-wrap gap-2">
+                <button class="mode-btn-simple active" data-mode="1">I Jónico</button>
+                <button class="mode-btn-simple" data-mode="2">II Dórico</button>
+                <button class="mode-btn-simple" data-mode="3">III Frigio</button>
+                <button class="mode-btn-simple" data-mode="4">IV Lidio</button>
+                <button class="mode-btn-simple" data-mode="5">V Mixolidio</button>
+                <button class="mode-btn-simple" data-mode="6">VI Eólico</button>
+                <button class="mode-btn-simple" data-mode="7">VII Locrio</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-pentatonics">
+        <div class="space-y-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="text-sm text-slate-400">Tipo:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button class="chord-btn active" data-penta="minor"><span class="roman">Menor</span></button>
+                    <button class="chord-btn" data-penta="major"><span class="roman">Mayor</span></button>
+                    <button class="chord-btn" data-penta="blues"><span class="roman">Blues</span></button>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="text-sm text-slate-400">Posición:</span>
+                <div class="flex gap-2" id="pentaBoxBtns">
+                    <button class="box-btn active" data-box="0">1</button>
+                    <button class="box-btn" data-box="1">2</button>
+                    <button class="box-btn" data-box="2">3</button>
+                    <button class="box-btn" data-box="3">4</button>
+                    <button class="box-btn" data-box="4">5</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-circle">
+        <div class="flex items-center justify-center">
+            <div class="relative w-56 h-56" id="circleOfFifthsMain">
+                <!-- Generated by JS -->
+            </div>
+            <div class="ml-8 text-sm text-slate-400">
+                <p>Haz clic en una nota para cambiar la tonalidad</p>
+                <p class="mt-2 text-cyan-400" id="circleInfo">-</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-progressions">
+        <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm text-slate-400">Progresión:</span>
+            <div class="flex flex-wrap gap-2">
+                <button class="progression-btn-simple active" data-progression="I-IV-V-I">I-IV-V-I</button>
+                <button class="progression-btn-simple" data-progression="I-V-vi-IV">I-V-vi-IV</button>
+                <button class="progression-btn-simple" data-progression="ii-V-I">ii-V-I</button>
+                <button class="progression-btn-simple" data-progression="I-vi-IV-V">I-vi-IV-V</button>
+                <button class="progression-btn-simple" data-progression="vi-IV-I-V">vi-IV-I-V</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-seventh">
+        <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm text-slate-400">Acorde 7ª:</span>
+            <div class="flex flex-wrap gap-2">
+                <button class="chord-btn" data-chord7="1"><span class="roman">Imaj7</span></button>
+                <button class="chord-btn" data-chord7="2"><span class="roman">ii-7</span></button>
+                <button class="chord-btn" data-chord7="3"><span class="roman">iii-7</span></button>
+                <button class="chord-btn" data-chord7="4"><span class="roman">IVmaj7</span></button>
+                <button class="chord-btn" data-chord7="5"><span class="roman">V7</span></button>
+                <button class="chord-btn" data-chord7="6"><span class="roman">vi-7</span></button>
+                <button class="chord-btn" data-chord7="7"><span class="roman">viiø7</span></button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-caged">
+        <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm text-slate-400">Forma CAGED:</span>
+            <div class="flex flex-wrap gap-2">
+                <button class="chord-btn active" data-caged="C"><span class="roman">C</span></button>
+                <button class="chord-btn" data-caged="A"><span class="roman">A</span></button>
+                <button class="chord-btn" data-caged="G"><span class="roman">G</span></button>
+                <button class="chord-btn" data-caged="E"><span class="roman">E</span></button>
+                <button class="chord-btn" data-caged="D"><span class="roman">D</span></button>
+            </div>
+            <span class="text-xs text-slate-500 ml-4">Orden: C → A → G → E → D → C...</span>
+        </div>
+    </template>
+
+    <!-- CLEANED: Old level cards content removed, now using templates + control panel -->
+
+    <script>
+        // ========================================
+        // MUSIC THEORY ENGINE
+        // ========================================
+        const MusicTheory = {
+            // 12 chromatic notes
+            notes: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+
+            // Enharmonic equivalents for display
+            enharmonics: {
+                'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
+            },
+
+            // Scale formulas (intervals from root)
+            scales: {
+                // === ESCALAS MAYORES ===
+                major:      [0, 2, 4, 5, 7, 9, 11],  // W-W-H-W-W-W-H (Jónico)
+
+                // === ESCALAS MENORES ===
+                minor:      [0, 2, 3, 5, 7, 8, 10],  // W-H-W-W-H-W-W (Menor Natural / Eólico)
+                harmonicMinor: [0, 2, 3, 5, 7, 8, 11], // Menor Armónica (7 natural)
+                melodicMinor:  [0, 2, 3, 5, 7, 9, 11], // Menor Melódica ascendente
+                dorianMinor:   [0, 2, 3, 5, 7, 9, 10], // Menor Dórica (6 natural)
+
+                // === MODOS DE LA ESCALA MAYOR ===
+                dorian:     [0, 2, 3, 5, 7, 9, 10],  // II grado - menor con 6 natural
+                phrygian:   [0, 1, 3, 5, 7, 8, 10],  // III grado - menor con b2
+                lydian:     [0, 2, 4, 6, 7, 9, 11],  // IV grado - mayor con #4
+                mixolydian: [0, 2, 4, 5, 7, 9, 10],  // V grado - mayor con b7
+                locrian:    [0, 1, 3, 5, 6, 8, 10],  // VII grado - menor con b2 y b5
+
+                // === MODOS DE LA MENOR ARMÓNICA ===
+                locrianNat6:    [0, 1, 3, 5, 6, 9, 10],  // II de armónica
+                ionianAug:      [0, 2, 4, 5, 8, 9, 11],  // III de armónica (Jónico #5)
+                dorianSharp4:   [0, 2, 3, 6, 7, 9, 10],  // IV de armónica (Dórico #4)
+                phrygianDom:    [0, 1, 4, 5, 7, 8, 10],  // V de armónica (Frigio Dominante/Español)
+                lydianSharp2:   [0, 3, 4, 6, 7, 9, 11],  // VI de armónica
+                superLocrian:   [0, 1, 3, 4, 6, 8, 10],  // VII de armónica (Superlocrio bb7)
+
+                // === MODOS DE LA MENOR MELÓDICA ===
+                dorianB2:       [0, 1, 3, 5, 7, 9, 10],  // II de melódica (Dórico b2)
+                lydianAug:      [0, 2, 4, 6, 8, 9, 11],  // III de melódica (Lidio #5)
+                lydianDom:      [0, 2, 4, 6, 7, 9, 10],  // IV de melódica (Lidio b7)
+                mixolydianB6:   [0, 2, 4, 5, 7, 8, 10],  // V de melódica (Mixolidio b6)
+                locrianNat2:    [0, 2, 3, 5, 6, 8, 10],  // VI de melódica (Locrio nat2)
+                alteredScale:   [0, 1, 3, 4, 6, 8, 10],  // VII de melódica (Superlocrio/Alterada)
+
+                // === PENTATÓNICAS ===
+                pentatonicMajor: [0, 2, 4, 7, 9],    // Mayor pentatónica
+                pentatonicMinor: [0, 3, 5, 7, 10],   // Menor pentatónica
+                blues:           [0, 3, 5, 6, 7, 10], // Blues (pent menor + blue note)
+                bluesMajor:      [0, 2, 3, 4, 7, 9],  // Blues mayor
+
+                // === ESCALAS SIMÉTRICAS ===
+                wholeTone:       [0, 2, 4, 6, 8, 10],    // Tonos enteros (6 notas)
+                diminished:      [0, 2, 3, 5, 6, 8, 9, 11], // Disminuida T-S (8 notas)
+                diminishedHW:    [0, 1, 3, 4, 6, 7, 9, 10], // Disminuida S-T
+                chromatic:       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], // Cromática
+
+                // === ESCALAS EXÓTICAS ===
+                hungarian:       [0, 2, 3, 6, 7, 8, 11],  // Húngara menor (gitana)
+                hungarianMajor:  [0, 3, 4, 6, 7, 9, 10],  // Húngara mayor
+                byzantine:       [0, 1, 4, 5, 7, 8, 11],  // Bizantina (Doble armónica)
+                arabic:          [0, 1, 4, 5, 7, 8, 10],  // Árabe (similar a frigio dom)
+                japanese:        [0, 1, 5, 7, 8],         // Japonesa (In Sen)
+                hirajoshi:       [0, 2, 3, 7, 8],         // Hirajoshi
+                egyptian:        [0, 2, 5, 7, 10],        // Egipcia (pentatónica suspendida)
+                prometheus:      [0, 2, 4, 6, 9, 10],     // Prometheus
+                neapolitan:      [0, 1, 3, 5, 7, 9, 11],  // Napolitana menor
+                neapolitanMajor: [0, 1, 3, 5, 7, 9, 11],  // Napolitana mayor
+                enigmatic:       [0, 1, 4, 6, 8, 10, 11], // Enigmática
+                persian:         [0, 1, 4, 5, 6, 8, 11],  // Persa
+                bebop:           [0, 2, 4, 5, 7, 9, 10, 11], // Bebop dominante (8 notas)
+                bebopMajor:      [0, 2, 4, 5, 7, 8, 9, 11],  // Bebop mayor
+            },
+
+            // Información extendida de cada escala
+            scaleInfo: {
+                // MAYORES
+                major: {
+                    name: 'Mayor (Jónico)',
+                    category: 'major',
+                    emotion: 'La luz del amanecer, el héroe que triunfa. Evoca victorias, finales felices y momentos de pura alegría. Es el hogar sonoro de la música occidental.',
+                    formula: 'T-T-S-T-T-T-S',
+                    usage: 'Pop, rock, música clásica. Base de la armonía occidental.',
+                    chordTypes: ['maj', 'min', 'min', 'maj', 'maj', 'min', 'dim'],
+                    parentScale: null,
+                    degree: 1,
+                    brightness: 6,
+                    characteristicNote: '7M',
+                    usageContext: ['Pop comercial', 'Himnos', 'Música infantil', 'Bandas sonoras épicas', 'Country']
+                },
+
+                // MENORES
+                minor: {
+                    name: 'Menor Natural (Eólico)',
+                    category: 'minor',
+                    emotion: 'La lluvia en la ventana, recuerdos que duelen dulcemente. Ideal para despedidas, reflexiones nocturnas y ese tipo de tristeza que no quieres soltar.',
+                    formula: 'T-S-T-T-S-T-T',
+                    usage: 'Baladas, rock alternativo, música clásica. Relativa menor de la mayor.',
+                    chordTypes: ['min', 'dim', 'maj', 'min', 'min', 'maj', 'maj'],
+                    parentScale: 'major',
+                    degree: 6,
+                    brightness: 2,
+                    characteristicNote: 'b6',
+                    usageContext: ['Baladas', 'Rock alternativo', 'Folk melancólico', 'Música clásica', 'Indie']
+                },
+                harmonicMinor: {
+                    name: 'Menor Armónica',
+                    category: 'minor',
+                    emotion: 'El villano de capa que entra en escena, el castillo en la tormenta. Tensión dramática que exige resolución, como un suspiro antes del beso.',
+                    formula: 'T-S-T-T-S-T½-S',
+                    usage: 'Música clásica, metal neoclásico, flamenco. El V7 resuelve mejor al Im.',
+                    chordTypes: ['min', 'dim', 'aug', 'min', 'maj', 'maj', 'dim'],
+                    parentScale: null,
+                    degree: 1,
+                    brightness: 3,
+                    characteristicNote: '7M',
+                    usageContext: ['Metal neoclásico', 'Flamenco', 'Música clásica', 'Bandas sonoras de suspenso', 'Tango']
+                },
+                melodicMinor: {
+                    name: 'Menor Melódica',
+                    category: 'minor',
+                    emotion: 'Sofisticación en penumbra, el jazz club a medianoche. Tristeza elegante que camina con tacones altos, melancolía que conoce buenos vinos.',
+                    formula: 'T-S-T-T-T-T-S',
+                    usage: 'Jazz, fusión. Combina el color menor con la 6ª y 7ª mayores.',
+                    chordTypes: ['min', 'min', 'aug', 'maj', 'maj', 'dim', 'dim'],
+                    parentScale: null,
+                    degree: 1,
+                    brightness: 4,
+                    characteristicNote: '6M',
+                    usageContext: ['Jazz moderno', 'Fusión', 'Neo-soul', 'Música de cine sofisticada', 'Bossa nova']
+                },
+
+                // MODOS DE LA MAYOR
+                dorian: {
+                    name: 'Dórico',
+                    category: 'modes',
+                    emotion: 'Tristeza que baila, melancolía con groove. Como llorar en la pista de baile o encontrar esperanza en un callejón oscuro.',
+                    formula: 'T-S-T-T-T-S-T',
+                    usage: 'Jazz, funk, rock. Menor con 6ª natural (más brillante que eólico).',
+                    chordTypes: ['min', 'min', 'maj', 'maj', 'min', 'dim', 'maj'],
+                    parentScale: 'major',
+                    degree: 2,
+                    brightness: 3,
+                    characteristicNote: '6M',
+                    usageContext: ['Funk', 'Jazz modal', 'Soul', 'Rock progresivo', 'Hip-hop melódico']
+                },
+                phrygian: {
+                    name: 'Frigio',
+                    category: 'modes',
+                    emotion: 'El sol de Andalucía sobre piedras antiguas, el bailaor que clava la mirada. Tensión española, misterio que huele a azahar.',
+                    formula: 'S-T-T-T-S-T-T',
+                    usage: 'Flamenco, metal, música española. La b2 da el sonido característico.',
+                    chordTypes: ['min', 'maj', 'maj', 'min', 'dim', 'maj', 'min'],
+                    parentScale: 'major',
+                    degree: 3,
+                    brightness: 1,
+                    characteristicNote: 'b2',
+                    usageContext: ['Flamenco', 'Metal', 'Música mediterránea', 'Ambient oscuro', 'Videojuegos épicos']
+                },
+                lydian: {
+                    name: 'Lidio',
+                    category: 'modes',
+                    emotion: 'Flotar entre nubes doradas, el asombro de un niño mirando las estrellas. Magia pura, E.T. volando sobre la luna.',
+                    formula: 'T-T-T-S-T-T-S',
+                    usage: 'Cine (Spielberg), jazz, prog rock. La #4 evita la gravedad del IV.',
+                    chordTypes: ['maj', 'maj', 'min', 'dim', 'maj', 'min', 'min'],
+                    parentScale: 'major',
+                    degree: 4,
+                    brightness: 7,
+                    characteristicNote: '#4',
+                    usageContext: ['Bandas sonoras mágicas', 'Jazz fusión', 'Rock progresivo', 'Dream pop', 'Ambient espacial']
+                },
+                mixolydian: {
+                    name: 'Mixolidio',
+                    category: 'modes',
+                    emotion: 'La carretera infinita con el sol en la cara, rock and roll en vena. El riff que hace mover la cabeza sin pensar.',
+                    formula: 'T-T-S-T-T-S-T',
+                    usage: 'Blues, rock, funk. Mayor con b7 (acorde dominante como tónica).',
+                    chordTypes: ['maj', 'min', 'dim', 'maj', 'min', 'min', 'maj'],
+                    parentScale: 'major',
+                    degree: 5,
+                    brightness: 5,
+                    characteristicNote: 'b7',
+                    usageContext: ['Blues rock', 'Country rock', 'Funk', 'Rock clásico', 'Jam bands']
+                },
+                locrian: {
+                    name: 'Locrio',
+                    category: 'modes',
+                    emotion: 'El suelo que se desmorona, vértigo existencial. Inquietud sin reposo, pesadillas lúcidas y pasillos infinitos.',
+                    formula: 'S-T-T-S-T-T-T',
+                    usage: 'Metal, jazz (sobre m7b5). La b5 hace imposible una tónica estable.',
+                    chordTypes: ['dim', 'maj', 'min', 'min', 'maj', 'maj', 'min'],
+                    parentScale: 'major',
+                    degree: 7,
+                    brightness: 0,
+                    characteristicNote: 'b5',
+                    usageContext: ['Metal extremo', 'Jazz sobre m7b5', 'Música experimental', 'Horror cinematográfico', 'Djent']
+                },
+
+                // MODOS DE LA MENOR ARMÓNICA
+                phrygianDom: {
+                    name: 'Frigio Dominante',
+                    category: 'harmonicMinorModes',
+                    emotion: 'El flamenco más puro, pies golpeando tierra sagrada. El desierto al atardecer, noches de Las Mil y Una Noches.',
+                    formula: 'S-T½-S-T-S-T-T',
+                    usage: 'Flamenco, metal, música árabe. Es el V grado de la menor armónica.',
+                    chordTypes: ['maj', 'dim', 'min', 'min', 'maj', 'maj', 'dim'],
+                    parentScale: 'harmonicMinor',
+                    degree: 5,
+                    brightness: 2,
+                    characteristicNote: 'b2 + 3M',
+                    usageContext: ['Flamenco', 'Metal oriental', 'Música árabe', 'Música judía', 'Fusión mediterránea']
+                },
+
+                // MODOS DE LA MENOR MELÓDICA
+                lydianDom: {
+                    name: 'Lidio Dominante',
+                    category: 'melodicMinorModes',
+                    emotion: 'Tensión que brilla como neón, el clímax antes de la resolución. Sofisticación que sabe a dry martini.',
+                    formula: 'T-T-T-S-T-S-T',
+                    usage: 'Jazz (sobre 7#11), fusión. Combina lydian y mixolydian.',
+                    chordTypes: ['maj', 'min', 'dim', 'min', 'min', 'maj', 'min'],
+                    parentScale: 'melodicMinor',
+                    degree: 4,
+                    brightness: 6,
+                    characteristicNote: '#4 + b7',
+                    usageContext: ['Jazz sobre 7#11', 'Fusión', 'Neo-soul avanzado', 'Steely Dan', 'Tritono sustituto']
+                },
+                alteredScale: {
+                    name: 'Alterada (Superlocrio)',
+                    category: 'melodicMinorModes',
+                    emotion: 'Máxima tensión controlada, el equilibrista sobre el abismo. El grito antes del silencio, la tormenta antes de la calma.',
+                    formula: 'S-T-S-T-T-T-T',
+                    usage: 'Jazz sobre dominantes alterados (7alt). Todas las tensiones alteradas.',
+                    chordTypes: ['dim', 'min', 'min', 'maj', 'maj', 'maj', 'min'],
+                    parentScale: 'melodicMinor',
+                    degree: 7,
+                    brightness: 1,
+                    characteristicNote: 'b9 + #9 + b5 + #5',
+                    usageContext: ['Jazz bebop', 'Jazz contemporáneo', 'Fusión avanzada', 'Dominantes V7alt', 'Resoluciones dramáticas']
+                },
+
+                // PENTATÓNICAS
+                pentatonicMajor: {
+                    name: 'Pentatónica Mayor',
+                    category: 'pentatonic',
+                    emotion: 'Praderas infinitas, porches al atardecer y guitarras acústicas. Simplicidad honesta que sabe a limonada casera.',
+                    formula: 'T-T-T½-T-T½',
+                    usage: 'Country, pop, rock. Sin semitonos = sin tensiones.',
+                    parentScale: 'major',
+                    degree: 1,
+                    brightness: 5,
+                    characteristicNote: 'Sin 4 ni 7',
+                    usageContext: ['Country', 'Pop', 'Folk americano', 'Rock melódico', 'Música china tradicional']
+                },
+                pentatonicMinor: {
+                    name: 'Pentatónica Menor',
+                    category: 'pentatonic',
+                    emotion: 'El lenguaje universal del rock, sangre de miles de solos legendarios. Cruda, directa, honesta.',
+                    formula: 'T½-T-T-T½-T',
+                    usage: 'Rock, blues, pop. La escala más usada en solos.',
+                    parentScale: 'minor',
+                    degree: 1,
+                    brightness: 2,
+                    characteristicNote: 'b3 + b7',
+                    usageContext: ['Rock', 'Blues', 'Metal', 'Pop rock', 'Prácticamente todo']
+                },
+                blues: {
+                    name: 'Blues',
+                    category: 'pentatonic',
+                    emotion: 'El lamento del delta, whisky y cigarrillos a las 3AM. Dolor que se convierte en arte.',
+                    formula: 'T½-T-S-S-T½-T',
+                    usage: 'Blues, rock. Pentatónica menor + blue note (b5).',
+                    parentScale: 'pentatonicMinor',
+                    degree: 1,
+                    specialNotes: { 6: 'blue note (b5)' },
+                    brightness: 2,
+                    characteristicNote: 'b5 (blue note)',
+                    usageContext: ['Blues tradicional', 'Rock blues', 'Jazz blues', 'Soul', 'R&B']
+                },
+
+                // SIMÉTRICAS
+                wholeTone: {
+                    name: 'Tonos Enteros',
+                    category: 'symmetric',
+                    emotion: 'Caer en un sueño sin fondo, Alicia en el País de las Maravillas. Sin arriba ni abajo, desorientación onírica.',
+                    formula: 'T-T-T-T-T-T',
+                    usage: 'Impresionismo (Debussy), jazz sobre 7#5. Solo 2 escalas posibles.',
+                    chordTypes: null,
+                    brightness: 4,
+                    characteristicNote: 'Todos T (sin ancla)',
+                    usageContext: ['Impresionismo', 'Transiciones oníricas', 'Jazz sobre 7#5', 'Cine surreal', 'Efectos especiales']
+                },
+                diminished: {
+                    name: 'Disminuida (T-S)',
+                    category: 'symmetric',
+                    emotion: 'Escaleras de Escher, persecuciones por callejones de espejos. Tensión que se repite cada tres semitonos.',
+                    formula: 'T-S-T-S-T-S-T-S',
+                    usage: 'Jazz sobre dim7, líneas cromáticas. Solo 3 escalas posibles.',
+                    chordTypes: null,
+                    brightness: 3,
+                    characteristicNote: 'Simetría cada 3 semitonos',
+                    usageContext: ['Jazz sobre dim7', 'Líneas cromáticas', 'Metal técnico', 'Música de suspenso', 'Transiciones']
+                },
+
+                // EXÓTICAS
+                hungarian: {
+                    name: 'Húngara Menor',
+                    category: 'exotic',
+                    emotion: 'Violines gitanos junto al fuego, pasión desbordada bajo las estrellas. Liszt cabalgando hacia el horizonte.',
+                    formula: 'T-S-T½-S-S-T½-S',
+                    usage: 'Música gitana, Liszt, metal neoclásico. Tiene dos aumentadas.',
+                    chordTypes: null,
+                    brightness: 3,
+                    characteristicNote: '#4 + 7M',
+                    usageContext: ['Música gitana', 'Clásica romántica', 'Metal neoclásico', 'Folk del este de Europa', 'Bandas sonoras épicas']
+                },
+                byzantine: {
+                    name: 'Bizantina (Doble Armónica)',
+                    category: 'exotic',
+                    emotion: 'Mezquitas al amanecer, el llamado a la oración sobre tejados antiguos. Oriente medio, serpientes y bazares.',
+                    formula: 'S-T½-S-T-S-T½-S',
+                    usage: 'Música del medio oriente, metal. Muy cromática.',
+                    chordTypes: null,
+                    brightness: 2,
+                    characteristicNote: 'b2 + 3M + 7M',
+                    usageContext: ['Música árabe', 'Música turca', 'Metal oriental', 'Bandas sonoras exóticas', 'Klezmer']
+                },
+                japanese: {
+                    name: 'Japonesa (In Sen)',
+                    category: 'exotic',
+                    emotion: 'Jardines zen bajo la lluvia, cerezos en flor que caen al estanque. Melancolía que encuentra paz.',
+                    formula: 'S-2T-T-S-2T',
+                    usage: 'Música tradicional japonesa, ambient.',
+                    chordTypes: null,
+                    brightness: 1,
+                    characteristicNote: 'b2 + espacios amplios',
+                    usageContext: ['Música japonesa tradicional', 'Ambient', 'Lo-fi', 'Meditación', 'Bandas sonoras contemplativas']
+                },
+                bebop: {
+                    name: 'Bebop Dominante',
+                    category: 'exotic',
+                    emotion: 'Nueva York años 50, dedos volando sobre las teclas, conversaciones entre genios. Elegancia a 200 BPM.',
+                    formula: 'T-T-S-T-T-S-S-S',
+                    usage: 'Jazz bebop. 8 notas para que las notas del acorde caigan en tiempo fuerte.',
+                    chordTypes: null,
+                    brightness: 5,
+                    characteristicNote: '7M cromática',
+                    usageContext: ['Jazz bebop', 'Hard bop', 'Jazz standards', 'Walking bass', 'Solos de viento']
+                }
+            },
+
+            // Categorías de escalas para la UI
+            scaleCategories: {
+                major: { name: 'Escalas Mayores', color: '#f97316' },
+                minor: { name: 'Escalas Menores', color: '#22d3ee' },
+                modes: { name: 'Modos de la Mayor', color: '#fbbf24' },
+                harmonicMinorModes: { name: 'Modos de la Menor Armónica', color: '#a855f7' },
+                melodicMinorModes: { name: 'Modos de la Menor Melódica', color: '#ec4899' },
+                pentatonic: { name: 'Pentatónicas y Blues', color: '#10b981' },
+                symmetric: { name: 'Escalas Simétricas', color: '#6366f1' },
+                exotic: { name: 'Escalas Exóticas', color: '#ef4444' }
+            },
+
+            // Obtener armonización de cualquier escala
+            getScaleHarmonization(root, scaleType) {
+                const scale = this.getScale(root, scaleType);
+                const formula = this.scales[scaleType];
+                const triads = [];
+
+                for (let degree = 0; degree < scale.length; degree++) {
+                    const rootNote = scale[degree].note;
+                    const rootInterval = formula[degree];
+
+                    // Buscar la 3ª (2 grados arriba en la escala)
+                    const thirdDegree = (degree + 2) % scale.length;
+                    const thirdNote = scale[thirdDegree].note;
+                    const thirdInterval = (formula[thirdDegree] - rootInterval + 12) % 12;
+
+                    // Buscar la 5ª (4 grados arriba en la escala)
+                    const fifthDegree = (degree + 4) % scale.length;
+                    const fifthNote = scale[fifthDegree].note;
+                    const fifthInterval = (formula[fifthDegree] - rootInterval + 12) % 12;
+
+                    // Determinar calidad del acorde
+                    let quality;
+                    if (thirdInterval === 4 && fifthInterval === 7) quality = 'maj';
+                    else if (thirdInterval === 3 && fifthInterval === 7) quality = 'min';
+                    else if (thirdInterval === 3 && fifthInterval === 6) quality = 'dim';
+                    else if (thirdInterval === 4 && fifthInterval === 8) quality = 'aug';
+                    else if (thirdInterval === 2 && fifthInterval === 7) quality = 'sus2';
+                    else if (thirdInterval === 5 && fifthInterval === 7) quality = 'sus4';
+                    else quality = '?';
+
+                    triads.push({
+                        degree: degree + 1,
+                        root: rootNote,
+                        third: thirdNote,
+                        fifth: fifthNote,
+                        quality: quality,
+                        intervals: { third: thirdInterval, fifth: fifthInterval }
+                    });
+                }
+
+                return triads;
+            },
+
+            // Comparar dos escalas
+            compareScales(scale1Type, scale2Type) {
+                const formula1 = this.scales[scale1Type];
+                const formula2 = this.scales[scale2Type];
+
+                const common = formula1.filter(n => formula2.includes(n));
+                const onlyIn1 = formula1.filter(n => !formula2.includes(n));
+                const onlyIn2 = formula2.filter(n => !formula1.includes(n));
+
+                return {
+                    common: common,
+                    onlyInFirst: onlyIn1,
+                    onlyInSecond: onlyIn2,
+                    similarity: (common.length / Math.max(formula1.length, formula2.length) * 100).toFixed(0)
+                };
+            },
+
+            // Obtener escala padre y grado
+            getParentInfo(scaleType) {
+                const info = this.scaleInfo[scaleType];
+                if (!info || !info.parentScale) return null;
+
+                return {
+                    parentScale: info.parentScale,
+                    degree: info.degree,
+                    parentName: this.scaleInfo[info.parentScale]?.name || info.parentScale
+                };
+            },
+
+            // Interval names
+            intervalNames: {
+                0: '1 (T)',
+                1: '2m',
+                2: '2M',
+                3: '3m',
+                4: '3M',
+                5: '4J',
+                6: 'TT',
+                7: '5J',
+                8: '6m',
+                9: '6M',
+                10: '7m',
+                11: '7M',
+            },
+
+            // Scale degree names
+            degreeNames: ['1', '2', '3', '4', '5', '6', '7'],
+
+            // Chord qualities for major scale harmonization
+            chordQualities: ['maj', 'min', 'min', 'maj', 'maj', 'min', 'dim'],
+            romanNumerals: ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'],
+
+            // Get note name from index
+            getNoteName(index) {
+                return this.notes[(index % 12 + 12) % 12];
+            },
+
+            // Get note index from name
+            getNoteIndex(name) {
+                return this.notes.indexOf(name);
+            },
+
+            // Calculate interval between two notes
+            getInterval(note1, note2) {
+                const idx1 = typeof note1 === 'number' ? note1 : this.getNoteIndex(note1);
+                const idx2 = typeof note2 === 'number' ? note2 : this.getNoteIndex(note2);
+                return ((idx2 - idx1) % 12 + 12) % 12;
+            },
+
+            // Get scale notes from root and scale type
+            getScale(root, scaleType) {
+                const rootIndex = typeof root === 'number' ? root : this.getNoteIndex(root);
+                const formula = this.scales[scaleType];
+                return formula.map(interval => ({
+                    note: this.getNoteName(rootIndex + interval),
+                    interval: interval,
+                    degree: formula.indexOf(interval) + 1
+                }));
+            },
+
+            // Get triad from scale degree
+            getTriad(root, scaleType, degree) {
+                const scale = this.getScale(root, scaleType);
+                const rootIndex = degree - 1;
+                const thirdIndex = (rootIndex + 2) % 7;
+                const fifthIndex = (rootIndex + 4) % 7;
+
+                return {
+                    root: scale[rootIndex],
+                    third: scale[thirdIndex],
+                    fifth: scale[fifthIndex],
+                    quality: this.chordQualities[rootIndex],
+                    roman: this.romanNumerals[rootIndex]
+                };
+            },
+
+            // Get all triads for a scale
+            getScaleTriads(root, scaleType) {
+                return [1, 2, 3, 4, 5, 6, 7].map(degree => this.getTriad(root, scaleType, degree));
+            },
+
+            // Get mode from parent scale
+            getMode(parentRoot, modeNumber) {
+                const parentScale = this.getScale(parentRoot, 'major');
+                const modeRoot = parentScale[modeNumber - 1].note;
+                const modeNames = ['major', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'minor', 'locrian'];
+                return {
+                    root: modeRoot,
+                    scale: this.getScale(modeRoot, modeNames[modeNumber - 1]),
+                    name: modeNames[modeNumber - 1]
+                };
+            },
+
+            // Circle of fifths order
+            circleOfFifths: [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5], // C, G, D, A, E, B, F#, C#, G#, D#, A#, F
+            circleOfFifthsLabels: ['C', 'G', 'D', 'A', 'E', 'B', 'F#/Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F'],
+
+            // Get relative minor
+            getRelativeMinor(majorRoot) {
+                return (majorRoot + 9) % 12; // 3 semitones down = 9 semitones up
+            },
+
+            // Get relative major
+            getRelativeMajor(minorRoot) {
+                return (minorRoot + 3) % 12;
+            },
+
+            // Seventh chord formulas from scale degree
+            seventhChordFormulas: {
+                1: [0, 4, 7, 11],  // maj7
+                2: [0, 3, 7, 10],  // m7
+                3: [0, 3, 7, 10],  // m7
+                4: [0, 4, 7, 11],  // maj7
+                5: [0, 4, 7, 10],  // dom7
+                6: [0, 3, 7, 10],  // m7
+                7: [0, 3, 6, 10],  // m7b5 (half-diminished)
+            },
+
+            seventhChordNames: ['maj7', 'm7', 'm7', 'maj7', '7', 'm7', 'ø7'],
+
+            // Get seventh chord from scale degree
+            getSeventhChord(root, degree) {
+                const scale = this.getScale(root, 'major');
+                const chordRoot = scale[degree - 1].note;
+                const chordRootIndex = this.getNoteIndex(chordRoot);
+                const formula = this.seventhChordFormulas[degree];
+
+                return {
+                    root: chordRoot,
+                    notes: formula.map(interval => ({
+                        note: this.getNoteName(chordRootIndex + interval),
+                        interval: interval
+                    })),
+                    quality: this.seventhChordNames[degree - 1],
+                    degree: degree
+                };
+            },
+
+            // CAGED system shapes (positions relative to root on specific strings)
+            cagedShapes: {
+                'C': {
+                    name: 'Forma C',
+                    // Positions: [string][fret relative to root position]
+                    positions: [
+                        { string: 0, fret: 0, degree: 1 },   // E string - root
+                        { string: 1, fret: 1, degree: 5 },   // B string
+                        { string: 2, fret: 0, degree: 3 },   // G string
+                        { string: 3, fret: 2, degree: 1 },   // D string - root
+                        { string: 4, fret: 3, degree: 5 },   // A string
+                        { string: 5, fret: -1, degree: null }, // E string - muted
+                    ],
+                    rootString: 4, // Root on A string
+                    description: 'Tónica en cuerda 5 (A)'
+                },
+                'A': {
+                    name: 'Forma A',
+                    positions: [
+                        { string: 0, fret: 0, degree: 5 },
+                        { string: 1, fret: 2, degree: 1 },   // root
+                        { string: 2, fret: 2, degree: 5 },
+                        { string: 3, fret: 2, degree: 1 },   // root
+                        { string: 4, fret: 0, degree: 1 },   // root
+                        { string: 5, fret: -1, degree: null },
+                    ],
+                    rootString: 4,
+                    description: 'Tónica en cuerda 5 (A)'
+                },
+                'G': {
+                    name: 'Forma G',
+                    positions: [
+                        { string: 0, fret: 3, degree: 1 },   // root
+                        { string: 1, fret: 0, degree: 3 },
+                        { string: 2, fret: 0, degree: 1 },   // root
+                        { string: 3, fret: 0, degree: 5 },
+                        { string: 4, fret: 2, degree: 3 },
+                        { string: 5, fret: 3, degree: 1 },   // root
+                    ],
+                    rootString: 5,
+                    description: 'Tónica en cuerda 6 (E)'
+                },
+                'E': {
+                    name: 'Forma E',
+                    positions: [
+                        { string: 0, fret: 0, degree: 1 },   // root
+                        { string: 1, fret: 0, degree: 5 },
+                        { string: 2, fret: 1, degree: 3 },
+                        { string: 3, fret: 2, degree: 1 },   // root
+                        { string: 4, fret: 2, degree: 5 },
+                        { string: 5, fret: 0, degree: 1 },   // root
+                    ],
+                    rootString: 5,
+                    description: 'Tónica en cuerda 6 (E)'
+                },
+                'D': {
+                    name: 'Forma D',
+                    positions: [
+                        { string: 0, fret: 2, degree: 3 },
+                        { string: 1, fret: 3, degree: 1 },   // root
+                        { string: 2, fret: 2, degree: 5 },
+                        { string: 3, fret: 0, degree: 1 },   // root
+                        { string: 4, fret: -1, degree: null },
+                        { string: 5, fret: -1, degree: null },
+                    ],
+                    rootString: 3,
+                    description: 'Tónica en cuerda 4 (D)'
+                }
+            },
+
+            // Progressions with chord degrees
+            progressions: {
+                'I-IV-V-I': { degrees: [1, 4, 5, 1], name: 'Blues Básico' },
+                'I-V-vi-IV': { degrees: [1, 5, 6, 4], name: 'Pop Universal' },
+                'ii-V-I': { degrees: [2, 5, 1], name: 'Jazz ii-V-I' },
+                'I-vi-IV-V': { degrees: [1, 6, 4, 5], name: '50s Doo-wop' },
+                'vi-IV-I-V': { degrees: [6, 4, 1, 5], name: 'Sad but Hopeful' },
+                'I-bVII-IV-I': { degrees: [1, -7, 4, 1], name: 'Rock Mixolidio' },
+            },
+
+            // Real chord voicings (fret positions for each string, -1 = muted, 0 = open)
+            // Format: [E6, A5, D4, G3, B2, E1] (low to high)
+            chordVoicings: {
+                // Major chords (CAGED shapes)
+                'C': { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0], barreInfo: null, position: 0 },
+                'A': { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 0, 1, 2, 3, 0], barreInfo: null, position: 0 },
+                'G': { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barreInfo: null, position: 0 },
+                'E': { frets: [0, 2, 2, 1, 0, 0], fingers: [0, 2, 3, 1, 0, 0], barreInfo: null, position: 0 },
+                'D': { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], barreInfo: null, position: 0 },
+                // Minor chords
+                'Am': { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 0, 2, 3, 1, 0], barreInfo: null, position: 0 },
+                'Em': { frets: [0, 2, 2, 0, 0, 0], fingers: [0, 2, 3, 0, 0, 0], barreInfo: null, position: 0 },
+                'Dm': { frets: [-1, -1, 0, 2, 3, 1], fingers: [0, 0, 0, 2, 3, 1], barreInfo: null, position: 0 },
+                // Barre chord templates (E shape and A shape)
+                'E_shape_major': { frets: [0, 2, 2, 1, 0, 0], fingers: [1, 3, 4, 2, 1, 1], barreInfo: { fret: 0, fromString: 0, toString: 5 }, position: 0 },
+                'E_shape_minor': { frets: [0, 2, 2, 0, 0, 0], fingers: [1, 3, 4, 1, 1, 1], barreInfo: { fret: 0, fromString: 0, toString: 5 }, position: 0 },
+                'A_shape_major': { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 1, 3, 3, 3, 1], barreInfo: { fret: 0, fromString: 1, toString: 5 }, position: 0 },
+                'A_shape_minor': { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 1, 3, 4, 2, 1], barreInfo: { fret: 0, fromString: 1, toString: 5 }, position: 0 },
+            },
+
+            // 7th chord voicings
+            seventhVoicings: {
+                'maj7_E': { frets: [0, 2, 1, 1, 0, 0], fingers: [0, 3, 1, 2, 0, 0], barreInfo: null, position: 0, type: 'maj7' },
+                'maj7_A': { frets: [-1, 0, 2, 1, 2, 0], fingers: [0, 0, 2, 1, 3, 0], barreInfo: null, position: 0, type: 'maj7' },
+                'maj7_C': { frets: [-1, 3, 2, 0, 0, 0], fingers: [0, 3, 2, 0, 0, 0], barreInfo: null, position: 0, type: 'maj7' },
+                'm7_E': { frets: [0, 2, 0, 0, 0, 0], fingers: [0, 2, 0, 0, 0, 0], barreInfo: null, position: 0, type: 'm7' },
+                'm7_A': { frets: [-1, 0, 2, 0, 1, 0], fingers: [0, 0, 2, 0, 1, 0], barreInfo: null, position: 0, type: 'm7' },
+                'dom7_E': { frets: [0, 2, 0, 1, 0, 0], fingers: [0, 2, 0, 1, 0, 0], barreInfo: null, position: 0, type: '7' },
+                'dom7_A': { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 1, 0, 2, 0], barreInfo: null, position: 0, type: '7' },
+                'm7b5_E': { frets: [-1, -1, 2, 3, 3, 3], fingers: [0, 0, 1, 2, 3, 4], barreInfo: null, position: 0, type: 'ø7' },
+            },
+
+            // Pentatonic box positions (fret range relative to root)
+            pentatonicBoxes: {
+                minor: [
+                    { name: 'Box 1 (E shape)', startFret: 0, pattern: [
+                        { string: 0, frets: [0, 3] },
+                        { string: 1, frets: [0, 3] },
+                        { string: 2, frets: [0, 2] },
+                        { string: 3, frets: [0, 2] },
+                        { string: 4, frets: [0, 2] },
+                        { string: 5, frets: [0, 3] },
+                    ]},
+                    { name: 'Box 2 (D shape)', startFret: 3, pattern: [
+                        { string: 0, frets: [0, 2] },
+                        { string: 1, frets: [0, 2] },
+                        { string: 2, frets: [-1, 2] },
+                        { string: 3, frets: [-1, 2] },
+                        { string: 4, frets: [-1, 2] },
+                        { string: 5, frets: [0, 2] },
+                    ]},
+                    { name: 'Box 3 (C shape)', startFret: 5, pattern: [
+                        { string: 0, frets: [0, 2] },
+                        { string: 1, frets: [0, 3] },
+                        { string: 2, frets: [0, 2] },
+                        { string: 3, frets: [0, 2] },
+                        { string: 4, frets: [0, 3] },
+                        { string: 5, frets: [0, 2] },
+                    ]},
+                    { name: 'Box 4 (A shape)', startFret: 7, pattern: [
+                        { string: 0, frets: [0, 3] },
+                        { string: 1, frets: [0, 2] },
+                        { string: 2, frets: [0, 2] },
+                        { string: 3, frets: [0, 3] },
+                        { string: 4, frets: [0, 2] },
+                        { string: 5, frets: [0, 3] },
+                    ]},
+                    { name: 'Box 5 (G shape)', startFret: 10, pattern: [
+                        { string: 0, frets: [0, 2] },
+                        { string: 1, frets: [0, 2] },
+                        { string: 2, frets: [-1, 2] },
+                        { string: 3, frets: [0, 2] },
+                        { string: 4, frets: [0, 2] },
+                        { string: 5, frets: [0, 2] },
+                    ]},
+                ],
+            },
+
+            // CAGED positions with actual fret positions for C major
+            cagedPositions: {
+                'C': {
+                    startFret: 0,
+                    endFret: 3,
+                    chord: { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0] },
+                    rootStrings: [1, 4], // A and B strings
+                    description: 'Posición abierta'
+                },
+                'A': {
+                    startFret: 2,
+                    endFret: 5,
+                    chord: { frets: [-1, 3, 5, 5, 5, 3], fingers: [0, 1, 3, 3, 3, 1], barreInfo: { fret: 3, fromString: 1, toString: 5 } },
+                    rootStrings: [1, 3],
+                    description: 'Traste 3 (cejilla)'
+                },
+                'G': {
+                    startFret: 4,
+                    endFret: 8,
+                    chord: { frets: [8, 7, 5, 5, 5, 8], fingers: [3, 2, 1, 1, 1, 4] },
+                    rootStrings: [0, 2, 5],
+                    description: 'Traste 5-8'
+                },
+                'E': {
+                    startFret: 7,
+                    endFret: 10,
+                    chord: { frets: [8, 10, 10, 9, 8, 8], fingers: [1, 3, 4, 2, 1, 1], barreInfo: { fret: 8, fromString: 0, toString: 5 } },
+                    rootStrings: [0, 3, 5],
+                    description: 'Traste 8 (cejilla)'
+                },
+                'D': {
+                    startFret: 9,
+                    endFret: 12,
+                    chord: { frets: [-1, -1, 10, 12, 13, 12], fingers: [0, 0, 1, 3, 4, 2] },
+                    rootStrings: [2, 4],
+                    description: 'Traste 10-13'
+                },
+            },
+
+            // Get chord voicing for any root note using shape transposition
+            getChordVoicing(root, quality, preferredShape = 'E') {
+                const rootIndex = typeof root === 'number' ? root : this.getNoteIndex(root);
+                const shapeName = quality === 'minor' ? `${preferredShape}_shape_minor` : `${preferredShape}_shape_major`;
+
+                // Base shapes start at different frets
+                const basePositions = { 'E': 0, 'A': 0, 'G': 3, 'C': 0, 'D': 0 };
+                const basePosition = basePositions[preferredShape] || 0;
+
+                // Calculate transposition
+                const transposition = rootIndex + basePosition;
+
+                return {
+                    ...this.chordVoicings[shapeName] || this.chordVoicings['E_shape_major'],
+                    position: transposition
+                };
+            }
+        };
+
+        // ========================================
+        // CHORD DIAGRAM COMPONENT - HORIZONTAL
+        // ========================================
+        const ChordDiagram = {
+            create(voicing, chordName, position = 0) {
+                const container = document.createElement('div');
+                container.className = 'chord-diagram';
+                container.style.paddingLeft = '40px';
+
+                // Chord name
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'chord-name-display';
+                nameDiv.innerHTML = `<div class="chord-symbol">${chordName}</div>`;
+                container.appendChild(nameDiv);
+
+                // Calculate actual frets
+                const actualFrets = voicing.frets.map(f => f === -1 ? -1 : f + position);
+                const minFret = Math.min(...actualFrets.filter(f => f > 0));
+                const maxFret = Math.max(...actualFrets);
+                const displayStartFret = position > 0 ? minFret : 0;
+                const numFrets = Math.max(4, maxFret - displayStartFret + 1);
+                const isOpenPosition = displayStartFret === 0;
+
+                // Grid container (horizontal layout)
+                const grid = document.createElement('div');
+                grid.className = 'chord-diagram-grid';
+                grid.style.position = 'relative';
+
+                // String labels (left side)
+                const stringLabels = document.createElement('div');
+                stringLabels.className = 'string-labels-left';
+                const stringNames = ['e', 'B', 'G', 'D', 'A', 'E'];
+                stringNames.forEach(name => {
+                    const label = document.createElement('div');
+                    label.className = 'string-label-item';
+                    label.textContent = name;
+                    stringLabels.appendChild(label);
+                });
+                container.appendChild(stringLabels);
+
+                // Create string rows (6 strings, horizontal)
+                for (let string = 0; string < 6; string++) {
+                    const row = document.createElement('div');
+                    row.className = 'string-row';
+
+                    const actualFret = actualFrets[string];
+
+                    // Open/Muted indicator
+                    if (actualFret === 0) {
+                        const open = document.createElement('div');
+                        open.className = 'open-indicator';
+                        open.textContent = 'O';
+                        row.appendChild(open);
+                    } else if (actualFret === -1) {
+                        const muted = document.createElement('div');
+                        muted.className = 'muted-indicator';
+                        muted.textContent = 'X';
+                        row.appendChild(muted);
+                    }
+
+                    // Create fret cells
+                    for (let fret = 0; fret < numFrets; fret++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'fret-cell';
+
+                        // First fret is the nut if open position
+                        if (fret === 0 && isOpenPosition) {
+                            cell.classList.add('nut-fret');
+                        }
+
+                        const displayFret = actualFret - displayStartFret;
+
+                        // Check for finger dot
+                        if (displayFret === fret && actualFret > 0) {
+                            const dot = document.createElement('div');
+                            dot.className = 'finger-dot';
+
+                            // Check if root note
+                            const stringOpenNote = [4, 11, 7, 2, 9, 4][string];
+                            const noteAtFret = (stringOpenNote + actualFret) % 12;
+                            const rootNote = MusicTheory.getNoteIndex(chordName.replace(/m.*|7.*|maj.*/g, ''));
+
+                            if (noteAtFret === rootNote) {
+                                dot.classList.add('root');
+                                dot.textContent = 'R';
+                            } else {
+                                dot.classList.add('note');
+                                dot.textContent = voicing.fingers ? voicing.fingers[string] : '';
+                            }
+                            cell.appendChild(dot);
+                        }
+
+                        // Check if open string note on nut fret
+                        if (fret === 0 && isOpenPosition && actualFret === 0) {
+                            const dot = document.createElement('div');
+                            dot.className = 'finger-dot';
+                            const stringOpenNote = [4, 11, 7, 2, 9, 4][string];
+                            const rootNote = MusicTheory.getNoteIndex(chordName.replace(/m.*|7.*|maj.*/g, ''));
+                            if (stringOpenNote === rootNote) {
+                                dot.classList.add('root');
+                                dot.textContent = 'R';
+                            } else {
+                                dot.classList.add('note');
+                                dot.textContent = 'O';
+                            }
+                            cell.appendChild(dot);
+                        }
+
+                        row.appendChild(cell);
+                    }
+
+                    grid.appendChild(row);
+                }
+
+                // Barre indication (horizontal)
+                if (voicing.barreInfo && position > 0) {
+                    const barre = document.createElement('div');
+                    barre.className = 'barre-line';
+                    const barreCol = voicing.barreInfo.fret;
+                    const fromString = voicing.barreInfo.fromString;
+                    const toString = voicing.barreInfo.toString;
+                    const topString = Math.min(fromString, toString);
+                    const bottomString = Math.max(fromString, toString);
+                    barre.style.top = `${topString * 32 + 4}px`;
+                    barre.style.height = `${(bottomString - topString) * 32 + 24}px`;
+                    barre.style.left = `${barreCol * 50 + 25}px`;
+                    grid.appendChild(barre);
+                }
+
+                container.appendChild(grid);
+
+                // Fret numbers
+                const fretNumbers = document.createElement('div');
+                fretNumbers.className = 'fret-numbers';
+                for (let fret = 0; fret < numFrets; fret++) {
+                    const numDiv = document.createElement('div');
+                    numDiv.className = 'fret-num';
+                    numDiv.textContent = fret + displayStartFret;
+                    fretNumbers.appendChild(numDiv);
+                }
+                container.appendChild(fretNumbers);
+
+                return container;
+            },
+
+            // Create multiple diagrams for a progression
+            createProgression(chords, currentIndex = 0) {
+                const container = document.createElement('div');
+                container.className = 'diagrams-container';
+                container.style.flexDirection = 'column';
+                container.style.gap = '20px';
+
+                chords.forEach((chord, i) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.opacity = i === currentIndex ? '1' : '0.4';
+                    wrapper.style.transform = i === currentIndex ? 'scale(1)' : 'scale(0.95)';
+                    wrapper.style.transition = 'all 0.3s ease';
+
+                    const diagram = this.create(chord.voicing, chord.name, chord.position);
+                    wrapper.appendChild(diagram);
+                    container.appendChild(wrapper);
+                });
+
+                return container;
+            }
+        };
+
+        // ========================================
+        // FRETBOARD COMPONENT
+        // ========================================
+        const Fretboard = {
+            // Standard tuning (high to low E)
+            tuning: [4, 11, 7, 2, 9, 4], // E B G D A E (as semitones from C)
+            frets: 13, // 0-12
+
+            // State
+            highlightedNotes: new Set(),
+            tonicNote: null,
+            showNoteNames: true,
+            showFunctions: false,
+            currentScale: [],
+            blueNoteIndex: null, // For blues scale special highlight
+            zoneStart: null, // Fret zone start
+            zoneEnd: null, // Fret zone end
+            specificPositions: null, // Array of {string, fret} for specific note display
+            chordHighlight: null, // Set of note indices to highlight as chord tones
+
+            // Initialize fretboard
+            init() {
+                this.render();
+                this.bindEvents();
+            },
+
+            // Render fretboard HTML
+            render() {
+                const fretboard = document.getElementById('fretboard');
+                fretboard.innerHTML = '';
+
+                this.tuning.forEach((openNote, stringIndex) => {
+                    const stringDiv = document.createElement('div');
+                    stringDiv.className = 'string';
+
+                    for (let fret = 0; fret < this.frets; fret++) {
+                        const noteIndex = (openNote + fret) % 12;
+                        const noteName = MusicTheory.getNoteName(noteIndex);
+
+                        const fretDiv = document.createElement('div');
+                        fretDiv.className = 'fret';
+                        fretDiv.dataset.string = stringIndex;
+                        fretDiv.dataset.fret = fret;
+                        fretDiv.dataset.note = noteIndex;
+
+                        const bubble = document.createElement('div');
+                        bubble.className = 'note-bubble';
+                        bubble.dataset.noteIndex = noteIndex;
+                        bubble.textContent = noteName;
+
+                        fretDiv.appendChild(bubble);
+                        stringDiv.appendChild(fretDiv);
+                    }
+
+                    fretboard.appendChild(stringDiv);
+                });
+            },
+
+            // Update displayed notes
+            updateDisplay() {
+                const bubbles = document.querySelectorAll('.note-bubble');
+                const frets = document.querySelectorAll('.fret');
+
+                // Reset fret zone highlighting
+                frets.forEach(fret => {
+                    fret.classList.remove('in-zone', 'zone-start', 'zone-end');
+                    const fretNum = parseInt(fret.dataset.fret);
+                    if (this.zoneStart !== null && this.zoneEnd !== null) {
+                        if (fretNum >= this.zoneStart && fretNum <= this.zoneEnd) {
+                            fret.classList.add('in-zone');
+                            if (fretNum === this.zoneStart) fret.classList.add('zone-start');
+                            if (fretNum === this.zoneEnd) fret.classList.add('zone-end');
+                        }
+                    }
+                });
+
+                bubbles.forEach((bubble) => {
+                    const noteIndex = parseInt(bubble.dataset.noteIndex);
+                    const noteName = MusicTheory.getNoteName(noteIndex);
+                    const fretEl = bubble.closest('.fret');
+                    const stringIndex = parseInt(fretEl.dataset.string);
+                    const fretNum = parseInt(fretEl.dataset.fret);
+
+                    // Reset classes
+                    bubble.classList.remove('visible', 'tonic', 'interval', 'other', 'pulse', 'blue-note', 'dimmed', 'chord-highlight');
+
+                    // Check if we're using specific positions mode
+                    if (this.specificPositions) {
+                        const isInPosition = this.specificPositions.some(
+                            p => p.string === stringIndex && p.fret === fretNum
+                        );
+
+                        if (isInPosition) {
+                            bubble.classList.add('visible');
+                            const scaleNoteForPosition = this.currentScale.find(n =>
+                                MusicTheory.getNoteIndex(n.note) === noteIndex
+                            );
+                            if (noteIndex === this.tonicNote) {
+                                bubble.classList.add('tonic', 'pulse');
+                            } else {
+                                bubble.classList.add('interval');
+                            }
+                            if (this.showFunctions && scaleNoteForPosition) {
+                                bubble.textContent = scaleNoteForPosition.degree ? scaleNoteForPosition.degree.toString() : (scaleNoteForPosition.intervalName || noteName);
+                            } else if (this.showNoteNames) {
+                                bubble.textContent = noteName;
+                            } else {
+                                bubble.textContent = '';
+                            }
+                        }
+                        return;
+                    }
+
+                    // Check if note should be highlighted
+                    const scaleNote = this.currentScale.find(n =>
+                        MusicTheory.getNoteIndex(n.note) === noteIndex
+                    );
+
+                    if (scaleNote || this.highlightedNotes.has(noteIndex)) {
+                        bubble.classList.add('visible');
+
+                        // Check if outside zone (dim it)
+                        const inZone = this.zoneStart === null ||
+                            (fretNum >= this.zoneStart && fretNum <= this.zoneEnd);
+
+                        if (!inZone) {
+                            bubble.classList.add('dimmed');
+                        }
+
+                        if (noteIndex === this.tonicNote) {
+                            bubble.classList.add('tonic');
+                            if (inZone) bubble.classList.add('pulse');
+                        } else if (this.blueNoteIndex !== null && noteIndex === this.blueNoteIndex) {
+                            bubble.classList.add('blue-note');
+                        } else if (scaleNote) {
+                            bubble.classList.add('interval');
+                        } else {
+                            bubble.classList.add('other');
+                        }
+
+                        // Highlight chord tones
+                        if (this.chordHighlight && this.chordHighlight.has(noteIndex)) {
+                            bubble.classList.add('chord-highlight');
+                        }
+
+                        // Set display text
+                        if (this.showFunctions && scaleNote) {
+                            // Show degree number (1-7) for scale notes
+                            bubble.textContent = scaleNote.degree ? scaleNote.degree.toString() : (scaleNote.intervalName || noteName);
+                        } else if (this.showNoteNames) {
+                            bubble.textContent = noteName;
+                        } else {
+                            bubble.textContent = '';
+                        }
+                    }
+                });
+
+                // Add staggered animation
+                const visibleBubbles = document.querySelectorAll('.note-bubble.visible:not(.dimmed)');
+                visibleBubbles.forEach((bubble, i) => {
+                    bubble.style.transitionDelay = `${i * 15}ms`;
+                });
+            },
+
+            // Set zone for limited display
+            setZone(start, end) {
+                this.zoneStart = start;
+                this.zoneEnd = end;
+            },
+
+            // Clear zone
+            clearZone() {
+                this.zoneStart = null;
+                this.zoneEnd = null;
+                this.specificPositions = null;
+            },
+
+            // Show specific positions only
+            showPositions(positions) {
+                this.specificPositions = positions;
+                this.updateDisplay();
+            },
+
+            // Show scale on fretboard
+            showScale(root, scaleType) {
+                this.tonicNote = typeof root === 'number' ? root : MusicTheory.getNoteIndex(root);
+                this.currentScale = MusicTheory.getScale(root, scaleType);
+                this.highlightedNotes.clear();
+                this.blueNoteIndex = null;
+                this.chordHighlight = null; // Clear chord highlight
+                this.clearZone(); // Reset zone
+                this.updateDisplay();
+            },
+
+            // Show specific interval from root
+            showInterval(root, semitones) {
+                this.tonicNote = typeof root === 'number' ? root : MusicTheory.getNoteIndex(root);
+                const targetNote = (this.tonicNote + semitones) % 12;
+                const intervalName = MusicTheory.intervalNames[semitones] || semitones.toString();
+
+                this.currentScale = [
+                    { note: MusicTheory.getNoteName(this.tonicNote), degree: 1, intervalName: '1' },
+                    { note: MusicTheory.getNoteName(targetNote), degree: 2, intervalName: intervalName }
+                ];
+                this.highlightedNotes.clear();
+                this.updateDisplay();
+            },
+
+            // Show triad on fretboard
+            showTriad(root, scaleType, degree) {
+                const triad = MusicTheory.getTriad(root, scaleType, degree);
+                this.tonicNote = MusicTheory.getNoteIndex(triad.root.note);
+
+                this.currentScale = [
+                    { note: triad.root.note, degree: 1 },
+                    { note: triad.third.note, degree: 3 },
+                    { note: triad.fifth.note, degree: 5 }
+                ];
+                this.highlightedNotes.clear();
+                this.updateDisplay();
+
+                return triad;
+            },
+
+            // Clear fretboard
+            clear() {
+                this.highlightedNotes.clear();
+                this.currentScale = [];
+                this.tonicNote = null;
+                this.chordHighlight = null;
+                this.updateDisplay();
+            },
+
+            // Bind events (toggles are handled by App.bindEvents)
+            bindEvents() {
+                // Empty - toggle events handled by App controller
+            }
+        };
+
+        // ========================================
+        // APP CONTROLLER
+        // ========================================
+        const App = {
+            // ====== CONSTANTES CONSOLIDADAS ======
+            CATEGORY_SCALES: {
+                'major': ['major'],
+                'minor': ['minor', 'harmonicMinor', 'melodicMinor'],
+                'modes': ['dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian'],
+                'pentatonic': ['pentatonicMajor', 'pentatonicMinor', 'blues', 'bluesMajor'],
+                'exotic': ['phrygianDom', 'hungarian', 'byzantine', 'japanese', 'wholeTone', 'diminished'],
+                'harmonicMinorModes': ['locrianNat6', 'ionianAug', 'dorianSharp4', 'phrygianDom', 'lydianSharp2', 'superLocrian'],
+                'melodicMinorModes': ['dorianB2', 'lydianAug', 'lydianDom', 'mixolydianB6', 'locrianNat2', 'alteredScale'],
+                'symmetric': ['wholeTone', 'diminished', 'diminishedHW', 'chromatic']
+            },
+            SCALE_NAMES: {
+                'major': 'Mayor', 'minor': 'Menor Natural', 'harmonicMinor': 'Menor Armónica',
+                'melodicMinor': 'Menor Melódica', 'dorianMinor': 'Menor Dórica',
+                'dorian': 'Dórico', 'phrygian': 'Frigio', 'lydian': 'Lidio',
+                'mixolydian': 'Mixolidio', 'locrian': 'Locrio',
+                'locrianNat6': 'Locrio ♮6', 'ionianAug': 'Jónico #5', 'dorianSharp4': 'Dórico #4',
+                'phrygianDom': 'Frigio Dominante', 'lydianSharp2': 'Lidio #2', 'superLocrian': 'Superlocrio',
+                'dorianB2': 'Dórico ♭2', 'lydianAug': 'Lidio #5', 'lydianDom': 'Lidio Dominante',
+                'mixolydianB6': 'Mixolidio ♭6', 'locrianNat2': 'Locrio ♮2', 'alteredScale': 'Alterada',
+                'pentatonicMajor': 'Pentatónica Mayor', 'pentatonicMinor': 'Pentatónica Menor',
+                'blues': 'Blues', 'bluesMajor': 'Blues Mayor',
+                'wholeTone': 'Tonos Enteros', 'diminished': 'Disminuida (T-S)',
+                'diminishedHW': 'Disminuida (S-T)', 'chromatic': 'Cromática',
+                'hungarian': 'Húngara Menor', 'hungarianMajor': 'Húngara Mayor',
+                'byzantine': 'Bizantina', 'arabic': 'Árabe', 'japanese': 'Japonesa',
+                'hirajoshi': 'Hirajoshi', 'egyptian': 'Egipcia', 'prometheus': 'Prometheus',
+                'persian': 'Persa', 'enigmatic': 'Enigmática', 'neapolitan': 'Napolitana',
+                'bebop': 'Bebop Dominante', 'bebopMajor': 'Bebop Mayor'
+            },
+
+            // ====== ESTADO ======
+            currentRoot: 0,
+            currentScale: 'major',
+            currentLevel: 1,
+            currentInterval: 4,
+            currentChord: null,
+            currentMode: 1,
+            currentPentatonic: 'minor',
+            currentBox: 0,
+            currentChord7: null,
+            currentProgression: null,
+            currentProgressionChordIndex: 0,
+            currentCAGED: 'C',
+            currentScaleCategory: 'major',
+            currentLabScale: 'major',
+            currentLabCategory: 'major',
+            currentLabHarmChord: null,
+            compareScale: null,
+
+            // ====== HELPERS ======
+            resetState(except = []) {
+                const defaults = {
+                    currentInterval: null, currentChord: null, currentMode: null,
+                    currentPentatonic: null, currentChord7: null, currentProgression: null, currentCAGED: null
+                };
+                Object.keys(defaults).forEach(key => {
+                    if (!except.includes(key)) this[key] = defaults[key];
+                });
+            },
+
+            hideUIElements() {
+                document.getElementById('diagramsContainer').classList.add('hidden');
+                document.getElementById('boxSelector').classList.add('hidden');
+            },
+
+            clearInfoPanel() {
+                const panel = document.getElementById('infoPanel');
+                if (panel) panel.innerHTML = '';
+            },
+
+            updateDisplay(title, subtitle) {
+                document.getElementById('displayTitle').textContent = title;
+                document.getElementById('displaySubtitle').textContent = subtitle;
+            },
+
+            init() {
+                Fretboard.init();
+                this.bindEvents();
+                this.loadLevel(1); // Start with intervals
+            },
+
+            bindEvents() {
+                // Root select
+                document.getElementById('rootSelect').addEventListener('change', (e) => {
+                    this.currentRoot = parseInt(e.target.value);
+                    this.refreshCurrentLevel();
+                });
+
+                // Toggle switches
+                document.getElementById('showNotesToggle').addEventListener('click', (e) => {
+                    e.currentTarget.classList.toggle('active');
+                    Fretboard.showNoteNames = e.currentTarget.classList.contains('active');
+                    Fretboard.updateDisplay();
+                });
+
+                document.getElementById('showFunctionsToggle').addEventListener('click', (e) => {
+                    e.currentTarget.classList.toggle('active');
+                    Fretboard.showFunctions = e.currentTarget.classList.contains('active');
+                    Fretboard.updateDisplay();
+                });
+
+                // Level navigation buttons
+                document.querySelectorAll('.level-nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const level = parseInt(e.currentTarget.dataset.level);
+                        this.loadLevel(level);
+                    });
+                });
+            },
+
+            loadLevel(level) {
+                this.currentLevel = level;
+
+                // Update sidebar active state
+                document.querySelectorAll('.level-nav-btn').forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.dataset.level) === level);
+                });
+
+                // Hide diagrams by default
+                document.getElementById('diagramsContainer').classList.add('hidden');
+                document.getElementById('boxSelector').classList.add('hidden');
+
+                // Load appropriate template into control panel
+                const controlPanel = document.getElementById('controlPanel');
+                const templates = {
+                    1: 'tpl-intervals',
+                    2: 'tpl-scales',
+                    3: 'tpl-chords',
+                    4: 'tpl-modes',
+                    5: 'tpl-pentatonics',
+                    6: 'tpl-circle',
+                    7: 'tpl-progressions',
+                    8: 'tpl-seventh',
+                    9: 'tpl-caged'
+                };
+
+                const tplId = templates[level];
+                const tpl = document.getElementById(tplId);
+                if (tpl) {
+                    controlPanel.innerHTML = '';
+                    controlPanel.appendChild(tpl.content.cloneNode(true));
+                    this.bindLevelEvents(level);
+                }
+
+                this.refreshCurrentLevel();
+            },
+
+            bindLevelEvents(level) {
+                const controlPanel = document.getElementById('controlPanel');
+
+                switch(level) {
+                    case 1: // Intervals
+                        controlPanel.querySelectorAll('.interval-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('.interval-btn').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentInterval = parseInt(e.currentTarget.dataset.interval);
+                                this.showInterval();
+                            });
+                        });
+                        // Set default active
+                        controlPanel.querySelector(`[data-interval="${this.currentInterval}"]`)?.classList.add('active');
+                        break;
+
+                    case 2: // Scales
+                        this.bindScaleEvents(controlPanel);
+                        break;
+
+                    case 3: // Chords
+                        controlPanel.querySelectorAll('.chord-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('.chord-btn').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentChord = parseInt(e.currentTarget.dataset.chord);
+                                this.showChord();
+                            });
+                        });
+                        break;
+
+                    case 4: // Modes
+                        controlPanel.querySelectorAll('.mode-btn-simple').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('.mode-btn-simple').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentMode = parseInt(e.currentTarget.dataset.mode);
+                                this.showMode();
+                            });
+                        });
+                        break;
+
+                    case 5: // Pentatonics
+                        controlPanel.querySelectorAll('[data-penta]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('[data-penta]').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentPentatonic = e.currentTarget.dataset.penta;
+                                this.showPentatonic();
+                            });
+                        });
+                        controlPanel.querySelectorAll('[data-box]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('[data-box]').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentBox = parseInt(e.currentTarget.dataset.box);
+                                this.showPentatonic();
+                            });
+                        });
+                        break;
+
+                    case 6: // Circle of Fifths
+                        this.renderCircleOfFifths();
+                        break;
+
+                    case 7: // Progressions
+                        controlPanel.querySelectorAll('.progression-btn-simple').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('.progression-btn-simple').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentProgression = e.currentTarget.dataset.progression;
+                                this.currentProgressionChordIndex = 0;
+                                this.showProgression();
+                            });
+                        });
+                        break;
+
+                    case 8: // Seventh chords
+                        controlPanel.querySelectorAll('[data-chord7]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('[data-chord7]').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentChord7 = parseInt(e.currentTarget.dataset.chord7);
+                                this.showSeventhChord();
+                            });
+                        });
+                        break;
+
+                    case 9: // CAGED
+                        controlPanel.querySelectorAll('[data-caged]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('[data-caged]').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this.currentCAGED = e.currentTarget.dataset.caged;
+                                this.showCAGEDShape();
+                            });
+                        });
+                        break;
+                }
+            },
+
+            bindScaleEvents(container) {
+                // Category buttons
+                container.querySelectorAll('.scale-cat-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        container.querySelectorAll('.scale-cat-btn').forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        this.currentScaleCategory = e.currentTarget.dataset.category;
+                        this.renderScaleButtons(container);
+                    });
+                });
+
+                this.renderScaleButtons(container);
+            },
+
+            renderScaleButtons(container) {
+                const scaleList = container.querySelector('#scaleListMain');
+                if (!scaleList) return;
+
+                const scales = this.CATEGORY_SCALES[this.currentScaleCategory] || [];
+                scaleList.innerHTML = '';
+
+                scales.forEach(scaleKey => {
+                    const btn = document.createElement('button');
+                    btn.className = `mode-btn-simple ${scaleKey === this.currentScale ? 'active' : ''}`;
+                    btn.dataset.scale = scaleKey;
+                    btn.textContent = this.SCALE_NAMES[scaleKey] || scaleKey;
+                    btn.addEventListener('click', () => {
+                        scaleList.querySelectorAll('.mode-btn-simple').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentScale = scaleKey;
+                        this.showScale();
+                    });
+                    scaleList.appendChild(btn);
+                });
+            },
+
+            refreshCurrentLevel() {
+                switch(this.currentLevel) {
+                    case 1: this.showIntervals(); break;
+                    case 2: this.showScale(); break;
+                    case 3: this.showHarmonization(); break;
+                    case 4: this.showMode(); break;
+                    case 5: this.showPentatonic(); break;
+                    case 6: this.showCircleOfFifths(); break;
+                    case 7: this.showProgressions(); break;
+                    case 8: this.showSeventhChords(); break;
+                    case 9: this.showCAGEDShape(); break;
+                    default: this.showScale();
+                }
+            },
+
+            showScale() {
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const info = MusicTheory.scaleInfo[this.currentScale];
+
+                // Hide diagrams and box selector for regular scale view
+                document.getElementById('diagramsContainer').classList.add('hidden');
+                document.getElementById('boxSelector').classList.add('hidden');
+
+                Fretboard.showScale(this.currentRoot, this.currentScale);
+
+                const noteCount = MusicTheory.scales[this.currentScale].length;
+                document.getElementById('displayTitle').textContent =
+                    `Escala de ${rootName} ${this.SCALE_NAMES[this.currentScale] || this.currentScale}`;
+                document.getElementById('displaySubtitle').textContent =
+                    `${noteCount} notas - Fórmula: ${MusicTheory.scales[this.currentScale].map(i => MusicTheory.intervalNames[i]).join(' - ')}`;
+
+                // Show detailed scale info panel
+                this.showScaleInfoPanel(info, this.currentScale);
+            },
+
+            showScaleInfoPanel(info, scaleKey) {
+                const panel = document.getElementById('infoPanel');
+                if (!panel) return;
+
+                if (!info) {
+                    panel.innerHTML = '';
+                    return;
+                }
+
+                // Generate brightness bar (0-7 scale, Locrio=0, Lidio=7)
+                const brightness = info.brightness !== undefined ? info.brightness : 4;
+                const brightnessPercent = (brightness / 7) * 100;
+                const brightnessLabels = ['Muy Oscuro', 'Oscuro', 'Semi-Oscuro', 'Neutral', 'Semi-Brillante', 'Brillante', 'Muy Brillante', 'Máximo Brillo'];
+                const brightnessLabel = brightnessLabels[brightness] || 'Neutral';
+
+                // Generate usage context tags
+                const usageContextHTML = info.usageContext ?
+                    info.usageContext.map(ctx => `<span class="context-tag">${ctx}</span>`).join('')
+                    : '';
+
+                // Generate characteristic note display
+                const charNote = info.characteristicNote || '-';
+
+                // Build the panel HTML with new styling
+                panel.innerHTML = `
+                    <div class="scale-info-box">
+                        <!-- Header with emotion -->
+                        <div class="info-header">
+                            <div class="info-title">${info.name || scaleKey}</div>
+                            <div class="info-emotion">"${info.emotion || ''}"</div>
+                        </div>
+
+                        <!-- Main info grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Left column -->
+                            <div class="space-y-3">
+                                <!-- Brightness meter -->
+                                <div class="info-section">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="info-label" style="margin-bottom: 0;">Brillo Modal</span>
+                                        <span class="info-value" style="font-size: 13px; color: #d4a574;">${brightness}/7 - ${brightnessLabel}</span>
+                                    </div>
+                                    <div class="brightness-bar">
+                                        <div class="brightness-fill" style="width: ${brightnessPercent}%;"></div>
+                                    </div>
+                                    <div class="flex justify-between mt-2" style="font-size: 10px; color: #666;">
+                                        <span>Locrio</span>
+                                        <span>Lidio</span>
+                                    </div>
+                                </div>
+
+                                <!-- Characteristic Note -->
+                                <div class="info-section accent">
+                                    <div class="info-label">Nota Característica</div>
+                                    <div class="info-value highlight" style="font-size: 22px;">${charNote}</div>
+                                    <div class="info-description">El intervalo que define su sonido único</div>
+                                </div>
+
+                                <!-- Formula -->
+                                <div class="info-section">
+                                    <div class="info-label">Fórmula Interválica</div>
+                                    <div class="info-value" style="font-size: 14px; letter-spacing: 2px;">${info.formula || '-'}</div>
+                                </div>
+                            </div>
+
+                            <!-- Right column -->
+                            <div class="space-y-3">
+                                <!-- Usage -->
+                                <div class="info-section">
+                                    <div class="info-label">Uso Práctico</div>
+                                    <p style="font-family: 'Barlow Condensed', sans-serif; font-size: 14px; color: #fafafa; line-height: 1.6;">${info.usage || ''}</p>
+                                </div>
+
+                                <!-- Usage Context Tags -->
+                                <div class="info-section">
+                                    <div class="info-label">Estilos y Contextos</div>
+                                    <div class="flex flex-wrap" style="margin-top: 8px;">${usageContextHTML || '<span style="color: #888; font-size: 13px;">-</span>'}</div>
+                                </div>
+
+                                ${info.parentScale ? `
+                                <!-- Parent Scale Info -->
+                                <div class="parent-scale-box">
+                                    <div class="info-label" style="color: #dc2626;">Escala Madre</div>
+                                    <p style="font-family: 'Barlow Condensed', sans-serif; font-size: 14px; color: #fafafa;">
+                                        Deriva del grado <span style="font-weight: 700; color: #dc2626;">${info.degree || '?'}</span>
+                                        de la escala <span style="font-weight: 700; color: #dc2626;">${MusicTheory.scaleInfo[info.parentScale]?.name || info.parentScale}</span>
+                                    </p>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Chord construction explanation -->
+                        ${info.chordTypes ? `
+                        <div style="border-top: 1px solid #333; padding-top: 16px; margin-top: 16px;">
+                            <div class="info-label">Armonización - Cómo nacen los acordes</div>
+                            <p style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; color: #e5e5e5; margin: 8px 0 12px 0;">Cada grado de la escala genera un acorde al apilar terceras. El tipo depende de los intervalos disponibles.</p>
+                            <div class="flex flex-wrap gap-2" id="harmonizationChords">
+                                ${info.chordTypes.map((type, i) => {
+                                    const romanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+                                    const typeName = type === 'maj' ? 'Mayor' : type === 'min' ? 'menor' : type === 'dim' ? 'dim' : type === 'aug' ? 'aug' : type;
+                                    return `<button class="harm-chord-btn type-${type}" data-degree="${i + 1}" data-quality="${type}">
+                                        <div style="font-size: 15px; font-weight: 700;">${romanNumerals[i] || (i+1)}</div>
+                                        <div class="chord-quality">${typeName}</div>
+                                    </button>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // Bind chord click events
+                setTimeout(() => {
+                    const container = document.getElementById('harmonizationChords');
+                    if (container) {
+                        container.querySelectorAll('[data-degree]').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const degree = parseInt(btn.dataset.degree);
+                                this.showHarmonizationChord(scaleKey, degree);
+                            });
+                        });
+                    }
+                }, 0);
+            },
+
+            showHarmonizationChord(scaleKey, degree) {
+                const harmonization = MusicTheory.getScaleHarmonization(this.currentRoot, scaleKey);
+                if (!harmonization || !harmonization[degree - 1]) return;
+
+                const chord = harmonization[degree - 1];
+                const chordRootIndex = MusicTheory.getNoteIndex(chord.root);
+                const qualityNames = { maj: 'Mayor', min: 'menor', dim: 'disminuido', aug: 'aumentado' };
+
+                // Keep the scale visible, just highlight chord tones
+                Fretboard.showScale(this.currentRoot, scaleKey);
+
+                // Set chord highlight for the chord tones
+                Fretboard.chordHighlight = new Set([
+                    MusicTheory.getNoteIndex(chord.root),
+                    MusicTheory.getNoteIndex(chord.third),
+                    MusicTheory.getNoteIndex(chord.fifth)
+                ]);
+                Fretboard.updateDisplay();
+
+                // Show chord diagram if available
+                const voicingKey = chord.quality === 'min' ? chord.root + 'm' : chord.root;
+                let voicing = MusicTheory.chordVoicings[voicingKey];
+                let position = 0;
+
+                if (!voicing && (chord.quality === 'maj' || chord.quality === 'min')) {
+                    const shape = chord.quality === 'min' ? 'E_shape_minor' : 'E_shape_major';
+                    voicing = MusicTheory.chordVoicings[shape];
+                    position = (chordRootIndex - 4 + 12) % 12;
+                }
+
+                const diagramContainer = document.getElementById('diagramsContainer');
+                if (diagramContainer && voicing) {
+                    diagramContainer.innerHTML = '';
+                    diagramContainer.classList.remove('hidden');
+                    const chordSuffix = chord.quality === 'min' ? 'm' : chord.quality === 'dim' ? '°' : chord.quality === 'aug' ? '+' : '';
+                    const chordName = chord.root + chordSuffix;
+                    const diagram = ChordDiagram.create(voicing, chordName, position);
+                    diagramContainer.appendChild(diagram);
+                } else if (diagramContainer) {
+                    diagramContainer.classList.add('hidden');
+                }
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const info = MusicTheory.scaleInfo[scaleKey];
+                const chordSuffix = chord.quality === 'min' ? 'm' : chord.quality === 'dim' ? '°' : chord.quality === 'aug' ? '+' : '';
+                const romanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+
+                this.updateDisplay(
+                    `${romanNumerals[degree - 1]} - ${chord.root}${chordSuffix} (${qualityNames[chord.quality] || chord.quality})`,
+                    `Grado ${degree} de ${rootName} ${info?.name || scaleKey} | Notas: ${chord.root} - ${chord.third} - ${chord.fifth}`
+                );
+            },
+
+            showIntervals() {
+                this.resetState(['currentInterval']);
+                this.hideUIElements();
+                if (this.currentInterval === null) {
+                    this.currentInterval = 4;
+                    document.querySelector('[data-interval="4"]')?.classList.add('active');
+                }
+                this.showInterval();
+            },
+
+            showInterval() {
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const intervalName = MusicTheory.intervalNames[this.currentInterval];
+                const targetNote = MusicTheory.getNoteName(this.currentRoot + this.currentInterval);
+
+                Fretboard.clearZone();
+                Fretboard.showInterval(this.currentRoot, this.currentInterval);
+
+                this.updateDisplay(
+                    `${intervalName} desde ${rootName}`,
+                    `${rootName} → ${targetNote} (${this.currentInterval} semitonos)`
+                );
+                this.clearInfoPanel();
+            },
+
+            showMajorScale() {
+                this.resetState();
+                this.currentScale = 'major';
+                const scaleSelect = document.getElementById('scaleSelect');
+                if (scaleSelect) scaleSelect.value = 'major';
+                this.showScale();
+            },
+
+            showHarmonization() {
+                this.resetState(['currentChord']);
+                if (this.currentChord === null) {
+                    this.currentChord = 1;
+                    document.querySelector('[data-chord="1"]')?.classList.add('active');
+                }
+                this.showChord();
+            },
+
+            showChord() {
+                const triad = MusicTheory.getTriad(this.currentRoot, 'major', this.currentChord);
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const chordRoot = triad.root.note;
+
+                const qualityNames = { maj: 'Mayor', min: 'menor', dim: 'disminuido' };
+                const voicingKey = triad.quality === 'min' ? `${chordRoot}m` : chordRoot;
+
+                // Show chord diagram
+                const diagramContainer = document.getElementById('diagramsContainer');
+                diagramContainer.innerHTML = '';
+                diagramContainer.classList.remove('hidden');
+
+                // Get voicing - use open chord if available, otherwise barre
+                let voicing = MusicTheory.chordVoicings[voicingKey];
+                let position = 0;
+
+                if (!voicing) {
+                    // Use barre chord shape - E shape root is on 6th string (E = index 4)
+                    const shape = triad.quality === 'min' ? 'E_shape_minor' : 'E_shape_major';
+                    voicing = MusicTheory.chordVoicings[shape];
+                    // Calculate position: distance from E (4) to target note
+                    const targetIndex = MusicTheory.getNoteIndex(chordRoot);
+                    position = (targetIndex - 4 + 12) % 12;
+                }
+
+                const chordName = triad.quality === 'min' ? `${chordRoot}m` : chordRoot;
+                const diagram = ChordDiagram.create(voicing, chordName, position);
+                diagramContainer.appendChild(diagram);
+
+                // Show chord notes on fretboard with zone
+                Fretboard.tonicNote = MusicTheory.getNoteIndex(chordRoot);
+                Fretboard.currentScale = [
+                    { note: triad.root.note, degree: 1 },
+                    { note: triad.third.note, degree: 3 },
+                    { note: triad.fifth.note, degree: 5 }
+                ];
+                Fretboard.highlightedNotes.clear();
+                Fretboard.setZone(position, position + 4);
+                Fretboard.specificPositions = null;
+                Fretboard.updateDisplay();
+
+                this.updateDisplay(
+                    `${triad.roman} de ${rootName} Mayor: ${chordName} ${qualityNames[triad.quality]}`,
+                    `Notas: ${triad.root.note} (T) - ${triad.third.note} (3ª) - ${triad.fifth.note} (5ª)`
+                );
+                document.getElementById('boxSelector').classList.add('hidden');
+                this.clearInfoPanel();
+            },
+
+            showModes() {
+                this.resetState(['currentMode']);
+                this.hideUIElements();
+                if (this.currentMode === null) {
+                    this.currentMode = 1;
+                    document.querySelector('[data-mode="1"]')?.classList.add('active');
+                }
+                this.showMode();
+            },
+
+            showMode() {
+                const modeNames = ['Jónico', 'Dórico', 'Frigio', 'Lidio', 'Mixolidio', 'Eólico', 'Locrio'];
+                const scaleTypes = ['major', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'minor', 'locrian'];
+                const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                this.currentScale = scaleTypes[this.currentMode - 1];
+
+                Fretboard.showScale(this.currentRoot, this.currentScale);
+
+                const scaleSelect = document.getElementById('scaleSelect');
+                if (scaleSelect) scaleSelect.value = this.currentScale;
+
+                this.updateDisplay(
+                    `${rootName} ${modeNames[this.currentMode - 1]}`,
+                    `Modo ${this.currentMode} - Grado ${romanNumerals[this.currentMode - 1]} de la escala mayor relativa`
+                );
+                // Mostrar info del modo
+                const info = MusicTheory.scaleInfo[this.currentScale];
+                this.showScaleInfoPanel(info, this.currentScale);
+            },
+
+            // ========== PENTATÓNICAS ==========
+
+            showPentatonics() {
+                this.resetState(['currentPentatonic']);
+                if (this.currentPentatonic === null) {
+                    this.currentPentatonic = 'minor';
+                    document.querySelector('[data-penta="minor"]')?.classList.add('active');
+                }
+                this.currentBox = 0;
+                this.showPentatonic();
+            },
+
+            showPentatonic() {
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const scaleMap = {
+                    'minor': 'pentatonicMinor',
+                    'major': 'pentatonicMajor',
+                    'blues': 'blues'
+                };
+                const nameMap = {
+                    'minor': 'Pentatónica Menor',
+                    'major': 'Pentatónica Mayor',
+                    'blues': 'Blues'
+                };
+
+                const scaleType = scaleMap[this.currentPentatonic];
+
+                // Hide chord diagrams
+                document.getElementById('diagramsContainer').classList.add('hidden');
+
+                // Show box selector for pentatonic minor
+                const boxSelector = document.getElementById('boxSelector');
+                if (this.currentPentatonic === 'minor' || this.currentPentatonic === 'blues') {
+                    boxSelector.classList.remove('hidden');
+                    boxSelector.innerHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = `box-btn ${i === this.currentBox ? 'active' : ''}`;
+                        btn.textContent = i + 1;
+                        btn.addEventListener('click', () => {
+                            this.currentBox = i;
+                            document.querySelectorAll('.box-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            this.showPentatonic();
+                        });
+                        boxSelector.appendChild(btn);
+                    }
+
+                    // Show specific box
+                    const boxes = MusicTheory.pentatonicBoxes.minor;
+                    const box = boxes[this.currentBox];
+                    const rootFret = this.currentRoot; // Simplified: root on 6th string
+
+                    // Calculate positions for this box
+                    const positions = [];
+                    box.pattern.forEach(p => {
+                        p.frets.forEach(f => {
+                            if (f >= 0) {
+                                const actualFret = (box.startFret + f + rootFret) % 12;
+                                positions.push({ string: p.string, fret: actualFret });
+                                // Also add octave position if in range
+                                if (actualFret + 12 < 13) {
+                                    positions.push({ string: p.string, fret: actualFret + 12 });
+                                }
+                            }
+                        });
+                    });
+
+                    // Set zone
+                    const startFret = (box.startFret + rootFret) % 12;
+                    Fretboard.tonicNote = this.currentRoot;
+                    Fretboard.currentScale = MusicTheory.getScale(this.currentRoot, scaleType);
+                    Fretboard.setZone(Math.max(0, startFret), Math.min(12, startFret + 4));
+
+                    if (this.currentPentatonic === 'blues') {
+                        Fretboard.blueNoteIndex = (this.currentRoot + 6) % 12;
+                    } else {
+                        Fretboard.blueNoteIndex = null;
+                    }
+
+                    Fretboard.updateDisplay();
+
+                    this.updateDisplay(
+                        `${rootName} ${nameMap[this.currentPentatonic]} - ${box.name}`,
+                        `Posición ${this.currentBox + 1} de 5 | Trastes ${startFret}-${startFret + 3}`
+                    );
+                } else {
+                    boxSelector.classList.add('hidden');
+                    Fretboard.showScale(this.currentRoot, scaleType);
+                    this.updateDisplay(
+                        `${rootName} ${nameMap[this.currentPentatonic]}`,
+                        `5 notas - Relativa de ${MusicTheory.getNoteName((this.currentRoot + 3) % 12)} Pent. Menor`
+                    );
+                }
+                // Mostrar info de la escala pentatónica/blues
+                const info = MusicTheory.scaleInfo[scaleType];
+                this.showScaleInfoPanel(info, scaleType);
+            },
+
+            // ========== CÍRCULO DE QUINTAS ==========
+
+            showCircleOfFifths() {
+                this.resetState();
+                this.hideUIElements();
+                Fretboard.showScale(this.currentRoot, 'major');
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const relativeMinor = MusicTheory.getNoteName(MusicTheory.getRelativeMinor(this.currentRoot));
+
+                this.updateDisplay(
+                    `Tonalidad: ${rootName} Mayor`,
+                    `Relativo menor: ${relativeMinor}m | Click en el círculo para cambiar tonalidad`
+                );
+                this.renderCircleOfFifths();
+                this.clearInfoPanel();
+            },
+
+            renderCircleOfFifths() {
+                // Try both possible container IDs
+                let container = document.getElementById('circleOfFifthsMain');
+                if (!container) container = document.getElementById('circleOfFifths');
+                if (!container) return;
+
+                container.innerHTML = '';
+                const centerX = 110;
+                const centerY = 110;
+                const outerRadius = 90;
+                const innerRadius = 60;
+
+                // Major keys (outer circle)
+                MusicTheory.circleOfFifths.forEach((noteIndex, i) => {
+                    const angle = (i * 30 - 90) * Math.PI / 180;
+                    const x = centerX + outerRadius * Math.cos(angle) - 16;
+                    const y = centerY + outerRadius * Math.sin(angle) - 16;
+
+                    const btn = document.createElement('button');
+                    btn.className = `circle-note ${noteIndex === this.currentRoot ? 'active' : ''}`;
+                    btn.style.left = `${x}px`;
+                    btn.style.top = `${y}px`;
+                    btn.textContent = MusicTheory.circleOfFifthsLabels[i];
+                    btn.dataset.note = noteIndex;
+                    btn.addEventListener('click', () => {
+                        this.currentRoot = noteIndex;
+                        document.getElementById('rootSelect').value = noteIndex;
+                        this.showCircleOfFifths();
+                    });
+                    container.appendChild(btn);
+                });
+
+                // Minor keys (inner circle)
+                MusicTheory.circleOfFifths.forEach((noteIndex, i) => {
+                    const minorNote = MusicTheory.getRelativeMinor(noteIndex);
+                    const angle = (i * 30 - 90) * Math.PI / 180;
+                    const x = centerX + innerRadius * Math.cos(angle) - 13;
+                    const y = centerY + innerRadius * Math.sin(angle) - 13;
+
+                    const minorLabels = ['Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'Ebm', 'Bbm', 'Fm', 'Cm', 'Gm', 'Dm'];
+                    const btn = document.createElement('button');
+                    const isRelativeOfCurrent = minorNote === MusicTheory.getRelativeMinor(this.currentRoot);
+                    btn.className = `circle-note minor ${isRelativeOfCurrent ? 'active' : ''}`;
+                    btn.style.left = `${x}px`;
+                    btn.style.top = `${y}px`;
+                    btn.textContent = minorLabels[i];
+                    btn.dataset.note = minorNote;
+                    btn.addEventListener('click', () => {
+                        this.currentRoot = MusicTheory.getRelativeMajor(minorNote);
+                        document.getElementById('rootSelect').value = this.currentRoot;
+                        this.showCircleOfFifths();
+                    });
+                    container.appendChild(btn);
+                });
+            },
+
+            // ========== ACORDES DE SÉPTIMA ==========
+
+            showSeventhChords() {
+                this.resetState(['currentChord7']);
+                if (this.currentChord7 === null) {
+                    this.currentChord7 = 1;
+                    document.querySelector('[data-chord7="1"]')?.classList.add('active');
+                }
+                this.showSeventhChord();
+            },
+
+            showSeventhChord() {
+                const chord = MusicTheory.getSeventhChord(this.currentRoot, this.currentChord7);
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const chordRootIndex = MusicTheory.getNoteIndex(chord.root);
+
+                // Hide box selector
+                document.getElementById('boxSelector').classList.add('hidden');
+
+                // Show chord diagram
+                const diagramContainer = document.getElementById('diagramsContainer');
+                diagramContainer.innerHTML = '';
+                diagramContainer.classList.remove('hidden');
+
+                // Get appropriate voicing
+                const voicingTypes = {
+                    1: 'maj7_E', 2: 'm7_A', 3: 'm7_E', 4: 'maj7_A',
+                    5: 'dom7_E', 6: 'm7_A', 7: 'm7b5_E'
+                };
+                const voicingKey = voicingTypes[this.currentChord7];
+                const voicing = MusicTheory.seventhVoicings[voicingKey];
+                // E shapes: root on 6th string (E=4), A shapes: root on 5th string (A=9)
+                const isAShape = voicingKey.includes('_A');
+                const baseNote = isAShape ? 9 : 4; // A=9, E=4
+                const position = (chordRootIndex - baseNote + 12) % 12;
+
+                const chordName = `${chord.root}${chord.quality}`;
+                const diagram = ChordDiagram.create(voicing, chordName, position);
+                diagramContainer.appendChild(diagram);
+
+                // Show chord on fretboard with zone
+                Fretboard.tonicNote = chordRootIndex;
+                Fretboard.currentScale = chord.notes.map((n, i) => ({
+                    note: n.note,
+                    degree: i + 1
+                }));
+                Fretboard.highlightedNotes.clear();
+                Fretboard.setZone(position, position + 4);
+                Fretboard.specificPositions = null;
+                Fretboard.updateDisplay();
+
+                const romanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+                this.updateDisplay(
+                    `${romanNumerals[this.currentChord7 - 1]}${chord.quality} de ${rootName} Mayor: ${chord.root}${chord.quality}`,
+                    `Notas: ${chord.notes.map(n => n.note).join(' - ')} | Tipo: ${chord.quality}`
+                );
+                this.clearInfoPanel();
+            },
+
+            // ========== PROGRESIONES ==========
+
+            showProgressions() {
+                this.resetState(['currentProgression']);
+                if (!this.currentProgression) {
+                    this.currentProgression = 'pop';
+                    document.querySelector('[data-progression="pop"]')?.classList.add('active');
+                }
+                this.showProgression();
+            },
+
+            showProgression() {
+                if (!this.currentProgression) return;
+
+                const prog = MusicTheory.progressions[this.currentProgression];
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+
+                // Hide box selector
+                document.getElementById('boxSelector').classList.add('hidden');
+
+                // Build all chords for the progression
+                const chords = prog.degrees.map(degree => {
+                    let chordRoot, quality, triad;
+
+                    if (degree === -7) {
+                        chordRoot = MusicTheory.getNoteName((this.currentRoot + 10) % 12);
+                        quality = 'maj';
+                        triad = {
+                            root: { note: chordRoot },
+                            third: { note: MusicTheory.getNoteName((this.currentRoot + 10 + 4) % 12) },
+                            fifth: { note: MusicTheory.getNoteName((this.currentRoot + 10 + 7) % 12) }
+                        };
+                    } else {
+                        triad = MusicTheory.getTriad(this.currentRoot, 'major', degree);
+                        chordRoot = triad.root.note;
+                        quality = triad.quality;
+                    }
+
+                    const voicingKey = quality === 'min' ? `${chordRoot}m` : chordRoot;
+                    let voicing = MusicTheory.chordVoicings[voicingKey];
+                    let position = 0;
+
+                    if (!voicing) {
+                        const shape = quality === 'min' ? 'E_shape_minor' : 'E_shape_major';
+                        voicing = MusicTheory.chordVoicings[shape];
+                        // Calculate position: distance from E (4) to target note
+                        const targetIndex = MusicTheory.getNoteIndex(chordRoot);
+                        position = (targetIndex - 4 + 12) % 12;
+                    }
+
+                    return {
+                        name: quality === 'min' ? `${chordRoot}m` : chordRoot,
+                        voicing,
+                        position,
+                        triad
+                    };
+                });
+
+                // Show all chord diagrams
+                const diagramContainer = document.getElementById('diagramsContainer');
+                diagramContainer.innerHTML = '';
+                diagramContainer.classList.remove('hidden');
+
+                chords.forEach((chord, i) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.transition = 'all 0.3s ease';
+                    wrapper.style.cursor = 'pointer';
+
+                    if (i === this.currentProgressionChordIndex) {
+                        wrapper.style.transform = 'scale(1)';
+                        wrapper.style.opacity = '1';
+                    } else {
+                        wrapper.style.transform = 'scale(0.8)';
+                        wrapper.style.opacity = '0.4';
+                    }
+
+                    wrapper.addEventListener('click', () => {
+                        this.currentProgressionChordIndex = i;
+                        this.showProgression();
+                    });
+
+                    const diagram = ChordDiagram.create(chord.voicing, chord.name, chord.position);
+                    wrapper.appendChild(diagram);
+                    diagramContainer.appendChild(wrapper);
+                });
+
+                // Show current chord on fretboard
+                const currentChord = chords[this.currentProgressionChordIndex];
+                const chordRootIndex = MusicTheory.getNoteIndex(currentChord.name.replace('m', ''));
+
+                Fretboard.tonicNote = chordRootIndex;
+                Fretboard.currentScale = [
+                    { note: currentChord.triad.root.note, degree: 1 },
+                    { note: currentChord.triad.third.note, degree: 3 },
+                    { note: currentChord.triad.fifth.note, degree: 5 }
+                ];
+                Fretboard.highlightedNotes.clear();
+                Fretboard.setZone(currentChord.position, currentChord.position + 4);
+                Fretboard.specificPositions = null;
+                Fretboard.updateDisplay();
+
+                this.updateDisplay(
+                    `Progresión ${this.currentProgression} en ${rootName}`,
+                    `${prog.name} | Acorde ${this.currentProgressionChordIndex + 1}/${prog.degrees.length}: ${currentChord.name}`
+                );
+                this.clearInfoPanel();
+            },
+
+            // ========== SISTEMA CAGED ==========
+
+            showCAGED() {
+                this.resetState(['currentCAGED']);
+                if (this.currentCAGED === null) {
+                    this.currentCAGED = 'C';
+                    document.querySelector('[data-caged="C"]')?.classList.add('active');
+                }
+                this.showCAGEDShape();
+            },
+
+            showCAGEDShape() {
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+
+                // Get CAGED position transposed to current root
+                const cagedPos = MusicTheory.cagedPositions[this.currentCAGED];
+
+                // Calculate transposition for current root
+                const transposition = this.currentRoot; // C = 0, so direct transposition
+
+                // Hide box selector
+                document.getElementById('boxSelector').classList.add('hidden');
+
+                // Show chord diagram
+                const diagramContainer = document.getElementById('diagramsContainer');
+                diagramContainer.innerHTML = '';
+                diagramContainer.classList.remove('hidden');
+
+                // Get base chord voicing for this shape
+                const baseVoicing = MusicTheory.chordVoicings[this.currentCAGED];
+                const position = this.currentCAGED === 'C' ? transposition :
+                    this.currentCAGED === 'A' ? transposition + 3 :
+                    this.currentCAGED === 'G' ? transposition + 5 :
+                    this.currentCAGED === 'E' ? transposition + 8 :
+                    transposition + 10; // D
+
+                // Adjust position to stay in range
+                const adjustedPosition = position % 12;
+
+                const diagram = ChordDiagram.create(baseVoicing, rootName, adjustedPosition);
+                diagramContainer.appendChild(diagram);
+
+                // Show major scale with zone highlighting
+                Fretboard.tonicNote = this.currentRoot;
+                Fretboard.currentScale = MusicTheory.getScale(this.currentRoot, 'major');
+                Fretboard.highlightedNotes.clear();
+
+                // Set zone based on CAGED position
+                const zoneStart = Math.max(0, adjustedPosition);
+                const zoneEnd = Math.min(12, adjustedPosition + 4);
+                Fretboard.setZone(zoneStart, zoneEnd);
+                Fretboard.specificPositions = null;
+                Fretboard.updateDisplay();
+
+                this.updateDisplay(
+                    `${rootName} Mayor - Forma ${this.currentCAGED}`,
+                    `Posición: Traste ${adjustedPosition} | Orden: C → A → G → E → D → C...`
+                );
+                this.clearInfoPanel();
+            },
+
+            // ========== LABORATORIO DE ESCALAS ==========
+
+            initScaleLab() {
+                this.renderScaleCategories();
+                this.renderScaleList('major');
+                this.populateCompareSelect();
+            },
+
+            renderScaleCategories() {
+                const container = document.getElementById('scaleCategoryBtns');
+                if (!container) return;
+                // Usa CATEGORY_SCALES consolidado
+            },
+
+            renderScaleList(category) {
+                const container = document.getElementById('scaleListContainer');
+                if (!container) return;
+
+                container.innerHTML = '';
+                const scales = this.CATEGORY_SCALES[category] || [];
+
+                scales.forEach(scaleKey => {
+                    const info = MusicTheory.scaleInfo[scaleKey];
+                    const item = document.createElement('div');
+                    item.className = `scale-list-item ${scaleKey === this.currentLabScale ? 'active' : ''}`;
+                    item.dataset.scale = scaleKey;
+
+                    const name = info ? info.name : scaleKey;
+                    const emotion = info ? info.emotion : '';
+
+                    item.innerHTML = `
+                        <div class="scale-name">${name}</div>
+                        <div class="scale-emotion">${emotion}</div>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        document.querySelectorAll('.scale-list-item').forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+                        this.currentLabScale = scaleKey;
+                        this.showScaleInfo(scaleKey);
+                        this.showScaleHarmonization(scaleKey);
+                        this.updateComparison();
+                    });
+
+                    container.appendChild(item);
+                });
+
+                // Auto-select first scale if none selected
+                if (scales.length > 0 && !scales.includes(this.currentLabScale)) {
+                    this.currentLabScale = scales[0];
+                    container.querySelector('.scale-list-item')?.classList.add('active');
+                }
+
+                this.showScaleInfo(this.currentLabScale);
+                this.showScaleHarmonization(this.currentLabScale);
+            },
+
+            showScaleInfo(scaleKey) {
+                const infoBox = document.getElementById('scaleInfoBox');
+                if (!infoBox) return;
+
+                const info = MusicTheory.scaleInfo[scaleKey];
+                const formula = MusicTheory.scales[scaleKey];
+
+                if (!info && !formula) {
+                    infoBox.classList.add('hidden');
+                    return;
+                }
+
+                infoBox.classList.remove('hidden');
+
+                document.getElementById('scaleInfoName').textContent = info?.name || scaleKey;
+                document.getElementById('scaleInfoCategory').textContent =
+                    MusicTheory.scaleCategories[info?.category]?.name || info?.category || '';
+                document.getElementById('scaleInfoFormula').textContent = info?.formula ||
+                    formula.map(i => MusicTheory.intervalNames[i]).join(' - ');
+                document.getElementById('scaleInfoEmotion').textContent = info?.emotion || '';
+                document.getElementById('scaleInfoUsage').textContent = info?.usage || '';
+
+                // Show parent info if exists
+                const parentInfo = MusicTheory.getParentInfo(scaleKey);
+                const parentSection = document.getElementById('scaleInfoParent');
+                if (parentInfo) {
+                    parentSection.classList.remove('hidden');
+                    document.getElementById('scaleInfoParentText').textContent =
+                        `${parentInfo.parentName} (grado ${parentInfo.degree})`;
+                } else {
+                    parentSection.classList.add('hidden');
+                }
+            },
+
+            showScaleHarmonization(scaleKey) {
+                const section = document.getElementById('scaleHarmonizationSection');
+                const container = document.getElementById('scaleHarmonizationChords');
+                if (!section || !container) return;
+
+                const formula = MusicTheory.scales[scaleKey];
+
+                // Only show for 7-note scales
+                if (formula.length !== 7) {
+                    section.classList.add('hidden');
+                    return;
+                }
+
+                section.classList.remove('hidden');
+                container.innerHTML = '';
+
+                const harmonization = MusicTheory.getScaleHarmonization(this.currentRoot, scaleKey);
+                const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+                const qualitySymbols = {
+                    'maj': '', 'min': 'm', 'dim': '°', 'aug': '+', 'sus2': 'sus2', 'sus4': 'sus4', '?': '?'
+                };
+
+                harmonization.forEach((chord, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = `harm-chord-btn ${this.currentLabHarmChord === i ? 'active' : ''}`;
+                    btn.innerHTML = `
+                        <span>${chord.root}${qualitySymbols[chord.quality]}</span>
+                        <span class="chord-quality">${romanNumerals[i]}${qualitySymbols[chord.quality]}</span>
+                    `;
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.harm-chord-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentLabHarmChord = i;
+                        this.showLabChord(chord);
+                    });
+                    container.appendChild(btn);
+                });
+            },
+
+            showLabChord(chord) {
+                const chordRootIndex = MusicTheory.getNoteIndex(chord.root);
+                const qualityNames = { maj: 'Mayor', min: 'menor', dim: 'disminuido', aug: 'aumentado' };
+
+                // Show on fretboard
+                Fretboard.tonicNote = chordRootIndex;
+                Fretboard.currentScale = [
+                    { note: chord.root, degree: 1 },
+                    { note: chord.third, degree: 3 },
+                    { note: chord.fifth, degree: 5 }
+                ];
+                Fretboard.highlightedNotes.clear();
+                Fretboard.clearZone();
+                Fretboard.specificPositions = null;
+                Fretboard.blueNoteIndex = null;
+                Fretboard.updateDisplay();
+
+                // Show chord diagram if possible
+                const voicingKey = chord.quality === 'min' ? `${chord.root}m` : chord.root;
+                let voicing = MusicTheory.chordVoicings[voicingKey];
+                let position = 0;
+
+                if (!voicing) {
+                    const shape = chord.quality === 'min' ? 'E_shape_minor' : 'E_shape_major';
+                    voicing = MusicTheory.chordVoicings[shape];
+                    // Calculate position: distance from E (4) to target note
+                    position = (chordRootIndex - 4 + 12) % 12;
+                }
+
+                const diagramContainer = document.getElementById('diagramsContainer');
+                if (diagramContainer && voicing) {
+                    diagramContainer.innerHTML = '';
+                    diagramContainer.classList.remove('hidden');
+                    const chordName = chord.quality === 'min' ? `${chord.root}m` : chord.root;
+                    const diagram = ChordDiagram.create(voicing, chordName, position);
+                    diagramContainer.appendChild(diagram);
+                }
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const info = MusicTheory.scaleInfo[this.currentLabScale];
+                document.getElementById('displayTitle').textContent =
+                    `Acorde ${chord.degree} de ${rootName} ${info?.name || this.currentLabScale}`;
+                document.getElementById('displaySubtitle').textContent =
+                    `${chord.root} ${qualityNames[chord.quality] || chord.quality} | Notas: ${chord.root} - ${chord.third} - ${chord.fifth}`;
+            },
+
+            populateCompareSelect() {
+                const select = document.getElementById('compareScaleSelect');
+                if (!select) return;
+
+                select.innerHTML = '<option value="">Selecciona para comparar...</option>';
+
+                const categories = {
+                    'Mayores': ['major'],
+                    'Menores': ['minor', 'harmonicMinor', 'melodicMinor'],
+                    'Modos': ['dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian'],
+                    'Pentatónicas': ['pentatonicMajor', 'pentatonicMinor', 'blues'],
+                    'Simétricas': ['wholeTone', 'diminished'],
+                    'Exóticas': ['hungarian', 'byzantine', 'phrygianDom', 'japanese']
+                };
+
+                Object.entries(categories).forEach(([catName, scales]) => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = catName;
+                    scales.forEach(scaleKey => {
+                        const info = MusicTheory.scaleInfo[scaleKey];
+                        const option = document.createElement('option');
+                        option.value = scaleKey;
+                        option.textContent = info?.name || scaleKey;
+                        optgroup.appendChild(option);
+                    });
+                    select.appendChild(optgroup);
+                });
+
+                select.addEventListener('change', (e) => {
+                    this.compareScale = e.target.value || null;
+                    this.updateComparison();
+                });
+            },
+
+            updateComparison() {
+                const resultDiv = document.getElementById('scaleComparisonResult');
+                if (!resultDiv) return;
+
+                if (!this.compareScale) {
+                    resultDiv.classList.add('hidden');
+                    return;
+                }
+
+                const comparison = MusicTheory.compareScales(this.currentLabScale, this.compareScale);
+                resultDiv.classList.remove('hidden');
+
+                document.getElementById('scaleSimilarity').textContent = `${comparison.similarity}%`;
+                document.getElementById('scaleCommonNotes').textContent =
+                    comparison.common.map(i => MusicTheory.intervalNames[i]).join(', ') || 'Ninguna';
+                document.getElementById('scaleOnlyFirst').textContent =
+                    comparison.onlyInFirst.map(i => MusicTheory.intervalNames[i]).join(', ') || 'Ninguna';
+                document.getElementById('scaleOnlySecond').textContent =
+                    comparison.onlyInSecond.map(i => MusicTheory.intervalNames[i]).join(', ') || 'Ninguna';
+            },
+
+            showScaleLab() {
+                this.resetState();
+                this.currentLabHarmChord = null;
+                this.hideUIElements();
+
+                const scaleSelect = document.getElementById('scaleSelect');
+                if (scaleSelect) scaleSelect.value = this.currentLabScale;
+                this.currentScale = this.currentLabScale;
+
+                Fretboard.showScale(this.currentRoot, this.currentLabScale);
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const info = MusicTheory.scaleInfo[this.currentLabScale];
+                const formula = MusicTheory.scales[this.currentLabScale];
+
+                this.updateDisplay(
+                    `${rootName} ${info?.name || this.currentLabScale}`,
+                    `${formula.length} notas | ${info?.emotion || ''} | Fórmula: ${formula.map(i => MusicTheory.intervalNames[i]).join('-')}`
+                );
+            }
+        };
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            App.init();
+        });
+    </script>
+</body>
+</html>
