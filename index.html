@@ -926,9 +926,12 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 14px;
             font-weight: 600;
-            color: var(--tape-red);
+            color: var(--tape-red) !important;
             min-width: 40px;
             text-align: center;
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .ctrl-toggle {
@@ -3163,7 +3166,7 @@
                         </div>
                         <div class="control-row">
                             <input type="range" id="bpmSlider" class="ctrl-slider" min="40" max="200" value="120" />
-                            <span id="bpmDisplay" class="bpm-value"></span>
+                            <span id="jamBpmDisplay" class="bpm-value"></span>
                             <label class="ctrl-toggle">
                                 <input type="checkbox" id="syncBPMToggle" checked />
                                 <span>SYNC</span>
@@ -6752,7 +6755,7 @@
                                 // Resetear BPM custom al cambiar track
                                 this.customBPM = null;
                                 let bpmSliderEl = document.getElementById('bpmSlider');
-                                let bpmDisplayEl = document.getElementById('bpmDisplay');
+                                let bpmDisplayEl = document.getElementById('jamBpmDisplay');
                                 if (bpmSliderEl && this.currentBackingTrack) {
                                     const bpm = this.syncMetronomeWithBacking ? this.globalBPM : this.currentBackingTrack.bpm;
                                     bpmSliderEl.value = bpm;
@@ -6809,7 +6812,7 @@
 
                                     // Actualizar BPM al global
                                     let bpmSliderEl2 = document.getElementById('bpmSlider');
-                                    let bpmDisplayEl2 = document.getElementById('bpmDisplay');
+                                    let bpmDisplayEl2 = document.getElementById('jamBpmDisplay');
                                     if (bpmSliderEl2) bpmSliderEl2.value = this.globalBPM;
                                     if (bpmDisplayEl2) bpmDisplayEl2.textContent = this.globalBPM;
                                     this.customBPM = null;
@@ -6822,13 +6825,15 @@
 
                         // BPM Slider con debounce
                         const bpmSlider = document.getElementById('bpmSlider');
-                        const bpmDisplay = document.getElementById('bpmDisplay');
+                        const bpmDisplay = document.getElementById('jamBpmDisplay');
                         let bpmChangeTimeout = null;
 
                         if (bpmSlider && bpmDisplay) {
                             const updateBPM = (e) => {
                                 const newBPM = parseInt(e.target.value);
                                 bpmDisplay.textContent = newBPM;
+                                // Forzar estilos inline
+                                bpmDisplay.style.cssText = 'color: #dc2626 !important; font-size: 14px !important; font-weight: 600 !important; display: inline-block !important; min-width: 40px !important; text-align: center !important; opacity: 1 !important; visibility: visible !important;';
 
                                 // Actualizar BPM inmediatamente en UI
                                 if (this.syncMetronomeWithBacking) {
@@ -6850,12 +6855,7 @@
                             bpmSlider.addEventListener('input', updateBPM);
                             bpmSlider.addEventListener('change', updateBPM);
 
-                            // Inicializar BPM
-                            if (this.currentBackingTrack) {
-                                const bpm = this.syncMetronomeWithBacking ? this.globalBPM : this.currentBackingTrack.bpm;
-                                bpmSlider.value = bpm;
-                                bpmDisplay.textContent = bpm;
-                            }
+                            // NOTA: La inicialización del BPM se hace en renderJamSessionPanel
                         }
 
                         // Drums Toggle
@@ -9385,10 +9385,14 @@
             },
 
             renderJamSessionPanel(track, rootName, bpm) {
+                console.log('[renderJamSessionPanel] INICIANDO... bpm:', bpm);
                 const keyDisplay = document.getElementById('jamKeyDisplay');
                 const progDisplay = document.getElementById('jamProgressionDisplay');
-                const bpmDisplay = document.getElementById('bpmDisplay');
+                const bpmDisplay = document.getElementById('jamBpmDisplay');
                 const bpmSlider = document.getElementById('bpmSlider');
+
+                console.log('[renderJamSessionPanel] jamBpmDisplay:', bpmDisplay);
+                console.log('[renderJamSessionPanel] bpmSlider:', bpmSlider);
 
                 if (!keyDisplay || !progDisplay) {
                     console.error('[Jam Session] Key display or progression display not found');
@@ -9399,12 +9403,19 @@
                 const scaleName = this.SCALE_NAMES[track.scale] || 'Mayor';
                 keyDisplay.textContent = `${rootName} ${scaleName}`.toUpperCase();
 
-                // Actualizar BPM DISPLAY
+                // Actualizar BPM DISPLAY con estilos inline forzados
                 if (bpmDisplay) {
                     bpmDisplay.textContent = bpm;
+                    // Forzar estilos inline para asegurar visibilidad
+                    bpmDisplay.style.cssText = 'color: #dc2626 !important; font-size: 14px !important; font-weight: 600 !important; display: inline-block !important; min-width: 40px !important; text-align: center !important; opacity: 1 !important; visibility: visible !important;';
+                } else {
+                    console.error('[renderJamSessionPanel] bpmDisplay NO ENCONTRADO!');
                 }
                 if (bpmSlider) {
+                    console.log('[renderJamSessionPanel] Estableciendo bpmSlider.value =', bpm);
                     bpmSlider.value = bpm;
+                } else {
+                    console.error('[renderJamSessionPanel] bpmSlider NO ENCONTRADO!');
                 }
 
                 // Actualizar PROGRESSION DISPLAY con animación
