@@ -2621,6 +2621,41 @@
                 </div>
             </div>
 
+            <!-- Visualización de progreso en vivo -->
+            <div id="jamProgressDisplay" style="display: none; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 2px solid rgba(16, 185, 129, 0.3); margin-bottom: 16px;">
+                <!-- Acorde actual grande -->
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #999; margin-bottom: 4px;">ACORDE ACTUAL</div>
+                    <div id="currentChordName" style="font-size: 42px; font-weight: bold; color: #10b981; margin-bottom: 8px;">C</div>
+                    <div id="currentChordFunction" style="font-size: 14px; color: #ccc;">(Tónica)</div>
+                </div>
+
+                <!-- Indicador de compás -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="font-size: 14px; color: #999;">
+                        <span>Compás:</span>
+                        <span id="currentBarDisplay" style="color: #dc2626; font-weight: bold; margin-left: 8px;">1 / 4</span>
+                    </div>
+                    <div style="font-size: 14px; color: #999;">
+                        <span>Loops:</span>
+                        <span id="loopCountDisplay" style="color: #10b981; font-weight: bold; margin-left: 8px;">1</span>
+                    </div>
+                </div>
+
+                <!-- Beat indicator (4 círculos) -->
+                <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 16px;">
+                    <div class="beat-dot" data-beat="0" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
+                    <div class="beat-dot" data-beat="1" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
+                    <div class="beat-dot" data-beat="2" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
+                    <div class="beat-dot" data-beat="3" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
+                </div>
+
+                <!-- Barra de progreso -->
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                    <div id="jamProgressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #dc2626); transition: width 0.1s linear;"></div>
+                </div>
+            </div>
+
             <!-- Info del track -->
             <div id="jamSessionInfo">
                 <!-- Info dinámica del track -->
@@ -4584,7 +4619,7 @@
             },
 
             // NUEVO: Secuenciador con batería dinámica
-            playChordSequenceWithDrums(chordProgression, bpm, rootKey, feel = 'straight') {
+            playChordSequenceWithDrums(chordProgression, bpm, rootKey, feel = 'straight', progressCallback = null) {
                 if (!this.enabled || !this.audioContext) return null;
 
                 const beatDuration = (60 / bpm) * 1000;
@@ -4608,6 +4643,16 @@
                     }
 
                     intervals.currentBar = currentBar % chordProgression.length;
+
+                    // Callback para actualizar UI
+                    if (progressCallback) {
+                        progressCallback({
+                            bar: currentBar % chordProgression.length,
+                            totalBars: chordProgression.length,
+                            loopCount: Math.floor(currentBar / chordProgression.length)
+                        });
+                    }
+
                     currentBar++;
                 }, barDuration);
 
@@ -4615,6 +4660,7 @@
                 const subdivisionDuration = beatDuration / 2; // 8th notes
                 intervals.drums = setInterval(() => {
                     const beat = (beatCount % 8) / 2; // 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5
+                    const wholeBeat = Math.floor(beat);
 
                     const pattern = this.getDrumPattern(feel, beat);
 
@@ -4626,6 +4672,13 @@
                     }
                     if (pattern.playHihat) {
                         this.playDrumSound('hihat');
+                    }
+
+                    // Beat indicator callback (solo en beats enteros)
+                    if (beat === wholeBeat && progressCallback) {
+                        progressCallback({
+                            beat: wholeBeat
+                        });
                     }
 
                     beatCount++;
@@ -5153,6 +5206,11 @@
             // Global BPM sync
             globalBPM: 120,
             syncMetronomeWithBacking: true,
+            // Jam Session visual progress
+            jamCurrentBar: 0,
+            jamLoopCount: 0,
+            jamCurrentBeat: 0,
+            jamBeatIntervalId: null,
             currentCAGED: 'C',
             cagedShowAll: false,
             currentScaleCategory: 'major',
@@ -5222,8 +5280,65 @@
                 Fretboard.init();
                 this.loadProgress();
                 this.bindEvents();
+                this.setupKeyboardNavigation();
                 this.loadLevel(this.currentLevel || 1);
                 this.showToast('GuitarMaster cargado correctamente', 'success');
+            },
+
+            setupKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    // Solo en nivel 7 (progresiones)
+                    if (this.currentLevel !== 7) return;
+
+                    const prog = MusicTheory.progressions[this.currentProgression];
+                    if (!prog) return;
+
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            if (!this.progressionPlaying) {
+                                this.currentProgressionChordIndex = Math.max(0, this.currentProgressionChordIndex - 1);
+                                this.showProgression();
+                            }
+                            break;
+
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            if (!this.progressionPlaying) {
+                                this.currentProgressionChordIndex = Math.min(prog.degrees.length - 1, this.currentProgressionChordIndex + 1);
+                                this.showProgression();
+                            }
+                            break;
+
+                        case 'Enter':
+                            e.preventDefault();
+                            if (!this.progressionPlaying) {
+                                // Reproducir acorde actual
+                                const degree = prog.degrees[this.currentProgressionChordIndex];
+                                this.playProgressionChord(degree);
+                            }
+                            break;
+
+                        case ' ':
+                            e.preventDefault();
+                            // Toggle reproducción de progresión
+                            if (this.progressionPlaying && !this.progressionPaused) {
+                                this.pauseProgression();
+                            } else if (this.progressionPaused) {
+                                this.playProgression();
+                            } else {
+                                this.playProgression();
+                            }
+                            break;
+
+                        case 'Escape':
+                            e.preventDefault();
+                            if (this.progressionPlaying || this.progressionPaused) {
+                                this.stopProgression();
+                            }
+                            break;
+                    }
+                });
             },
 
             // === PERSISTENCIA ===
@@ -6933,17 +7048,97 @@
                     const wrapper = document.createElement('div');
                     wrapper.className = 'chord-wrapper';
                     wrapper.style.cursor = 'pointer';
+                    wrapper.style.position = 'relative';
+                    wrapper.style.transition = 'all 0.2s';
 
                     if (i === this.currentProgressionChordIndex) {
                         wrapper.classList.add('active-chord');
                         wrapper.style.opacity = '1';
+                        // Borde animado para acorde activo
+                        if (this.progressionPlaying && !this.progressionPaused) {
+                            wrapper.style.border = '3px solid #10b981';
+                            wrapper.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.5)';
+                        }
                     } else {
                         wrapper.style.opacity = '0.6';
                     }
 
                     wrapper.addEventListener('click', () => {
-                        this.currentProgressionChordIndex = i;
-                        this.showProgression();
+                        if (!this.progressionPlaying) {
+                            this.currentProgressionChordIndex = i;
+                            this.showProgression();
+                        }
+                    });
+
+                    // Hover effects
+                    wrapper.addEventListener('mouseenter', () => {
+                        if (!this.progressionPlaying) {
+                            wrapper.style.transform = 'scale(1.15)';
+                            wrapper.style.zIndex = '100';
+                            wrapper.style.opacity = '1';
+                        }
+                    });
+
+                    wrapper.addEventListener('mouseleave', () => {
+                        if (!this.progressionPlaying) {
+                            wrapper.style.transform = 'scale(1)';
+                            wrapper.style.zIndex = '1';
+                            if (i !== this.currentProgressionChordIndex) {
+                                wrapper.style.opacity = '0.6';
+                            }
+                        }
+                    });
+
+                    // Numeración del acorde
+                    const numberBadge = document.createElement('div');
+                    numberBadge.style.cssText = `
+                        position: absolute;
+                        top: -8px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        background: ${this.getChordFunctionColor(prog, i)};
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 12px;
+                        z-index: 10;
+                    `;
+                    numberBadge.textContent = i + 1;
+                    wrapper.appendChild(numberBadge);
+
+                    // Tooltip con notas del acorde
+                    const tooltip = document.createElement('div');
+                    const chordNotes = [chord.triad.root.note, chord.triad.third.note, chord.triad.fifth.note].join(' - ');
+                    tooltip.style.cssText = `
+                        position: absolute;
+                        bottom: -30px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: rgba(0, 0, 0, 0.9);
+                        color: white;
+                        padding: 6px 12px;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        white-space: nowrap;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.2s;
+                        z-index: 200;
+                    `;
+                    tooltip.textContent = chordNotes;
+                    wrapper.appendChild(tooltip);
+
+                    wrapper.addEventListener('mouseenter', () => {
+                        tooltip.style.opacity = '1';
+                    });
+
+                    wrapper.addEventListener('mouseleave', () => {
+                        tooltip.style.opacity = '0';
                     });
 
                     const diagram = ChordDiagram.create(chord.voicing, chord.name, chord.position);
@@ -7052,30 +7247,74 @@
                 const currentFunction = prog.function[chordIndex];
                 const functionDesc = functionLabels[currentFunction] || currentFunction;
 
+                // Verificar estado de colapso desde localStorage
+                const isCollapsed = localStorage.getItem('progressionPanelCollapsed') === 'true';
+
                 infoPanel.innerHTML = `
-                    <div class="info-section" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin-bottom: 16px;">
-                        <div class="info-label" style="color: #dc2626; margin-bottom: 12px;">ANÁLISIS ARMÓNICO</div>
-                        <div style="margin-bottom: 16px;">
-                            ${chordChips}
-                        </div>
-                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-left: 3px solid ${functionColors[currentFunction]}; border-radius: 4px;">
-                            <strong style="color: ${functionColors[currentFunction]};">Acorde actual:</strong>
-                            ${functionDesc}
-                        </div>
-                        <div style="color: #ccc; font-size: 14px; line-height: 1.6;">
-                            ${prog.analysis}
+                    <div style="position: relative;">
+                        <button id="toggleProgressionPanel" style="
+                            position: absolute;
+                            top: -40px;
+                            right: 0;
+                            padding: 8px 16px;
+                            background: rgba(220, 38, 38, 0.2);
+                            border: 1px solid rgba(220, 38, 38, 0.4);
+                            border-radius: 4px;
+                            color: #dc2626;
+                            cursor: pointer;
+                            font-size: 12px;
+                            font-weight: 600;
+                            transition: all 0.2s;
+                        " onmouseover="this.style.background='rgba(220, 38, 38, 0.3)'" onmouseout="this.style.background='rgba(220, 38, 38, 0.2)'">
+                            ${isCollapsed ? '▼ Mostrar Análisis' : '▲ Ocultar Análisis'}
+                        </button>
+
+                        <div id="progressionPanelContent" style="
+                            max-height: ${isCollapsed ? '0' : '1000px'};
+                            overflow: hidden;
+                            transition: max-height 0.3s ease-in-out, opacity 0.3s;
+                            opacity: ${isCollapsed ? '0' : '1'};
+                        ">
+                            <div class="info-section" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                                <div class="info-label" style="color: #dc2626; margin-bottom: 12px;">ANÁLISIS ARMÓNICO</div>
+                                <div style="margin-bottom: 16px;">
+                                    ${chordChips}
+                                </div>
+                                <div style="margin-bottom: 12px; padding: 12px; background: rgba(220,38,38,0.1); border-left: 3px solid ${functionColors[currentFunction]}; border-radius: 4px;">
+                                    <strong style="color: ${functionColors[currentFunction]};">Acorde actual:</strong>
+                                    ${functionDesc}
+                                </div>
+                                <div style="color: #ccc; font-size: 14px; line-height: 1.6;">
+                                    ${prog.analysis}
+                                </div>
+                            </div>
+
+                            ${prog.songs ? `
+                                <div class="info-section" style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                                    <div class="info-label" style="color: #dc2626; margin-bottom: 8px;">CANCIONES FAMOSAS</div>
+                                    <div style="color: #aaa; font-size: 13px; line-height: 1.8;">
+                                        ${prog.songs.map(song => `• ${song}`).join('<br>')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
-
-                    ${prog.songs ? `
-                        <div class="info-section" style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
-                            <div class="info-label" style="color: #dc2626; margin-bottom: 8px;">CANCIONES FAMOSAS</div>
-                            <div style="color: #aaa; font-size: 13px; line-height: 1.8;">
-                                ${prog.songs.map(song => `• ${song}`).join('<br>')}
-                            </div>
-                        </div>
-                    ` : ''}
                 `;
+
+                // Agregar event listener para el botón de toggle
+                setTimeout(() => {
+                    const toggleBtn = document.getElementById('toggleProgressionPanel');
+                    const content = document.getElementById('progressionPanelContent');
+                    if (toggleBtn && content) {
+                        toggleBtn.addEventListener('click', () => {
+                            const isCurrentlyCollapsed = content.style.maxHeight === '0px';
+                            content.style.maxHeight = isCurrentlyCollapsed ? '1000px' : '0';
+                            content.style.opacity = isCurrentlyCollapsed ? '1' : '0';
+                            toggleBtn.textContent = isCurrentlyCollapsed ? '▲ Ocultar Análisis' : '▼ Mostrar Análisis';
+                            localStorage.setItem('progressionPanelCollapsed', !isCurrentlyCollapsed);
+                        });
+                    }
+                }, 0);
             },
 
             // NUEVO: Convertir grado numérico a romano
@@ -7264,6 +7503,18 @@
                 if (playBtn) playBtn.disabled = this.progressionPlaying && !this.progressionPaused;
                 if (pauseBtn) pauseBtn.disabled = !this.progressionPlaying || this.progressionPaused;
                 if (stopBtn) stopBtn.disabled = !this.progressionPlaying && !this.progressionPaused;
+            },
+
+            getChordFunctionColor(prog, index) {
+                if (!prog.function) return '#666';
+                const func = prog.function[index];
+                const colors = {
+                    'T': '#10b981', 'Tm': '#10b981',
+                    'SD': '#f59e0b', 'SDm': '#f59e0b',
+                    'D': '#dc2626', 'Dm': '#dc2626',
+                    'bVII': '#8b5cf6', 'bVI': '#8b5cf6', 'bIII': '#8b5cf6'
+                };
+                return colors[func] || '#666';
             },
 
             // ========== SISTEMA CAGED ==========
@@ -8420,13 +8671,38 @@
                 const bpm = this.syncMetronomeWithBacking ? this.globalBPM : (this.customBPM || track.bpm);
                 this.backingTrackPlaying = true;
 
+                // Resetear contadores
+                this.jamCurrentBar = 0;
+                this.jamLoopCount = 0;
+                this.jamCurrentBeat = 0;
+
+                // Mostrar panel de progreso
+                const progressDisplay = document.getElementById('jamProgressDisplay');
+                if (progressDisplay) {
+                    progressDisplay.style.display = 'block';
+                }
+
+                // Callback para actualizar progreso visual
+                const progressCallback = (data) => {
+                    if (data.bar !== undefined) {
+                        this.jamCurrentBar = data.bar;
+                        this.jamLoopCount = data.loopCount || 0;
+                        this.updateJamProgress();
+                    }
+                    if (data.beat !== undefined) {
+                        this.jamCurrentBeat = data.beat;
+                        this.updateBeatIndicator(data.beat);
+                    }
+                };
+
                 // Iniciar secuenciador con o sin batería
                 if (this.drumsEnabled) {
                     this.backingTrackIntervals = AudioEngine.playChordSequenceWithDrums(
                         track.progression,
                         bpm,
                         this.currentRoot,
-                        track.feel.toLowerCase()
+                        track.feel.toLowerCase(),
+                        progressCallback
                     );
                 } else {
                     this.backingTrackIntervals = {
@@ -8444,6 +8720,60 @@
                 if (playBtn) playBtn.disabled = true;
                 const stopBtn = document.getElementById('stopTrackBtn');
                 if (stopBtn) stopBtn.disabled = false;
+            },
+
+            updateJamProgress() {
+                const track = this.currentBackingTrack;
+                if (!track) return;
+
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                const currentChordSymbol = track.progression[this.jamCurrentBar];
+                const chordName = `${rootName}${currentChordSymbol}`;
+
+                // Actualizar nombre del acorde
+                const chordNameEl = document.getElementById('currentChordName');
+                if (chordNameEl) chordNameEl.textContent = chordName;
+
+                // Función armónica (simple)
+                const chordFunction = currentChordSymbol.includes('I') ? 'Tónica' :
+                                     currentChordSymbol.includes('IV') ? 'Subdominante' :
+                                     currentChordSymbol.includes('V') ? 'Dominante' : 'Acorde';
+                const functionEl = document.getElementById('currentChordFunction');
+                if (functionEl) functionEl.textContent = `(${chordFunction})`;
+
+                // Actualizar compás
+                const barDisplay = document.getElementById('currentBarDisplay');
+                if (barDisplay) {
+                    barDisplay.textContent = `${this.jamCurrentBar + 1} / ${track.progression.length}`;
+                }
+
+                // Actualizar contador de loops
+                const loopDisplay = document.getElementById('loopCountDisplay');
+                if (loopDisplay) {
+                    loopDisplay.textContent = this.jamLoopCount + 1;
+                }
+
+                // Barra de progreso
+                const progressBar = document.getElementById('jamProgressBar');
+                if (progressBar) {
+                    const percentage = ((this.jamCurrentBar + 1) / track.progression.length) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                }
+            },
+
+            updateBeatIndicator(beat) {
+                const dots = document.querySelectorAll('.beat-dot');
+                dots.forEach((dot, i) => {
+                    if (i === beat) {
+                        dot.style.background = i === 0 ? '#dc2626' : '#10b981'; // Beat 1 rojo, otros verde
+                        dot.style.transform = 'scale(1.5)';
+                        dot.style.boxShadow = `0 0 10px ${i === 0 ? '#dc2626' : '#10b981'}`;
+                    } else {
+                        dot.style.background = '#333';
+                        dot.style.transform = 'scale(1)';
+                        dot.style.boxShadow = 'none';
+                    }
+                });
             },
 
             async stopBackingTrack() {
@@ -8471,6 +8801,12 @@
 
                 this.backingTrackPlaying = false;
                 this.backingTrackIntervals = null;
+
+                // Ocultar panel de progreso
+                const progressDisplay = document.getElementById('jamProgressDisplay');
+                if (progressDisplay) {
+                    progressDisplay.style.display = 'none';
+                }
 
                 // Restaurar volumen
                 if (AudioEngine.masterGain) {
