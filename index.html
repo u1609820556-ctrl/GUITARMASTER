@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -50,6 +51,19 @@
         }
     </script>
     <style>
+        :root {
+            /* Studio Vinyl Modernist Palette */
+            --vinyl-black: #0a0a0a;
+            --studio-gray: #1a1a1a;
+            --tape-red: #dc2626;
+            --vumeter-green: #10b981;
+            --steel: #404040;
+            --chrome: #888888;
+            --paper: #fafafa;
+            --key-highlight: #eab308;
+            --chord-active: #3b82f6;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -608,6 +622,580 @@
             letter-spacing: 3px;
             text-align: center;
             margin: 16px 0;
+        }
+
+        /* ============================================
+           JAM SESSION - STUDIO VINYL MODERNIST
+           ============================================ */
+
+        #jamSessionFullLayout {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--vinyl-black);
+        }
+
+        #jamSessionFullLayout.active {
+            display: block !important;
+        }
+
+        .jam-session-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR DE TRACKS */
+        .jam-sidebar {
+            background: var(--studio-gray);
+            border-right: 1px solid var(--steel);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .jam-sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--steel);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--chrome);
+        }
+
+        .sidebar-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--chrome);
+            background: rgba(255,255,255,0.05);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .jam-tracklist {
+            overflow-y: auto;
+            padding: 8px;
+            flex: 1;
+        }
+
+        .jam-track-item {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 12px 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .jam-track-item:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: var(--steel);
+        }
+
+        .jam-track-item.active {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: var(--tape-red);
+            box-shadow: inset 2px 0 0 var(--tape-red);
+        }
+
+        .jam-track-item:active {
+            animation: pulse 0.2s ease;
+        }
+
+        .track-name {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--paper);
+            line-height: 1.3;
+        }
+
+        .jam-track-item.active .track-name {
+            color: var(--tape-red);
+        }
+
+        .track-bpm {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--chrome);
+            letter-spacing: 0.05em;
+        }
+
+        .track-bpm::after {
+            content: ' BPM';
+            opacity: 0.5;
+        }
+
+        /* ÁREA PRINCIPAL */
+        .jam-main-area {
+            padding: 20px 24px;
+            overflow-y: auto;
+        }
+
+        /* KEY INFO BAR */
+        .jam-keyinfo-bar {
+            background: var(--studio-gray);
+            border: 1px solid var(--steel);
+            border-radius: 8px;
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .key-display {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .key-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            color: var(--chrome);
+        }
+
+        .key-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--key-highlight);
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .key-value.updating {
+            transform: scale(1.05);
+        }
+
+        /* PROGRESSION DISPLAY */
+        .progression-display {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 32px;
+            border-left: 1px solid var(--steel);
+        }
+
+        .progression-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            color: var(--chrome);
+        }
+
+        .progression-chords {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .prog-chord {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--paper);
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .prog-chord.active {
+            background: var(--chord-active);
+            color: var(--vinyl-black);
+            transform: scale(1.1);
+        }
+
+        .prog-separator {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--chrome);
+            opacity: 0.4;
+        }
+
+        /* CONTROLS */
+        .jam-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-left: 32px;
+            border-left: 1px solid var(--steel);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 1px solid var(--steel);
+            background: rgba(255,255,255,0.05);
+            color: var(--paper);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--paper);
+        }
+
+        .ctrl-play {
+            background: var(--vumeter-green);
+            border-color: var(--vumeter-green);
+        }
+
+        .ctrl-play:hover:not(:disabled) {
+            background: #14b88c;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .ctrl-play:not(:disabled) {
+            animation: playGlow 2s ease-in-out infinite;
+        }
+
+        .ctrl-stop {
+            background: var(--tape-red);
+            border-color: var(--tape-red);
+        }
+
+        .ctrl-stop:hover:not(:disabled) {
+            background: #c81e1e;
+        }
+
+        .ctrl-stop:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .ctrl-select {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: rgba(255,255,255,0.05);
+            color: var(--paper);
+            border: 1px solid var(--steel);
+            border-radius: 4px;
+            padding: 8px 10px;
+            cursor: pointer;
+        }
+
+        .ctrl-select option {
+            background: var(--vinyl-black);
+            color: var(--paper);
+        }
+
+        .ctrl-slider {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            accent-color: var(--tape-red);
+        }
+
+        .bpm-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tape-red);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .ctrl-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--chrome);
+            cursor: pointer;
+        }
+
+        .ctrl-toggle input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--vumeter-green);
+        }
+
+        /* LIVE PROGRESS PANEL */
+        .jam-live-progress {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--vumeter-green);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .jam-live-progress.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .live-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .live-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--vumeter-green);
+            background: rgba(16, 185, 129, 0.15);
+            padding: 4px 10px;
+            border-radius: 3px;
+        }
+
+        .live-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .live-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--chrome);
+        }
+
+        .live-stat span {
+            color: var(--paper);
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .live-chord {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .live-chord-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--chord-active);
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .live-chord-function {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: var(--chrome);
+        }
+
+        .live-beats {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .beat-pip {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.1s ease;
+        }
+
+        .beat-pip.active {
+            background: var(--vumeter-green);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+            transform: scale(1.3);
+            animation: beatPulse 0.15s ease;
+        }
+
+        .live-progress-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .live-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--vumeter-green), var(--chord-active));
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* TIP */
+        .jam-tip {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            color: var(--chrome);
+            background: rgba(220, 38, 38, 0.08);
+            border-left: 2px solid var(--tape-red);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 16px;
+        }
+
+        .jam-tip strong {
+            color: var(--tape-red);
+            font-weight: 600;
+        }
+
+        /* Asegurar que el diapasón en Jam Session se vea correctamente */
+        #jamFretboard {
+            min-height: 400px;
+        }
+
+        #jamFretboard .string {
+            display: flex;
+            gap: 0;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        #jamFretboard .fret {
+            flex: 1;
+            min-width: 60px;
+            height: 60px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #jamFretboard .fret:first-child {
+            flex: 0.6;
+            min-width: 40px;
+        }
+
+        #jamFretboard .note-bubble {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        /* Burbujas visibles */
+        #jamFretboard .note-bubble.visible {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #jamFretboard .note-bubble.tonic {
+            background: var(--tape-red);
+            color: var(--vinyl-black);
+        }
+
+        #jamFretboard .note-bubble.interval {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--vinyl-black);
+        }
+
+        #jamFretboard .note-bubble.pulse {
+            animation: fretPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes fretPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(220, 38, 38, 0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(220, 38, 38, 0.6); }
+        }
+
+        /* FRETBOARD EN JAM SESSION */
+        .jam-fretboard-container {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: visible;
+            border: 1px solid var(--steel);
+            background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
+            padding: 16px;
+        }
+
+        .jam-fretboard-container .fretboard-container {
+            background: transparent;
+        }
+
+        /* Asegurar que el diapasón del Jam Session se vea correctamente */
+        #jamFretboard .string {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        #jamFretboard .fret {
+            flex: 1;
+            position: relative;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+        }
+
+        @keyframes playGlow {
+            0%, 100% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.6); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes beatPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1.3); }
         }
 
         /* Header glow effect - industrial */
@@ -2073,7 +2661,7 @@
             </div>
 
             <!-- Fretboard Area - Industrial -->
-            <div class="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
+            <div id="mainFretboardArea" class="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
                 <!-- Current Display Info -->
                 <div class="mb-6 text-center">
                     <h2 class="font-display text-4xl text-chalk-100 tracking-widest" id="displayTitle">SELECCIONA UN NIVEL</h2>
@@ -2144,6 +2732,11 @@
                 </div>
             </div>
         </main>
+
+        <!-- JAM SESSION FULL LAYOUT (nivel 15) -->
+        <div id="jamSessionFullLayout">
+            <!-- El template se cargará aquí -->
+        </div>
     </div>
 
     <!-- TEMPLATES FOR CONTROL PANELS -->
@@ -2523,153 +3116,144 @@
     </template>
 
     <template id="tpl-jam-session">
-        <div class="space-y-4">
-            <!-- Header con estilo industrial -->
-            <div style="border-left: 3px solid #dc2626; padding-left: 12px; margin-bottom: 20px;">
-                <div class="text-xs text-void-400 uppercase tracking-widest mb-1">Jam Session</div>
-                <div class="text-sm text-chalk-100">Practica sobre bases profesionales</div>
-            </div>
-
-            <!-- Tabs de categorías -->
-            <div class="mb-4">
-                <div class="flex flex-wrap gap-2 mb-3 border-b border-slate-700 pb-2">
-                    <button class="jam-category-tab active" data-category="all" style="padding: 8px 16px; background: rgba(220, 38, 38, 0.2); border: 1px solid rgba(220, 38, 38, 0.4); border-radius: 4px 4px 0 0; color: #dc2626; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        🎵 Todos
-                    </button>
-                    <button class="jam-category-tab" data-category="blues-rock" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        🎸 Blues/Rock
-                    </button>
-                    <button class="jam-category-tab" data-category="jazz-funk" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        🎺 Jazz/Funk
-                    </button>
-                    <button class="jam-category-tab" data-category="latin-reggae" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        🌎 Latino/Reggae
-                    </button>
-                    <button class="jam-category-tab" data-category="metal-heavy" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        🔥 Metal/Heavy
-                    </button>
+        <div class="jam-session-layout">
+            <!-- SIDEBAR DE TRACKS -->
+            <div class="jam-sidebar">
+                <div class="jam-sidebar-header">
+                    <span class="sidebar-label">TRACKS</span>
+                    <span class="sidebar-count" id="jamTrackCount">17</span>
                 </div>
-
-                <!-- Track cards grid -->
-                <div id="jamTrackGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    <!-- Cards generados dinámicamente -->
+                <div id="jamTrackGrid" class="jam-tracklist">
+                    <!-- Generado dinámicamente -->
                 </div>
             </div>
 
-            <!-- Controles de reproducción -->
-            <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 4px; border: 1px solid rgba(220, 38, 38, 0.2);">
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <button id="playTrackBtn" class="mode-btn-simple" style="background: #10b981; padding: 14px; font-weight: 600;">
-                        ▶ PLAY
-                    </button>
-                    <button id="stopTrackBtn" class="mode-btn-simple" style="background: #dc2626; padding: 14px; font-weight: 600;" disabled>
-                        ⏹ STOP
-                    </button>
-                </div>
+            <!-- ÁREA PRINCIPAL -->
+            <div class="jam-main-area">
+                <!-- KEY INFO BAR (3 columnas: KEY | PROGRESSION | CONTROLS) -->
+                <div class="jam-keyinfo-bar">
+                    <div class="key-display">
+                        <div class="key-label">KEY</div>
+                        <div id="jamKeyDisplay" class="key-value">C MAYOR</div>
+                    </div>
 
-                <!-- Selector de tonalidad -->
-                <div class="mb-3">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-void-400 uppercase tracking-wider">Tonalidad:</span>
-                        <select id="jamKeySelector" class="px-3 py-1 bg-slate-800 text-white rounded border border-slate-600">
-                            <option value="0">C</option>
-                            <option value="1">C# / Db</option>
-                            <option value="2">D</option>
-                            <option value="3">D# / Eb</option>
-                            <option value="4">E</option>
-                            <option value="5">F</option>
-                            <option value="6">F# / Gb</option>
-                            <option value="7">G</option>
-                            <option value="8">G# / Ab</option>
-                            <option value="9">A</option>
-                            <option value="10">A# / Bb</option>
-                            <option value="11">B</option>
-                        </select>
+                    <div class="progression-display">
+                        <div class="progression-label">PROGRESSION</div>
+                        <div id="jamProgressionDisplay" class="progression-chords"></div>
+                    </div>
+
+                    <div class="jam-controls">
+                        <div class="control-row">
+                            <button id="playTrackBtn" class="ctrl-btn ctrl-play">▶</button>
+                            <button id="stopTrackBtn" class="ctrl-btn ctrl-stop" disabled>■</button>
+                            <select id="jamKeySelector" class="ctrl-select">
+                                <option value="0">C</option>
+                                <option value="1">C# / Db</option>
+                                <option value="2">D</option>
+                                <option value="3">D# / Eb</option>
+                                <option value="4">E</option>
+                                <option value="5">F</option>
+                                <option value="6">F# / Gb</option>
+                                <option value="7">G</option>
+                                <option value="8">G# / Ab</option>
+                                <option value="9">A</option>
+                                <option value="10">A# / Bb</option>
+                                <option value="11">B</option>
+                            </select>
+                        </div>
+                        <div class="control-row">
+                            <input type="range" id="bpmSlider" class="ctrl-slider" min="40" max="200" value="120" />
+                            <span id="bpmDisplay" class="bpm-value"></span>
+                            <label class="ctrl-toggle">
+                                <input type="checkbox" id="syncBPMToggle" checked />
+                                <span>SYNC</span>
+                            </label>
+                            <label class="ctrl-toggle">
+                                <input type="checkbox" id="drumsToggle" checked />
+                                <span>DRUMS</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Control de BPM -->
-                <div class="mb-3">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-void-400 uppercase tracking-wider">Tempo (BPM):</span>
-                        <span id="bpmDisplay" class="text-lg font-bold text-blood-400">120</span>
+                <!-- FRETBOARD CONTAINER (MAXIMIZADO) -->
+                <div class="jam-fretboard-container">
+                    <!-- Fret numbers -->
+                    <div style="display: flex; padding-left: 32px; margin-bottom: 8px;">
+                        <div style="width: 32px;"></div>
+                        <div style="flex: 1; display: flex;">
+                            <div style="flex: 0.6;"></div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">1</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">2</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666; font-weight: bold;">3</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">4</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666; font-weight: bold;">5</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">6</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666; font-weight: bold;">7</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">8</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666; font-weight: bold;">9</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">10</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666;">11</div>
+                            <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #dc2626; font-weight: bold;">12</div>
+                        </div>
                     </div>
-                    <input type="range" id="bpmSlider" min="40" max="200" value="120"
-                           style="width: 100%; accent-color: #dc2626;">
+
+                    <!-- Fretboard -->
+                    <div id="jamFretboard" class="fretboard-container" style="padding: 16px;">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <!-- Fret markers -->
+                    <div style="display: flex; margin-top: 12px; padding-left: 32px;">
+                        <div style="width: 32px;"></div>
+                        <div style="flex: 1; display: flex;">
+                            <div style="flex: 0.6;"></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1; display: flex; justify-content: center;"><div style="width: 12px; height: 12px; border-radius: 50%; background: #404040;"></div></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1; display: flex; justify-content: center;"><div style="width: 12px; height: 12px; border-radius: 50%; background: #404040;"></div></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1; display: flex; justify-content: center;"><div style="width: 12px; height: 12px; border-radius: 50%; background: #404040;"></div></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1; display: flex; justify-content: center;"><div style="width: 12px; height: 12px; border-radius: 50%; background: #404040;"></div></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1;"></div>
+                            <div style="flex: 1; display: flex; justify-content: center; gap: 8px;"><div style="width: 12px; height: 12px; border-radius: 50%; background: #dc2626;"></div><div style="width: 12px; height: 12px; border-radius: 50%; background: #dc2626;"></div></div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Toggle de sincronización BPM -->
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs text-void-400 uppercase tracking-wider">Sync con global BPM:</span>
-                    <label class="relative inline-block w-12 h-6">
-                        <input type="checkbox" id="syncBPMToggle" checked class="opacity-0 w-0 h-0">
-                        <span class="slider-sync absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-void-700 rounded-full transition-all duration-300"
-                              style="background: #10b981;">
-                            <span class="dot-sync absolute h-5 w-5 left-0.5 bottom-0.5 bg-chalk-100 rounded-full transition-all duration-300"
-                                  style="transform: translateX(24px);"></span>
+                <!-- LIVE PROGRESS (aparece cuando está playing) -->
+                <div id="jamProgressDisplay" class="jam-live-progress">
+                    <div class="live-header">
+                        <span class="live-label">LIVE</span>
+                        <span class="live-stats">
+                            <span class="live-stat">Bar <span id="currentBarDisplay">1/4</span></span>
+                            <span class="live-stat">Loop <span id="loopCountDisplay">1</span></span>
                         </span>
-                    </label>
-                </div>
-
-                <!-- Toggle de batería -->
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-void-400 uppercase tracking-wider">Batería:</span>
-                    <label class="relative inline-block w-12 h-6">
-                        <input type="checkbox" id="drumsToggle" checked class="opacity-0 w-0 h-0">
-                        <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-void-700 rounded-full transition-all duration-300"
-                              style="background: #dc2626;">
-                            <span class="dot absolute h-5 w-5 left-0.5 bottom-0.5 bg-chalk-100 rounded-full transition-all duration-300"
-                                  style="transform: translateX(24px);"></span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Visualización de progreso en vivo -->
-            <div id="jamProgressDisplay" style="display: none; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 2px solid rgba(16, 185, 129, 0.3); margin-bottom: 16px;">
-                <!-- Acorde actual grande -->
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <div style="font-size: 12px; color: #999; margin-bottom: 4px;">ACORDE ACTUAL</div>
-                    <div id="currentChordName" style="font-size: 42px; font-weight: bold; color: #10b981; margin-bottom: 8px;">C</div>
-                    <div id="currentChordFunction" style="font-size: 14px; color: #ccc;">(Tónica)</div>
-                </div>
-
-                <!-- Indicador de compás -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div style="font-size: 14px; color: #999;">
-                        <span>Compás:</span>
-                        <span id="currentBarDisplay" style="color: #dc2626; font-weight: bold; margin-left: 8px;">1 / 4</span>
                     </div>
-                    <div style="font-size: 14px; color: #999;">
-                        <span>Loops:</span>
-                        <span id="loopCountDisplay" style="color: #10b981; font-weight: bold; margin-left: 8px;">1</span>
+
+                    <div class="live-chord">
+                        <div id="currentChordName" class="live-chord-name">C</div>
+                        <div id="currentChordFunction" class="live-chord-function">Tónica</div>
+                    </div>
+
+                    <div class="live-beats">
+                        <div class="beat-pip" data-beat="0"></div>
+                        <div class="beat-pip" data-beat="1"></div>
+                        <div class="beat-pip" data-beat="2"></div>
+                        <div class="beat-pip" data-beat="3"></div>
+                    </div>
+
+                    <div class="live-progress-track">
+                        <div id="jamProgressBar" class="live-progress-fill"></div>
                     </div>
                 </div>
 
-                <!-- Beat indicator (4 círculos) -->
-                <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 16px;">
-                    <div class="beat-dot" data-beat="0" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
-                    <div class="beat-dot" data-beat="1" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
-                    <div class="beat-dot" data-beat="2" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
-                    <div class="beat-dot" data-beat="3" style="width: 16px; height: 16px; border-radius: 50%; background: #333; transition: all 0.1s;"></div>
-                </div>
-
-                <!-- Barra de progreso -->
-                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
-                    <div id="jamProgressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #dc2626); transition: width 0.1s linear;"></div>
-                </div>
-            </div>
-
-            <!-- Info del track -->
-            <div id="jamSessionInfo">
-                <!-- Info dinámica del track -->
-            </div>
-
-            <!-- Tips -->
-            <div style="background: rgba(220, 38, 38, 0.1); padding: 12px; border-radius: 4px; border-left: 3px solid #dc2626;">
-                <div class="text-xs text-void-400 leading-relaxed">
-                    <strong style="color: #dc2626;">TIP:</strong> El diapasón muestra la escala recomendada.
-                    Improvisa libremente y experimenta con diferentes técnicas: bends, slides, hammer-ons, vibrato.
+                <!-- TIP COMPACTO -->
+                <div class="jam-tip">
+                    <strong>TIP:</strong> El diapasón muestra la escala recomendada para improvisar.
                 </div>
             </div>
         </div>
@@ -4900,8 +5484,10 @@
             },
 
             // Render fretboard HTML
-            render() {
-                const fretboard = document.getElementById('fretboard');
+            render(containerId = 'fretboard') {
+                const fretboard = document.getElementById(containerId);
+                if (!fretboard) return;
+
                 fretboard.innerHTML = '';
 
                 this.tuning.forEach((openNote, stringIndex) => {
@@ -5276,17 +5862,37 @@
                 if (panel) panel.innerHTML = '';
             },
 
+            clearAllContentContainers() {
+                // Limpiar TODOS los contenedores de contenido dinámico
+                const containers = [
+                    'infoPanel',           // Usado por la mayoría de niveles (2,6,7,8,10,11,12,13)
+                    'jamSessionInfo',      // Nivel 15 (Jam Session) - panel de info
+                    'jamTrackGrid',        // Nivel 15 (Jam Session) - grid de tracks
+                    'earTrainingAnswers',  // Nivel 14 (Ear Training) - respuestas
+                    'diagramsContainer'    // Diagramas de acordes (para limpieza completa)
+                ];
+
+                containers.forEach(id => {
+                    const container = document.getElementById(id);
+                    if (container) {
+                        container.innerHTML = '';
+                    }
+                });
+            },
+
             updateDisplay(title, subtitle) {
                 document.getElementById('displayTitle').textContent = title;
                 document.getElementById('displaySubtitle').textContent = subtitle;
             },
 
             init() {
+                console.log('[Init] Starting initialization, currentLevel:', this.currentLevel);
                 Fretboard.init();
-                this.loadProgress();
-                this.bindEvents();
+                this.loadProgress();           // Load saved progress (updates currentLevel)
+                this.bindEvents();             // Bind all event listeners
                 this.setupKeyboardNavigation();
-                this.loadLevel(this.currentLevel || 1);
+                // Load the saved level (or default to 1 if no save exists)
+                this.loadLevel(this.currentLevel);  // Uses the level from loadProgress()
                 this.showToast('GuitarMaster cargado correctamente', 'success');
             },
 
@@ -5697,39 +6303,44 @@
 
             bindEvents() {
                 // Root select
-                document.getElementById('rootSelect').addEventListener('change', (e) => {
-                    this.currentRoot = parseInt(e.target.value);
-                    this.refreshCurrentLevel();
-                });
+                const rootSelect = document.getElementById('rootSelect');
+                if (rootSelect) {
+                    rootSelect.addEventListener('change', (e) => {
+                        this.currentRoot = parseInt(e.target.value);
+                        this.refreshCurrentLevel();
+                    });
+                }
 
                 // Toggle switches
                 const notesToggle = document.getElementById('showNotesToggle');
                 const functionsToggle = document.getElementById('showFunctionsToggle');
 
-                // Toggle con soporte de teclado y ARIA
-                const handleToggle = (toggle, updateFn) => {
-                    const handler = (e) => {
-                        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-                        if (e.type === 'keydown') e.preventDefault();
+                if (notesToggle && functionsToggle) {
+                    // Toggle con soporte de teclado y ARIA
+                    const handleToggle = (toggle, updateFn) => {
+                        const handler = (e) => {
+                            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+                            if (e.type === 'keydown') e.preventDefault();
 
-                        toggle.classList.toggle('active');
-                        const isActive = toggle.classList.contains('active');
-                        toggle.setAttribute('aria-checked', isActive.toString());
-                        updateFn(isActive);
+                            toggle.classList.toggle('active');
+                            const isActive = toggle.classList.contains('active');
+                            toggle.setAttribute('aria-checked', isActive.toString());
+                            updateFn(isActive);
+                        };
+                        toggle.addEventListener('click', handler);
+                        toggle.addEventListener('keydown', handler);
                     };
-                    toggle.addEventListener('click', handler);
-                    toggle.addEventListener('keydown', handler);
-                };
 
-                handleToggle(notesToggle, (isActive) => {
-                    Fretboard.showNoteNames = isActive;
-                    Fretboard.updateDisplay();
-                });
+                    handleToggle(notesToggle, (isActive) => {
+                        Fretboard.showNoteNames = isActive;
+                        Fretboard.updateDisplay();
+                    });
 
-                handleToggle(functionsToggle, (isActive) => {
-                    Fretboard.showFunctions = isActive;
-                    Fretboard.updateDisplay();
-                });
+                    handleToggle(functionsToggle, (isActive) => {
+                        Fretboard.showFunctions = isActive;
+                        Fretboard.updateDisplay();
+                    });
+                }
 
                 // Metronome button
                 const metronomeBtn = document.getElementById('metronomeBtn');
@@ -5763,15 +6374,21 @@
                 }
 
                 // Level navigation buttons
-                document.querySelectorAll('.level-nav-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const level = parseInt(e.currentTarget.dataset.level);
-                        this.loadLevel(level);
+                const levelBtns = document.querySelectorAll('.level-nav-btn');
+                if (levelBtns.length > 0) {
+                    levelBtns.forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const level = parseInt(e.currentTarget.dataset.level);
+                            this.loadLevel(level);
+                        });
                     });
-                });
+                } else {
+                    console.error('No level navigation buttons found');
+                }
             },
 
             loadLevel(level) {
+                console.log('[LoadLevel] Loading level:', level);
                 this.currentLevel = level;
 
                 // Cleanup backing track si está corriendo
@@ -5784,6 +6401,9 @@
                     this.eventController.abort();
                 }
                 this.eventController = new AbortController();
+
+                // Limpiar TODOS los contenedores de contenido dinámico
+                this.clearAllContentContainers();
 
                 // Update sidebar active state y ARIA
                 document.querySelectorAll('.level-nav-btn').forEach(btn => {
@@ -5822,12 +6442,61 @@
 
                 const tplId = templates[level];
                 const tpl = document.getElementById(tplId);
-                if (tpl) {
-                    controlPanel.innerHTML = '';
-                    controlPanel.appendChild(tpl.content.cloneNode(true));
-                    this.bindLevelEvents(level);
+
+                // Manejo especial para Jam Session (nivel 15)
+                if (level === 15) {
+                    const jamSessionLayout = document.getElementById('jamSessionFullLayout');
+                    const header = document.querySelector('header'); // Header principal
+                    const mainFretboardArea = document.getElementById('mainFretboardArea');
+                    const controlPanel = document.getElementById('controlPanel');
+
+                    if (tpl && jamSessionLayout) {
+                        console.log('[Jam Session] Loading template...');
+
+                        // Ocultar header y área principal
+                        if (header) header.style.display = 'none';
+                        if (mainFretboardArea) mainFretboardArea.style.display = 'none';
+                        if (controlPanel) controlPanel.style.display = 'none';
+
+                        // Mostrar Jam Session
+                        jamSessionLayout.innerHTML = '';
+                        jamSessionLayout.appendChild(tpl.content.cloneNode(true));
+                        jamSessionLayout.classList.add('active');
+
+                        console.log('[Jam Session] Template loaded, classList:', jamSessionLayout.classList);
+
+                        // IMPORTANTE: Llamar a showJamSession DESPUÉS de insertar el template
+                        // Para que los elementos del DOM ya existan
+                        this.bindLevelEvents(level);
+                        this.showJamSession();
+                        this.saveProgress();
+                        return; // Salir temprano para nivel 15
+                    }
+                } else {
+                    // Niveles normales: restaurar layout
+                    const jamSessionLayout = document.getElementById('jamSessionFullLayout');
+                    const header = document.querySelector('header');
+                    const mainFretboardArea = document.getElementById('mainFretboardArea');
+                    const controlPanel = document.getElementById('controlPanel');
+
+                    // Ocultar Jam Session
+                    if (jamSessionLayout) {
+                        jamSessionLayout.classList.remove('active');
+                    }
+
+                    // Mostrar layout normal
+                    if (header) header.style.display = 'flex';
+                    if (mainFretboardArea) mainFretboardArea.style.display = 'flex';
+                    if (controlPanel) controlPanel.style.display = 'block';
+
+                    if (tpl) {
+                        controlPanel.innerHTML = '';
+                        controlPanel.appendChild(tpl.content.cloneNode(true));
+                    }
                 }
 
+                // Bind events DESPUÉS de cargar el template (solo para niveles != 15)
+                this.bindLevelEvents(level);
                 this.refreshCurrentLevel();
                 this.saveProgress();
             },
@@ -5922,14 +6591,14 @@
                         });
 
                         // BPM slider
-                        const bpmSlider = document.getElementById('progressionBPMSlider');
-                        const bpmDisplay = document.getElementById('progressionBPMDisplay');
-                        if (bpmSlider && bpmDisplay) {
-                            bpmSlider.value = this.progressionBPM;
-                            bpmDisplay.textContent = this.progressionBPM;
-                            bpmSlider.addEventListener('input', (e) => {
+                        const progressionBpmSlider = document.getElementById('progressionBPMSlider');
+                        const progressionBpmDisplay = document.getElementById('progressionBPMDisplay');
+                        if (progressionBpmSlider && progressionBpmDisplay) {
+                            progressionBpmSlider.value = this.progressionBPM;
+                            progressionBpmDisplay.textContent = this.progressionBPM;
+                            progressionBpmSlider.addEventListener('input', (e) => {
                                 this.progressionBPM = parseInt(e.target.value);
-                                bpmDisplay.textContent = this.progressionBPM;
+                                progressionBpmDisplay.textContent = this.progressionBPM;
                             });
                         }
 
@@ -6070,30 +6739,11 @@
                         break;
 
                     case 15: // Jam Session
-                        // Category tabs
-                        controlPanel.querySelectorAll('.jam-category-tab').forEach(tab => {
-                            tab.addEventListener('click', (e) => {
-                                controlPanel.querySelectorAll('.jam-category-tab').forEach(t => {
-                                    t.style.background = 'rgba(100, 100, 100, 0.2)';
-                                    t.style.borderColor = 'rgba(100, 100, 100, 0.4)';
-                                    t.style.color = '#999';
-                                    t.classList.remove('active');
-                                });
-                                e.currentTarget.style.background = 'rgba(220, 38, 38, 0.2)';
-                                e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.4)';
-                                e.currentTarget.style.color = '#dc2626';
-                                e.currentTarget.classList.add('active');
-
-                                this.jamTrackCategory = e.currentTarget.dataset.category;
-                                this.renderJamTrackGrid();
-                            });
-                        });
-
                         // Track cards (delegated event)
                         const trackGrid = document.getElementById('jamTrackGrid');
                         if (trackGrid) {
                             trackGrid.addEventListener('click', (e) => {
-                                const card = e.target.closest('.jam-track-card');
+                                const card = e.target.closest('.jam-track-item');
                                 if (!card) return;
 
                                 const trackId = card.dataset.track;
@@ -6101,12 +6751,12 @@
 
                                 // Resetear BPM custom al cambiar track
                                 this.customBPM = null;
-                                const bpmSlider = document.getElementById('bpmSlider');
-                                const bpmDisplay = document.getElementById('bpmDisplay');
-                                if (bpmSlider && this.currentBackingTrack) {
+                                let bpmSliderEl = document.getElementById('bpmSlider');
+                                let bpmDisplayEl = document.getElementById('bpmDisplay');
+                                if (bpmSliderEl && this.currentBackingTrack) {
                                     const bpm = this.syncMetronomeWithBacking ? this.globalBPM : this.currentBackingTrack.bpm;
-                                    bpmSlider.value = bpm;
-                                    if (bpmDisplay) bpmDisplay.textContent = bpm;
+                                    bpmSliderEl.value = bpm;
+                                    if (bpmDisplayEl) bpmDisplayEl.textContent = bpm;
                                 }
 
                                 this.showJamSession();
@@ -6139,14 +6789,14 @@
                         // Toggle de sincronización BPM
                         const syncToggle = document.getElementById('syncBPMToggle');
                         if (syncToggle) {
-                            const syncSlider = syncToggle.parentElement.querySelector('.slider-sync');
-                            const syncDot = syncToggle.parentElement.querySelector('.dot-sync');
+                            const syncSlider = syncToggle.parentElement?.querySelector('.slider-sync');
+                            const syncDot = syncToggle.parentElement?.querySelector('.dot-sync');
 
                             syncToggle.checked = this.syncMetronomeWithBacking;
-                            if (this.syncMetronomeWithBacking) {
+                            if (this.syncMetronomeWithBacking && syncSlider && syncDot) {
                                 syncSlider.style.background = '#10b981';
                                 syncDot.style.transform = 'translateX(24px)';
-                            } else {
+                            } else if (syncSlider && syncDot) {
                                 syncSlider.style.background = '#333';
                                 syncDot.style.transform = 'translateX(0)';
                             }
@@ -6154,18 +6804,18 @@
                             syncToggle.addEventListener('change', (e) => {
                                 this.syncMetronomeWithBacking = e.target.checked;
                                 if (this.syncMetronomeWithBacking) {
-                                    syncSlider.style.background = '#10b981';
-                                    syncDot.style.transform = 'translateX(24px)';
+                                    if (syncSlider) syncSlider.style.background = '#10b981';
+                                    if (syncDot) syncDot.style.transform = 'translateX(24px)';
 
                                     // Actualizar BPM al global
-                                    const bpmSlider = document.getElementById('bpmSlider');
-                                    const bpmDisplay = document.getElementById('bpmDisplay');
-                                    if (bpmSlider) bpmSlider.value = this.globalBPM;
-                                    if (bpmDisplay) bpmDisplay.textContent = this.globalBPM;
+                                    let bpmSliderEl2 = document.getElementById('bpmSlider');
+                                    let bpmDisplayEl2 = document.getElementById('bpmDisplay');
+                                    if (bpmSliderEl2) bpmSliderEl2.value = this.globalBPM;
+                                    if (bpmDisplayEl2) bpmDisplayEl2.textContent = this.globalBPM;
                                     this.customBPM = null;
                                 } else {
-                                    syncSlider.style.background = '#333';
-                                    syncDot.style.transform = 'translateX(0)';
+                                    if (syncSlider) syncSlider.style.background = '#333';
+                                    if (syncDot) syncDot.style.transform = 'translateX(0)';
                                 }
                             });
                         }
@@ -6176,7 +6826,7 @@
                         let bpmChangeTimeout = null;
 
                         if (bpmSlider && bpmDisplay) {
-                            bpmSlider.addEventListener('input', (e) => {
+                            const updateBPM = (e) => {
                                 const newBPM = parseInt(e.target.value);
                                 bpmDisplay.textContent = newBPM;
 
@@ -6195,7 +6845,10 @@
                                         this.changeBackingTrackBPM(newBPM);
                                     }
                                 }, 300);
-                            });
+                            };
+
+                            bpmSlider.addEventListener('input', updateBPM);
+                            bpmSlider.addEventListener('change', updateBPM);
 
                             // Inicializar BPM
                             if (this.currentBackingTrack) {
@@ -6272,6 +6925,7 @@
             },
 
             refreshCurrentLevel() {
+                console.log('[RefreshLevel] Refreshing level:', this.currentLevel);
                 switch(this.currentLevel) {
                     case 1: this.showIntervals(); break;
                     case 2: this.showScale(); break;
@@ -6492,17 +7146,24 @@
             },
 
             showIntervals() {
-                this.resetState(['currentInterval']);
-                this.hideUIElements();
-                if (this.currentInterval === null) {
-                    this.currentInterval = 4;
-                    document.querySelector('[data-interval="4"]')?.classList.add('active');
+                console.log('[ShowIntervals] currentInterval:', this.currentInterval);
+                try {
+                    this.resetState(['currentInterval']);
+                    this.hideUIElements();
+                    if (this.currentInterval === null) {
+                        this.currentInterval = 4;
+                        document.querySelector('[data-interval="4"]')?.classList.add('active');
+                    }
+                    this.showInterval();
+                } catch (error) {
+                    console.error('[ShowIntervals] Error:', error);
                 }
-                this.showInterval();
             },
 
             showInterval() {
-                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                console.log('[ShowInterval] root:', this.currentRoot, 'interval:', this.currentInterval);
+                try {
+                    const rootName = MusicTheory.getNoteName(this.currentRoot);
                 const intervalName = MusicTheory.intervalNames[this.currentInterval];
                 const targetNote = MusicTheory.getNoteName(this.currentRoot + this.currentInterval);
 
@@ -6518,6 +7179,9 @@
                     `Ascendente: ${rootName} → ${targetNote} (${this.currentInterval} st) | Descendente: ${rootName} → ${descendingNote} (${descendingSemitones} st)`
                 );
                 this.showIntervalInfo(this.currentInterval);
+                } catch (error) {
+                    console.error('[ShowInterval] Error:', error);
+                }
             },
 
             showMajorScale() {
@@ -8632,147 +9296,128 @@
             // ========== NIVEL 15 - JAM SESSION ==========
 
             showJamSession() {
+                console.log('[showJamSession] INICIANDO...');
                 this.resetState();
-                this.hideUIElements();
 
                 if (!this.currentBackingTrack) {
                     this.currentBackingTrack = MusicTheory.backingTracks[0];
                 }
 
                 const track = this.currentBackingTrack;
-
-                // Usar BPM custom o el del track
                 const bpm = this.customBPM || track.bpm;
 
-                // Mostrar escala recomendada en diapasón para CUALQUIER tonalidad
-                Fretboard.showScale(this.currentRoot, track.scale);
+                console.log('[showJamSession] Track:', track);
+                console.log('[showJamSession] BPM:', bpm);
 
-                const rootName = MusicTheory.getNoteName(this.currentRoot);
-
-                this.updateDisplay(
-                    `${track.name} - ${rootName}`,
-                    `${bpm} BPM | ${track.style} | Feel: ${track.feel} | Escala: ${this.SCALE_NAMES[track.scale]}`
-                );
-
-                this.renderJamSessionPanel(track, rootName, bpm);
+                // Renderizar tracks primero
+                console.log('[showJamSession] Llamando renderJamTrackGrid...');
                 this.renderJamTrackGrid();
+
+                // Renderizar panel de info
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+                console.log('[showJamSession] Llamando renderJamSessionPanel...');
+                this.renderJamSessionPanel(track, rootName, bpm);
+
+                // Renderizar diapasón con verificación robusta
+                console.log('[showJamSession] Llamando renderJamFretboard...');
+                this.renderJamFretboard();
+
+                console.log('[showJamSession] TERMINADO');
+            },
+
+            renderJamFretboard() {
+                console.log('[renderJamFretboard] INICIANDO...');
+                const jamFretboard = document.getElementById('jamFretboard');
+                console.log('[renderJamFretboard] jamFretboard element:', jamFretboard);
+
+                if (!jamFretboard) {
+                    console.error('[Jam Session] jamFretboard container not found');
+                    return;
+                }
+
+                // Limpiar contenido previo
+                jamFretboard.innerHTML = '';
+                console.log('[renderJamFretboard] Llamando Fretboard.render...');
+
+                // Renderizar diapasón
+                Fretboard.render('jamFretboard');
+
+                console.log('[renderJamFretboard] Fretboard renderizado, HTML length:', jamFretboard.innerHTML.length);
+
+                // Esperar a que el DOM se actualice antes de aplicar escala
+                requestAnimationFrame(() => {
+                    const track = this.currentBackingTrack;
+                    console.log('[renderJamFretboard] requestAnimationFrame - track:', track);
+                    if (track) {
+                        console.log('[renderJamFretboard] Llamando showScale, root:', this.currentRoot, 'scale:', track.scale);
+                        Fretboard.showScale(this.currentRoot, track.scale);
+                    }
+                });
+
+                console.log('[renderJamFretboard] TERMINADO');
             },
 
             renderJamTrackGrid() {
+                console.log('[renderJamTrackGrid] INICIANDO...');
                 const grid = document.getElementById('jamTrackGrid');
-                if (!grid) return;
+                console.log('[renderJamTrackGrid] Grid element:', grid);
 
-                const categoryMap = {
-                    'blues-12bar': 'blues-rock',
-                    'blues-slow': 'blues-rock',
-                    'rock-pop': 'blues-rock',
-                    'rock-driving': 'blues-rock',
-                    'country-shuffle': 'blues-rock',
-                    'jazz-251': 'jazz-funk',
-                    'jazz-minor': 'jazz-funk',
-                    'funk-groove': 'jazz-funk',
-                    'funk-7ths': 'jazz-funk',
-                    'latin-bossa': 'latin-reggae',
-                    'latin-salsa': 'latin-reggae',
-                    'reggae-one-drop': 'latin-reggae',
-                    'metal-riff': 'metal-heavy',
-                    'grunge-alternative': 'metal-heavy',
-                    'minor-epic': 'metal-heavy'
-                };
+                if (!grid) {
+                    console.error('[Jam Session] jamTrackGrid container not found');
+                    return;
+                }
 
-                const filteredTracks = MusicTheory.backingTracks.filter(track => {
-                    if (this.jamTrackCategory === 'all') return true;
-                    return categoryMap[track.id] === this.jamTrackCategory;
-                });
+                console.log('[renderJamTrackGrid] Backing tracks:', MusicTheory.backingTracks);
 
-                grid.innerHTML = filteredTracks.map(track => {
+                grid.innerHTML = MusicTheory.backingTracks.map(track => {
                     const isActive = this.currentBackingTrack && this.currentBackingTrack.id === track.id;
-                    const styleIcons = {
-                        'Blues': '🎸',
-                        'Rock': '🎸',
-                        'Pop': '🎹',
-                        'Jazz': '🎺',
-                        'Funk': '🎷',
-                        'Metal': '🔥',
-                        'Grunge': '🎸',
-                        'Latin': '🌎',
-                        'Reggae': '🌴',
-                        'Country': '🤠',
-                        'Minor': '🎭'
-                    };
-
-                    const icon = Object.keys(styleIcons).find(key => track.style.includes(key));
-                    const emoji = icon ? styleIcons[icon] : '🎵';
 
                     return `
-                        <div class="jam-track-card" data-track="${track.id}" style="
-                            background: ${isActive ? 'rgba(220, 38, 38, 0.2)' : 'rgba(0, 0, 0, 0.3)'};
-                            border: 2px solid ${isActive ? '#dc2626' : 'rgba(100, 100, 100, 0.3)'};
-                            border-radius: 8px;
-                            padding: 12px;
-                            cursor: pointer;
-                            transition: all 0.2s;
-                            position: relative;
-                            ${isActive ? 'box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);' : ''}
-                        ">
-                            ${isActive ? '<div style="position: absolute; top: 8px; right: 8px; color: #10b981; font-size: 16px;">▶️</div>' : ''}
-                            <div style="font-size: 24px; text-align: center; margin-bottom: 8px;">${emoji}</div>
-                            <div style="font-size: 13px; font-weight: 600; color: white; text-align: center; margin-bottom: 4px;">${track.name}</div>
-                            <div style="font-size: 10px; color: #999; text-align: center; margin-bottom: 8px;">${track.style}</div>
-                            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #666;">
-                                <span>${track.bpm} BPM</span>
-                                <span>${track.feel}</span>
-                            </div>
-                        </div>
+                        <button class="jam-track-item ${isActive ? 'active' : ''}" data-track="${track.id}">
+                            <span class="track-name">${track.name}</span>
+                            <span class="track-bpm">${track.bpm}</span>
+                        </button>
                     `;
                 }).join('');
 
-                // Add hover effects
-                grid.querySelectorAll('.jam-track-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        if (card.dataset.track !== this.currentBackingTrack?.id) {
-                            card.style.borderColor = '#666';
-                            card.style.transform = 'translateY(-2px)';
-                        }
-                    });
-                    card.addEventListener('mouseleave', () => {
-                        if (card.dataset.track !== this.currentBackingTrack?.id) {
-                            card.style.borderColor = 'rgba(100, 100, 100, 0.3)';
-                            card.style.transform = 'translateY(0)';
-                        }
-                    });
-                });
+                console.log('[renderJamTrackGrid] Grid HTML length:', grid.innerHTML.length);
+                console.log('[renderJamTrackGrid] TERMINADO');
             },
 
             renderJamSessionPanel(track, rootName, bpm) {
-                const panel = document.getElementById('jamSessionInfo');
-                if (!panel) return;
+                const keyDisplay = document.getElementById('jamKeyDisplay');
+                const progDisplay = document.getElementById('jamProgressionDisplay');
+                const bpmDisplay = document.getElementById('bpmDisplay');
+                const bpmSlider = document.getElementById('bpmSlider');
 
-                const chordNames = track.progression.map(symbol => {
-                    return `${rootName}${symbol}`;
-                }).join(' → ');
+                if (!keyDisplay || !progDisplay) {
+                    console.error('[Jam Session] Key display or progression display not found');
+                    return;
+                }
 
-                panel.innerHTML = `
-                    <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 4px; border: 1px solid rgba(220, 38, 38, 0.2);">
-                        <div class="text-xs text-void-400 uppercase tracking-wider mb-3">Progresión Actual:</div>
-                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #dc2626;">${chordNames}</div>
+                // Actualizar KEY DISPLAY
+                const scaleName = this.SCALE_NAMES[track.scale] || 'Mayor';
+                keyDisplay.textContent = `${rootName} ${scaleName}`.toUpperCase();
 
-                        <div class="grid grid-cols-2 gap-4 mb-3" style="font-size: 12px;">
-                            <div>
-                                <span class="text-void-400">Estilo:</span>
-                                <span class="text-chalk-100 font-semibold ml-2">${track.style}</span>
-                            </div>
-                            <div>
-                                <span class="text-void-400">Feel:</span>
-                                <span class="text-chalk-100 font-semibold ml-2">${track.feel}</span>
-                            </div>
-                        </div>
+                // Actualizar BPM DISPLAY
+                if (bpmDisplay) {
+                    bpmDisplay.textContent = bpm;
+                }
+                if (bpmSlider) {
+                    bpmSlider.value = bpm;
+                }
 
-                        <div style="color: #999; font-size: 13px; line-height: 1.5; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
-                            ${track.description}
-                        </div>
-                    </div>
-                `;
+                // Actualizar PROGRESSION DISPLAY con animación
+                if (progDisplay) {
+                    const chords = track.progression.map((symbol, idx) => {
+                        const chordName = `${rootName}${symbol}`;
+                        return `
+                            <span class="prog-chord" data-chord-idx="${idx}">${chordName}</span>
+                            ${idx < track.progression.length - 1 ? '<span class="prog-separator">→</span>' : ''}
+                        `;
+                    }).join('');
+                    progDisplay.innerHTML = chords;
+                }
             },
 
             playBackingTrack() {
@@ -8793,7 +9438,7 @@
                 // Mostrar panel de progreso
                 const progressDisplay = document.getElementById('jamProgressDisplay');
                 if (progressDisplay) {
-                    progressDisplay.style.display = 'block';
+                    progressDisplay.classList.add('active');
                 }
 
                 // Callback para actualizar progreso visual
@@ -8853,12 +9498,17 @@
                                      currentChordSymbol.includes('IV') ? 'Subdominante' :
                                      currentChordSymbol.includes('V') ? 'Dominante' : 'Acorde';
                 const functionEl = document.getElementById('currentChordFunction');
-                if (functionEl) functionEl.textContent = `(${chordFunction})`;
+                if (functionEl) functionEl.textContent = `${chordFunction}`;
+
+                // Resaltar acorde activo en PROGRESSION BAR
+                document.querySelectorAll('.prog-chord').forEach((chord, idx) => {
+                    chord.classList.toggle('active', idx === this.jamCurrentBar);
+                });
 
                 // Actualizar compás
                 const barDisplay = document.getElementById('currentBarDisplay');
                 if (barDisplay) {
-                    barDisplay.textContent = `${this.jamCurrentBar + 1} / ${track.progression.length}`;
+                    barDisplay.textContent = `${this.jamCurrentBar + 1}/${track.progression.length}`;
                 }
 
                 // Actualizar contador de loops
@@ -8876,17 +9526,8 @@
             },
 
             updateBeatIndicator(beat) {
-                const dots = document.querySelectorAll('.beat-dot');
-                dots.forEach((dot, i) => {
-                    if (i === beat) {
-                        dot.style.background = i === 0 ? '#dc2626' : '#10b981'; // Beat 1 rojo, otros verde
-                        dot.style.transform = 'scale(1.5)';
-                        dot.style.boxShadow = `0 0 10px ${i === 0 ? '#dc2626' : '#10b981'}`;
-                    } else {
-                        dot.style.background = '#333';
-                        dot.style.transform = 'scale(1)';
-                        dot.style.boxShadow = 'none';
-                    }
+                document.querySelectorAll('.beat-pip').forEach((pip, idx) => {
+                    pip.classList.toggle('active', idx === beat);
                 });
             },
 
@@ -8919,7 +9560,7 @@
                 // Ocultar panel de progreso
                 const progressDisplay = document.getElementById('jamProgressDisplay');
                 if (progressDisplay) {
-                    progressDisplay.style.display = 'none';
+                    progressDisplay.classList.remove('active');
                 }
 
                 // Restaurar volumen

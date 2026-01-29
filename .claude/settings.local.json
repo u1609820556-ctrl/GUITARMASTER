@@ -15,7 +15,12 @@
       "Bash(powershell -Command \"\\(Get-Content index.html -Raw\\).Length\")",
       "Bash(powershell -Command:*)",
       "Bash(grep:*)",
-      "Bash(dir /R \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\")"
+      "Bash(dir /R \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\")",
+      "Bash(git push:*)",
+      "Bash(start \"\" \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\\\\index.html\")",
+      "Bash(start msedge \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\\\\index.html\")",
+      "Bash(start chrome:*)",
+      "Bash(python -m http.server:*)"
     ]
   }
 }
