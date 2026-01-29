@@ -2530,25 +2530,29 @@
                 <div class="text-sm text-chalk-100">Practica sobre bases profesionales</div>
             </div>
 
-            <!-- Selector de estilo -->
+            <!-- Tabs de categorías -->
             <div class="mb-4">
-                <div class="text-xs text-void-400 uppercase tracking-wider mb-2">Estilo:</div>
-                <div class="flex flex-wrap gap-2">
-                    <button class="scale-cat-btn active" data-track="blues-12bar">Blues Shuffle</button>
-                    <button class="scale-cat-btn" data-track="blues-slow">Slow Blues</button>
-                    <button class="scale-cat-btn" data-track="rock-pop">Pop</button>
-                    <button class="scale-cat-btn" data-track="rock-driving">Rock</button>
-                    <button class="scale-cat-btn" data-track="metal-riff">Metal</button>
-                    <button class="scale-cat-btn" data-track="jazz-251">Jazz</button>
-                    <button class="scale-cat-btn" data-track="jazz-minor">Jazz Minor</button>
-                    <button class="scale-cat-btn" data-track="funk-groove">Funk</button>
-                    <button class="scale-cat-btn" data-track="funk-7ths">Funk 7ths</button>
-                    <button class="scale-cat-btn" data-track="minor-epic">Épico</button>
-                    <button class="scale-cat-btn" data-track="latin-bossa">Bossa</button>
-                    <button class="scale-cat-btn" data-track="latin-salsa">Salsa</button>
-                    <button class="scale-cat-btn" data-track="reggae-one-drop">Reggae</button>
-                    <button class="scale-cat-btn" data-track="country-shuffle">Country</button>
-                    <button class="scale-cat-btn" data-track="grunge-alternative">Grunge</button>
+                <div class="flex flex-wrap gap-2 mb-3 border-b border-slate-700 pb-2">
+                    <button class="jam-category-tab active" data-category="all" style="padding: 8px 16px; background: rgba(220, 38, 38, 0.2); border: 1px solid rgba(220, 38, 38, 0.4); border-radius: 4px 4px 0 0; color: #dc2626; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🎵 Todos
+                    </button>
+                    <button class="jam-category-tab" data-category="blues-rock" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🎸 Blues/Rock
+                    </button>
+                    <button class="jam-category-tab" data-category="jazz-funk" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🎺 Jazz/Funk
+                    </button>
+                    <button class="jam-category-tab" data-category="latin-reggae" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🌎 Latino/Reggae
+                    </button>
+                    <button class="jam-category-tab" data-category="metal-heavy" style="padding: 8px 16px; background: rgba(100, 100, 100, 0.2); border: 1px solid rgba(100, 100, 100, 0.4); border-radius: 4px 4px 0 0; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🔥 Metal/Heavy
+                    </button>
+                </div>
+
+                <!-- Track cards grid -->
+                <div id="jamTrackGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <!-- Cards generados dinámicamente -->
                 </div>
             </div>
 
@@ -5211,6 +5215,7 @@
             jamLoopCount: 0,
             jamCurrentBeat: 0,
             jamBeatIntervalId: null,
+            jamTrackCategory: 'all',
             currentCAGED: 'C',
             cagedShowAll: false,
             currentScaleCategory: 'major',
@@ -6065,11 +6070,33 @@
                         break;
 
                     case 15: // Jam Session
-                        controlPanel.querySelectorAll('[data-track]').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                controlPanel.querySelectorAll('[data-track]').forEach(b => b.classList.remove('active'));
+                        // Category tabs
+                        controlPanel.querySelectorAll('.jam-category-tab').forEach(tab => {
+                            tab.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('.jam-category-tab').forEach(t => {
+                                    t.style.background = 'rgba(100, 100, 100, 0.2)';
+                                    t.style.borderColor = 'rgba(100, 100, 100, 0.4)';
+                                    t.style.color = '#999';
+                                    t.classList.remove('active');
+                                });
+                                e.currentTarget.style.background = 'rgba(220, 38, 38, 0.2)';
+                                e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.4)';
+                                e.currentTarget.style.color = '#dc2626';
                                 e.currentTarget.classList.add('active');
-                                const trackId = e.currentTarget.dataset.track;
+
+                                this.jamTrackCategory = e.currentTarget.dataset.category;
+                                this.renderJamTrackGrid();
+                            });
+                        });
+
+                        // Track cards (delegated event)
+                        const trackGrid = document.getElementById('jamTrackGrid');
+                        if (trackGrid) {
+                            trackGrid.addEventListener('click', (e) => {
+                                const card = e.target.closest('.jam-track-card');
+                                if (!card) return;
+
+                                const trackId = card.dataset.track;
                                 this.currentBackingTrack = MusicTheory.backingTracks.find(t => t.id === trackId);
 
                                 // Resetear BPM custom al cambiar track
@@ -6084,7 +6111,7 @@
 
                                 this.showJamSession();
                             });
-                        });
+                        }
 
                         // Selector de tonalidad
                         const keySelector = document.getElementById('jamKeySelector');
@@ -8628,6 +8655,93 @@
                 );
 
                 this.renderJamSessionPanel(track, rootName, bpm);
+                this.renderJamTrackGrid();
+            },
+
+            renderJamTrackGrid() {
+                const grid = document.getElementById('jamTrackGrid');
+                if (!grid) return;
+
+                const categoryMap = {
+                    'blues-12bar': 'blues-rock',
+                    'blues-slow': 'blues-rock',
+                    'rock-pop': 'blues-rock',
+                    'rock-driving': 'blues-rock',
+                    'country-shuffle': 'blues-rock',
+                    'jazz-251': 'jazz-funk',
+                    'jazz-minor': 'jazz-funk',
+                    'funk-groove': 'jazz-funk',
+                    'funk-7ths': 'jazz-funk',
+                    'latin-bossa': 'latin-reggae',
+                    'latin-salsa': 'latin-reggae',
+                    'reggae-one-drop': 'latin-reggae',
+                    'metal-riff': 'metal-heavy',
+                    'grunge-alternative': 'metal-heavy',
+                    'minor-epic': 'metal-heavy'
+                };
+
+                const filteredTracks = MusicTheory.backingTracks.filter(track => {
+                    if (this.jamTrackCategory === 'all') return true;
+                    return categoryMap[track.id] === this.jamTrackCategory;
+                });
+
+                grid.innerHTML = filteredTracks.map(track => {
+                    const isActive = this.currentBackingTrack && this.currentBackingTrack.id === track.id;
+                    const styleIcons = {
+                        'Blues': '🎸',
+                        'Rock': '🎸',
+                        'Pop': '🎹',
+                        'Jazz': '🎺',
+                        'Funk': '🎷',
+                        'Metal': '🔥',
+                        'Grunge': '🎸',
+                        'Latin': '🌎',
+                        'Reggae': '🌴',
+                        'Country': '🤠',
+                        'Minor': '🎭'
+                    };
+
+                    const icon = Object.keys(styleIcons).find(key => track.style.includes(key));
+                    const emoji = icon ? styleIcons[icon] : '🎵';
+
+                    return `
+                        <div class="jam-track-card" data-track="${track.id}" style="
+                            background: ${isActive ? 'rgba(220, 38, 38, 0.2)' : 'rgba(0, 0, 0, 0.3)'};
+                            border: 2px solid ${isActive ? '#dc2626' : 'rgba(100, 100, 100, 0.3)'};
+                            border-radius: 8px;
+                            padding: 12px;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            position: relative;
+                            ${isActive ? 'box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);' : ''}
+                        ">
+                            ${isActive ? '<div style="position: absolute; top: 8px; right: 8px; color: #10b981; font-size: 16px;">▶️</div>' : ''}
+                            <div style="font-size: 24px; text-align: center; margin-bottom: 8px;">${emoji}</div>
+                            <div style="font-size: 13px; font-weight: 600; color: white; text-align: center; margin-bottom: 4px;">${track.name}</div>
+                            <div style="font-size: 10px; color: #999; text-align: center; margin-bottom: 8px;">${track.style}</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #666;">
+                                <span>${track.bpm} BPM</span>
+                                <span>${track.feel}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Add hover effects
+                grid.querySelectorAll('.jam-track-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        if (card.dataset.track !== this.currentBackingTrack?.id) {
+                            card.style.borderColor = '#666';
+                            card.style.transform = 'translateY(-2px)';
+                        }
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        if (card.dataset.track !== this.currentBackingTrack?.id) {
+                            card.style.borderColor = 'rgba(100, 100, 100, 0.3)';
+                            card.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
             },
 
             renderJamSessionPanel(track, rootName, bpm) {
