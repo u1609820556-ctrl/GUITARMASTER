@@ -20,7 +20,9 @@
       "Bash(start \"\" \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\\\\index.html\")",
       "Bash(start msedge \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\\\\index.html\")",
       "Bash(start chrome:*)",
-      "Bash(python -m http.server:*)"
+      "Bash(python -m http.server:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(python:*)"
     ]
   }
 }
