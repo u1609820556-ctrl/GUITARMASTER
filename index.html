@@ -299,6 +299,31 @@
             border-left: 3px solid #3b82f6;
         }
 
+        /* CAGED SVG node styles */
+        .caged-node {
+            transition: all 0.3s ease;
+        }
+
+        .caged-node:hover circle {
+            filter: brightness(1.2);
+            cursor: pointer;
+        }
+
+        .caged-node.active circle {
+            stroke: #84cc16 !important;
+            stroke-width: 4 !important;
+        }
+
+        .caged-connection {
+            transition: all 0.3s ease;
+        }
+
+        .caged-connection:hover {
+            stroke: #94a3b8 !important;
+            stroke-width: 3 !important;
+            cursor: pointer;
+        }
+
         /* Position marker label */
         .position-marker {
             position: absolute;
@@ -2541,6 +2566,99 @@
             color: #cbd5e1;
         }
 
+        .initial-chord-btn {
+            padding: 1rem;
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .initial-chord-btn:hover {
+            background: #334155;
+            border-color: #84cc16;
+            transform: translateY(-2px);
+        }
+
+        .emotion-btn {
+            padding: 1rem;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .emotion-btn:hover {
+            background: #334155;
+            border-color: #84cc16;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(132, 204, 22, 0.2);
+        }
+
+        .suggestion-card {
+            padding: 1rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .suggestion-card:hover {
+            border-color: #84cc16;
+            box-shadow: 0 4px 12px rgba(132, 204, 22, 0.2);
+        }
+
+        .progression-chord-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 0.375rem;
+        }
+
+        .progression-chord-chip .chord-name {
+            font-weight: 600;
+            color: #84cc16;
+        }
+
+        .progression-chord-chip .remove-chord {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .progression-chord-chip .remove-chord:hover {
+            color: #ef4444;
+        }
+
+        .ctrl-btn-small {
+            padding: 0.375rem 0.75rem;
+            background: #84cc16;
+            color: #0a0a0a;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn-small:hover {
+            background: #a3e635;
+        }
+
         .chord-lab-difficulty-bar {
             height: 6px;
             background: #334155;
@@ -4013,22 +4131,109 @@
     </template>
 
     <template id="tpl-caged">
-        <div class="space-y-3">
-            <div class="flex flex-wrap items-center gap-3">
-                <span class="text-sm text-slate-400">Forma CAGED:</span>
-                <div class="flex flex-wrap gap-2">
-                    <button class="chord-btn active" data-caged="C"><span class="roman">C</span></button>
-                    <button class="chord-btn" data-caged="A"><span class="roman">A</span></button>
-                    <button class="chord-btn" data-caged="G"><span class="roman">G</span></button>
-                    <button class="chord-btn" data-caged="E"><span class="roman">E</span></button>
-                    <button class="chord-btn" data-caged="D"><span class="roman">D</span></button>
+        <div class="space-y-6">
+            <!-- Sección 1: Introducción didáctica -->
+            <div class="p-4 bg-blue-900/20 border border-blue-700 rounded-lg">
+                <h3 class="text-xl font-medium text-sage-400 mb-3">
+                    🎸 ¿Qué es el Sistema CAGED?
+                </h3>
+                <p class="text-sm text-chalk-200 mb-2">
+                    El Sistema CAGED te permite tocar el mismo acorde en 5 formas diferentes
+                    a lo largo del diapasón. Las letras representan las formas básicas:
+                </p>
+                <div class="grid grid-cols-5 gap-2 my-4">
+                    <div class="p-2 bg-void-800 rounded text-center">
+                        <div class="text-2xl font-bold" style="color: #ef4444">C</div>
+                        <div class="text-xs text-void-400">Abierta y brillante</div>
+                    </div>
+                    <div class="p-2 bg-void-800 rounded text-center">
+                        <div class="text-2xl font-bold" style="color: #f59e0b">A</div>
+                        <div class="text-xs text-void-400">Full y potente</div>
+                    </div>
+                    <div class="p-2 bg-void-800 rounded text-center">
+                        <div class="text-2xl font-bold" style="color: #eab308">G</div>
+                        <div class="text-xs text-void-400">Rica y resonante</div>
+                    </div>
+                    <div class="p-2 bg-void-800 rounded text-center">
+                        <div class="text-2xl font-bold" style="color: #84cc16">E</div>
+                        <div class="text-xs text-void-400">Versátil y móvil</div>
+                    </div>
+                    <div class="p-2 bg-void-800 rounded text-center">
+                        <div class="text-2xl font-bold" style="color: #06b6d4">D</div>
+                        <div class="text-xs text-void-400">Aguda y penetrante</div>
+                    </div>
                 </div>
-                <span class="text-xs text-slate-500 ml-4">Orden: C → A → G → E → D → C...</span>
+                <p class="text-sm text-void-300">
+                    💡 <strong>El truco:</strong> Estas formas se repiten en orden circular por todo
+                    el mástil. Domina este sistema y podrás tocar cualquier acorde en cualquier lugar.
+                </p>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="text-sm text-void-300">Ver todas las formas</span>
-                <div class="toggle-switch" id="cagedShowAllToggle" style="width: 48px; height: 24px; background: #333; border-radius: 12px; position: relative; cursor: pointer; transition: all 0.3s;">
-                    <div style="width: 20px; height: 20px; background: #dc2626; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: all 0.3s;"></div>
+
+            <!-- Sección 2: Visualizador interactivo -->
+            <div>
+                <h3 class="text-lg font-medium text-sage-400 mb-3">
+                    Visualizador Interactivo
+                </h3>
+                <p class="text-sm text-void-300 mb-3">
+                    Haz click en los nodos para ver cada forma. Click en las líneas para ver transiciones.
+                </p>
+                <div id="caged-svg-container" class="flex justify-center mb-4">
+                    <!-- SVG generado por renderCAGEDMap() -->
+                </div>
+
+                <!-- Botón Tour CAGED -->
+                <div class="text-center mb-4">
+                    <button id="caged-tour-btn" class="px-6 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded-lg font-medium">
+                        🎵 Tour Completo CAGED (C→A→G→E→D)
+                    </button>
+                </div>
+
+                <!-- Panel de información dinámica -->
+                <div id="caged-info-panel" class="p-4 bg-void-800 rounded-lg hidden">
+                    <!-- Contenido dinámico -->
+                </div>
+            </div>
+
+            <!-- Sección 3: Toggle "Ver todas las formas" -->
+            <div class="p-4 bg-sage-900/20 border border-sage-600 rounded-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 class="text-lg font-medium text-sage-400">Ver Todas las Formas</h3>
+                        <p class="text-sm text-void-400">Compara las 5 posiciones CAGED simultáneamente</p>
+                    </div>
+                    <button id="cagedShowAllToggle" class="relative inline-flex h-8 w-16 items-center rounded-full bg-void-700 transition-colors">
+                        <span class="inline-block h-6 w-6 transform rounded-full bg-chalk-100 transition-transform translate-x-1" id="caged-toggle-dot"></span>
+                    </button>
+                </div>
+
+                <!-- Diagramas de todas las formas -->
+                <div id="caged-all-diagrams" class="hidden mt-4">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="caged-diagrams-container">
+                        <!-- Diagramas generados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 4: Ejercicio práctico -->
+            <div class="p-4 bg-void-800 rounded-lg">
+                <h3 class="text-lg font-medium text-sage-400 mb-3">
+                    🎯 Ejercicio: Encuentra el patrón
+                </h3>
+                <p class="text-sm text-chalk-200 mb-3">
+                    Prueba tocar un acorde C mayor usando las 5 formas CAGED en orden:
+                </p>
+                <ol class="text-sm text-void-300 space-y-2 ml-6 list-decimal">
+                    <li>Forma C (posición abierta) - Traste 0</li>
+                    <li>Forma A (barre en 3er traste) - Traste 3</li>
+                    <li>Forma G (barre en 5º traste) - Traste 5</li>
+                    <li>Forma E (barre en 8º traste) - Traste 8</li>
+                    <li>Forma D (barre en 10º traste) - Traste 10</li>
+                </ol>
+                <div class="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded">
+                    <strong class="text-blue-400">💡 Reto avanzado:</strong>
+                    <p class="text-sm text-chalk-200 mt-1">
+                        ¿Puedes tocar una progresión I-IV-V (C-F-G) usando solo formas E?
+                    </p>
                 </div>
             </div>
         </div>
@@ -4099,8 +4304,8 @@
                 <button class="chord-lab-mode-btn active" data-mode="explorer">
                     Explorer
                 </button>
-                <button class="chord-lab-mode-btn" data-mode="caged-map">
-                    CAGED Map
+                <button class="chord-lab-mode-btn" data-mode="progression-builder">
+                    Progression Builder
                 </button>
                 <button class="chord-lab-mode-btn" data-mode="practice">
                     Practice Builder
@@ -4137,18 +4342,6 @@
                         <button class="chord-lab-quality-btn" data-quality="11">11th</button>
                         <button class="chord-lab-quality-btn" data-quality="13">13th</button>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span class="text-sm text-void-400">Register:</span>
-                        <button class="chord-lab-filter-btn active" data-filter="register" data-value="all">All</button>
-                        <button class="chord-lab-filter-btn" data-filter="register" data-value="low">Low</button>
-                        <button class="chord-lab-filter-btn" data-filter="register" data-value="mid">Mid</button>
-                        <button class="chord-lab-filter-btn" data-filter="register" data-value="high">High</button>
-                        <span class="text-sm text-void-400 ml-4">Difficulty:</span>
-                        <button class="chord-lab-filter-btn active" data-filter="difficulty" data-value="all">All</button>
-                        <button class="chord-lab-filter-btn" data-filter="difficulty" data-value="easy">Easy (1-3)</button>
-                        <button class="chord-lab-filter-btn" data-filter="difficulty" data-value="medium">Medium (4-7)</button>
-                        <button class="chord-lab-filter-btn" data-filter="difficulty" data-value="hard">Hard (8-10)</button>
-                    </div>
                 </div>
 
                 <!-- Voicings Grid -->
@@ -4174,20 +4367,91 @@
                 </div>
             </div>
 
-            <!-- Mode: CAGED Map -->
-            <div id="chord-lab-caged-map" class="chord-lab-mode hidden">
-                <div class="text-center mb-4">
-                    <h3 class="text-xl font-medium text-sage-400 mb-2">CAGED System Relationships</h3>
-                    <p class="text-sm text-void-400">Click nodes to see position on fretboard. Click connections to see transitions.</p>
+            <!-- Mode: Progression Builder -->
+            <div id="chord-lab-progression-builder" class="chord-lab-mode hidden">
+                <!-- Área de progresión construida -->
+                <div class="mb-6 p-4 bg-void-800 rounded-lg">
+                    <h3 class="text-lg font-medium text-sage-400 mb-3">Tu Progresión</h3>
+                    <div id="progression-chain" class="flex items-center gap-2 flex-wrap min-h-[40px]">
+                        <span class="text-sm text-void-400">Comienza seleccionando un acorde inicial...</span>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <button id="play-progression" class="px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            ▶ Escuchar progresión
+                        </button>
+                        <button id="clear-progression" class="px-4 py-2 bg-void-700 hover:bg-void-600 text-chalk-100 rounded disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            Limpiar
+                        </button>
+                    </div>
                 </div>
-                <div id="chord-lab-caged-svg-container" class="flex justify-center">
-                    <!-- SVG generated by JS -->
+
+                <!-- Selector de acorde inicial -->
+                <div class="mb-6" id="initial-chord-selector">
+                    <h3 class="text-lg font-medium text-sage-400 mb-3">1. Elige tu acorde inicial</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                        <button class="initial-chord-btn" data-chord="C" data-quality="maj">C</button>
+                        <button class="initial-chord-btn" data-chord="C" data-quality="min">Cm</button>
+                        <button class="initial-chord-btn" data-chord="D" data-quality="maj">D</button>
+                        <button class="initial-chord-btn" data-chord="D" data-quality="min">Dm</button>
+                        <button class="initial-chord-btn" data-chord="E" data-quality="maj">E</button>
+                        <button class="initial-chord-btn" data-chord="E" data-quality="min">Em</button>
+                        <button class="initial-chord-btn" data-chord="F" data-quality="maj">F</button>
+                        <button class="initial-chord-btn" data-chord="F" data-quality="min">Fm</button>
+                        <button class="initial-chord-btn" data-chord="G" data-quality="maj">G</button>
+                        <button class="initial-chord-btn" data-chord="G" data-quality="min">Gm</button>
+                        <button class="initial-chord-btn" data-chord="A" data-quality="maj">A</button>
+                        <button class="initial-chord-btn" data-chord="A" data-quality="min">Am</button>
+                        <button class="initial-chord-btn" data-chord="B" data-quality="maj">B</button>
+                        <button class="initial-chord-btn" data-chord="B" data-quality="min">Bm</button>
+                    </div>
                 </div>
-                <div id="chord-lab-transition-info" class="mt-4 p-4 bg-void-800 rounded-lg hidden">
-                    <!-- Transition details -->
+
+                <!-- Selector de emoción -->
+                <div class="mb-6 hidden" id="emotion-selector">
+                    <h3 class="text-lg font-medium text-sage-400 mb-3">2. ¿Cómo quieres que suene el siguiente acorde?</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                        <button class="emotion-btn" data-emotion="misterioso">
+                            <div class="text-2xl mb-1">🌙</div>
+                            <div class="font-medium text-sage-300">Misterioso</div>
+                            <div class="text-xs text-void-400">Ambiguo, modal</div>
+                        </button>
+                        <button class="emotion-btn" data-emotion="abierto">
+                            <div class="text-2xl mb-1">☁️</div>
+                            <div class="font-medium text-sage-300">Abierto</div>
+                            <div class="text-xs text-void-400">Espacioso, aire</div>
+                        </button>
+                        <button class="emotion-btn" data-emotion="alegre">
+                            <div class="text-2xl mb-1">☀️</div>
+                            <div class="font-medium text-sage-300">Alegre</div>
+                            <div class="text-xs text-void-400">Brillante, optimista</div>
+                        </button>
+                        <button class="emotion-btn" data-emotion="melancólico">
+                            <div class="text-2xl mb-1">🌧️</div>
+                            <div class="font-medium text-sage-300">Melancólico</div>
+                            <div class="text-xs text-void-400">Triste, introspectivo</div>
+                        </button>
+                        <button class="emotion-btn" data-emotion="tenso">
+                            <div class="text-2xl mb-1">⚡</div>
+                            <div class="font-medium text-sage-300">Tenso</div>
+                            <div class="text-xs text-void-400">Dramático, disonante</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sugerencias de acordes -->
+                <div class="mb-6 hidden" id="chord-suggestions">
+                    <h3 class="text-lg font-medium text-sage-400 mb-3">3. Elige tu siguiente acorde</h3>
+                    <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <!-- Panel de explicación -->
+                <div class="mt-6 p-4 bg-sage-900/20 border border-sage-600 rounded-lg hidden" id="transition-explanation">
+                    <h4 class="text-lg font-medium text-sage-400 mb-3">📚 Por qué funciona esta transición</h4>
+                    <div id="explanation-content"></div>
                 </div>
             </div>
 
+            <!-- Mode: CAGED Map -->
             <!-- Mode: Practice Builder -->
             <div id="chord-lab-practice" class="chord-lab-mode hidden">
                 <div class="space-y-4">
@@ -4218,6 +4482,14 @@
             <div id="chord-lab-fretboard-display" class="mt-6">
                 <h3 class="text-lg font-medium text-sage-400 mb-3">Fretboard View</h3>
                 <div id="chord-lab-fretboard-container"></div>
+
+                <!-- Chord Story Panel -->
+                <div id="chord-story-panel" class="mt-4 p-4 bg-sage-900/20 border border-sage-600 rounded-lg hidden">
+                    <h4 class="text-lg font-medium text-sage-400 mb-3">📖 Historia de este acorde</h4>
+                    <div id="chord-story-content" class="space-y-2 text-sm">
+                        <!-- Contenido dinámico -->
+                    </div>
+                </div>
             </div>
         </div>
     </template>
@@ -5057,6 +5329,20 @@
                     movable: false,
                     commonUse: 'Bright, high voicing'
                 },
+                'E_shape_major': {
+                    name: 'E Shape',
+                    frets: [0, 2, 2, 1, 0, 0],
+                    fingers: [0, 2, 3, 1, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 2,
+                    brightness: 7,
+                    bestFor: ['full-sound', 'open'],
+                    genres: ['rock', 'folk', 'blues'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Open E chord, full resonance'
+                },
                 // Minor shapes
                 'Am_shape': {
                     name: 'Am Shape',
@@ -5865,6 +6151,14 @@
                 }
             },
 
+            // Calculate CAGED position on fretboard based on shape and root note
+            calculateCAGEDPosition(shape, root = 'C') {
+                const rootIndex = this.notes.indexOf(root);
+                const shapeOffsets = { 'C': 0, 'A': 3, 'G': 5, 'E': 8, 'D': 10 };
+                const offset = shapeOffsets[shape] || 0;
+                return (rootIndex + offset) % 12;
+            },
+
             // Didactic comparisons between voicings
             voicingComparisons: {
                 'E_shape_maj7_vs_A_shape_maj7': {
@@ -6535,7 +6829,7 @@
                     ]
                 },
                 'country': {
-                    preferredVoicings: ['C_shape_major', 'G_shape_major', 'D_shape_major', 'A_shape_dom7', 'D_shape_dom7'],
+                    preferredVoicings: ['C_shape_major', 'G_shape_major', 'D_shape_major', 'A_shape_dom7', 'E_shape_dom7'],
                     avoidVoicings: ['Drop2_Cmaj7_root', 'C7sharp9', 'Amadd9'],
                     registerPreference: 'low',
                     explanation: 'Country usa open chords y dom7s - sonido bright y twangy.',
@@ -6549,6 +6843,135 @@
                         'Jolene - todas open chords',
                         'Friends in Low Places - progresión simple'
                     ]
+                }
+            },
+
+            // Emotional qualities mapping for Progression Builder
+            emotionalQualities: {
+                'misterioso': {
+                    name: 'Misterioso',
+                    description: 'Sonidos ambiguos, modales, con tensión suspendida',
+                    brightness: [1, 4],
+                    tension: ['medium', 'high'],
+                    preferredQualities: ['m7', 'm7b5', 'sus2', 'dim', 'min'],
+                    avoidQualities: ['maj', 'maj7'],
+                    modes: ['phrygian', 'locrian', 'dorian'],
+                    examples: 'Como "Riders on the Storm" - The Doors'
+                },
+                'abierto': {
+                    name: 'Abierto/Espacioso',
+                    description: 'Sonidos con aire, cuerdas al aire, reverberación',
+                    brightness: [7, 10],
+                    tension: ['low'],
+                    preferredQualities: ['maj', 'sus2', 'add9'],
+                    avoidQualities: ['dim', 'm7b5', '7'],
+                    voicingPreference: 'open chords con cuerdas al aire',
+                    examples: 'Como "Wonderwall" - Oasis'
+                },
+                'alegre': {
+                    name: 'Alegre/Brillante',
+                    description: 'Mayor, optimista, energético',
+                    brightness: [6, 9],
+                    tension: ['low'],
+                    preferredQualities: ['maj', 'maj7'],
+                    avoidQualities: ['min', 'dim'],
+                    modes: ['ionian', 'lydian', 'mixolydian'],
+                    examples: 'Como "Don\'t Stop Believin\'" - Journey'
+                },
+                'melancólico': {
+                    name: 'Melancólico/Triste',
+                    description: 'Menor, introspectivo, emotivo',
+                    brightness: [2, 5],
+                    tension: ['low', 'medium'],
+                    preferredQualities: ['min', 'm7'],
+                    avoidQualities: ['maj', 'maj7'],
+                    modes: ['aeolian', 'phrygian', 'dorian'],
+                    examples: 'Como "Hurt" - Johnny Cash'
+                },
+                'tenso': {
+                    name: 'Tenso/Dramático',
+                    description: 'Disonancia, acordes alterados, inestabilidad',
+                    brightness: [3, 7],
+                    tension: ['high'],
+                    preferredQualities: ['dim', '7', 'm7b5'],
+                    avoidQualities: ['maj', 'maj7'],
+                    examples: 'Como "Black Hole Sun" - Soundgarden'
+                }
+            },
+
+            // Harmonic transitions explained
+            harmonicTransitions: {
+                'I-IV': {
+                    function: 'T→SD',
+                    feeling: 'Movimiento hacia afuera, expansión',
+                    brightness_change: 1,
+                    tension_change: 0,
+                    examples: ['Let It Be - Beatles (C→F)', 'Wonderwall - Oasis (Em→G)'],
+                    voiceLeadingTip: 'Nota común en cuerda G, movimiento suave'
+                },
+                'I-V': {
+                    function: 'T→D',
+                    feeling: 'Tensión, pregunta, anticipación',
+                    brightness_change: 0,
+                    tension_change: 1,
+                    examples: ['Sweet Home Alabama (D→A)', 'Wild Thing (A→E)'],
+                    voiceLeadingTip: 'Raíz salta quinta, muy estable'
+                },
+                'V-I': {
+                    function: 'D→T',
+                    feeling: 'Resolución, llegada a casa, cierre',
+                    brightness_change: 0,
+                    tension_change: -2,
+                    examples: ['Cualquier cadencia perfecta', 'Final de canciones clásicas'],
+                    voiceLeadingTip: 'La más fuerte resolución en música occidental'
+                },
+                'I-vi': {
+                    function: 'T→Tm',
+                    feeling: 'Giro melancólico, de mayor a menor',
+                    brightness_change: -2,
+                    tension_change: 0,
+                    examples: ['50s Progression (C→Am)', 'Stand By Me'],
+                    voiceLeadingTip: 'Notas comunes, cambio sutil'
+                },
+                'IV-I': {
+                    function: 'SD→T',
+                    feeling: 'Resolución plagal, "Amén", conclusión suave',
+                    brightness_change: -1,
+                    tension_change: 0,
+                    examples: ['Hey Jude - Beatles (ending)', 'Let It Be'],
+                    voiceLeadingTip: 'Menos dramático que V→I, más modal'
+                },
+                'vi-IV': {
+                    function: 'Tm→SD',
+                    feeling: 'Esperanza emergiendo de tristeza',
+                    brightness_change: 2,
+                    tension_change: 0,
+                    examples: ['Axis of Awesome 4 chords (vi-IV-I-V)'],
+                    voiceLeadingTip: 'Salto descendente suave de tercera'
+                },
+                'ii-V': {
+                    function: 'SD→D',
+                    feeling: 'Setup de jazz, preparación para resolución',
+                    brightness_change: 0,
+                    tension_change: 1,
+                    examples: ['Autumn Leaves', 'All the Things You Are'],
+                    voiceLeadingTip: 'Movimiento de 4ta, smooth voice leading'
+                },
+                'I-ii': {
+                    function: 'T→SD',
+                    feeling: 'Suave, íntimo, movimiento pequeño',
+                    brightness_change: -1,
+                    tension_change: 0,
+                    examples: ['The Scientist - Coldplay'],
+                    voiceLeadingTip: 'Cambio mínimo, muy smooth'
+                },
+                'V-vi': {
+                    function: 'D→Tm',
+                    feeling: 'Cadencia rota, sorpresa, evita resolución',
+                    brightness_change: -1,
+                    tension_change: -1,
+                    examples: ['Creep - Radiohead'],
+                    voiceLeadingTip: 'Evita la tónica esperada, giro inesperado'
                 }
             },
 
@@ -7996,7 +8419,141 @@
                     fingering: [0, 1, 0, 0, 3, 0, 1],
                     position: 0
                 }
-            ]
+            ],
+
+            // NEW: Suggest next chords based on emotion and harmonic context
+            suggestNextChords(currentChord, emotionalQuality, key = 'C', options = {}) {
+                const quality = this.emotionalQualities[emotionalQuality];
+                if (!quality) return [];
+
+                const currentRoot = this.notes.indexOf(currentChord);
+                const keyRoot = this.notes.indexOf(key);
+
+                // Get scale harmonization (major for now, can be extended)
+                const harmonization = this.getScaleHarmonization(key, 'major');
+
+                // Filter compatible chords
+                const compatible = harmonization.filter(chord => {
+                    // Check if quality matches emotional preference
+                    return quality.preferredQualities.includes(chord.quality);
+                });
+
+                // Score and sort
+                const scored = compatible.map(chord => {
+                    const chordRootIdx = this.notes.indexOf(chord.root);
+                    const transition = this.getTransitionInfo(currentChord, chord.root, key);
+                    const emotionalFit = this.calculateEmotionalFit(chord, quality);
+
+                    return {
+                        chord: chord.root,
+                        quality: chord.quality,
+                        degree: chord.degree,
+                        transition,
+                        emotionalFit,
+                        totalScore: emotionalFit
+                    };
+                });
+
+                // Sort by score and filter to only those with available voicings
+                return scored
+                    .sort((a, b) => b.totalScore - a.totalScore)
+                    .filter(sug => {
+                        // Check if voicing exists for this chord/quality combo
+                        const testKeys = [
+                            `${sug.chord}_shape_major`,
+                            `${sug.chord}_shape_maj7`,
+                            `${sug.chord}_shape_dom7`,
+                            `${sug.chord}${sug.quality}`,
+                            `${sug.chord}maj7`,
+                            `${sug.chord}9`,
+                            `${sug.chord}m7`,
+                            `${sug.chord}_shape`
+                        ];
+                        return testKeys.some(key => this.chordLabVoicings[key]);
+                    })
+                    .slice(0, options.limit || 4)
+                    .map(sug => ({
+                        chord: sug.chord,
+                        quality: sug.quality,
+                        romanNumeral: this.getRomanNumeral(sug.degree, sug.quality),
+                        explanation: this.generateExplanation(currentChord, sug.chord, sug.quality, emotionalQuality, key),
+                        transition: sug.transition,
+                        emotionalFit: sug.emotionalFit
+                    }));
+            },
+
+            // Calculate emotional fit score
+            calculateEmotionalFit(chord, emotionalQuality) {
+                // Simple scoring based on quality match
+                if (emotionalQuality.preferredQualities.includes(chord.quality)) {
+                    return 0.8 + Math.random() * 0.2; // 0.8-1.0
+                }
+                if (emotionalQuality.avoidQualities?.includes(chord.quality)) {
+                    return 0.1 + Math.random() * 0.2; // 0.1-0.3
+                }
+                return 0.4 + Math.random() * 0.2; // 0.4-0.6
+            },
+
+            // Get transition info between chords
+            getTransitionInfo(fromChord, toChord, key = 'C') {
+                const harmonization = this.getScaleHarmonization(key, 'major');
+
+                // Find degrees
+                const fromDegree = harmonization.findIndex(c => c.root === fromChord) + 1;
+                const toDegree = harmonization.findIndex(c => c.root === toChord) + 1;
+
+                if (fromDegree === 0 || toDegree === 0) {
+                    return {
+                        function: '?',
+                        feeling: 'Transición fuera de la tonalidad',
+                        examples: []
+                    };
+                }
+
+                const key_str = this.romanNumerals[fromDegree - 1] + '-' + this.romanNumerals[toDegree - 1];
+
+                // Look up in harmonicTransitions
+                if (this.harmonicTransitions[key_str]) {
+                    return this.harmonicTransitions[key_str];
+                }
+
+                // Generic fallback
+                return {
+                    function: `${this.romanNumerals[fromDegree - 1]}→${this.romanNumerals[toDegree - 1]}`,
+                    feeling: 'Movimiento armónico',
+                    examples: []
+                };
+            },
+
+            // Generate didactic explanation
+            generateExplanation(fromChord, toChord, toQuality, emotion, key) {
+                const harmonization = this.getScaleHarmonization(key, 'major');
+                const toDegree = harmonization.findIndex(c => c.root === toChord) + 1;
+                const roman = this.getRomanNumeral(toDegree, toQuality);
+
+                const emotionData = this.emotionalQualities[emotion];
+
+                return `${toChord}${toQuality === 'maj' ? '' : toQuality} es el ${roman} grado de ${key}. Esta transición crea una sensación ${emotionData.description.toLowerCase()}, perfecta para el mood "${emotion}" que buscas.`;
+            },
+
+            // Get roman numeral for degree and quality
+            getRomanNumeral(degree, quality) {
+                if (!degree || degree < 1 || degree > 7) return '?';
+                const numerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+                let numeral = numerals[degree - 1];
+
+                // Lowercase for minor
+                if (quality === 'min' || quality === 'm7' || quality === 'dim' || quality === 'm7b5') {
+                    numeral = numeral.toLowerCase();
+                }
+
+                // Add symbols
+                if (quality === 'dim' || quality === 'm7b5') {
+                    numeral += '°';
+                }
+
+                return numeral;
+            }
         };
 
         // ========================================
@@ -8870,11 +9427,15 @@
             currentMode: 'explorer',
             currentRoot: 'C',
             currentQuality: 'maj',
-            filterRegister: 'all',
-            filterDifficulty: 'all',
             comparisonA: null,
             comparisonB: null,
             selectedVoicing: null
+        };
+
+        const ProgressionBuilderState = {
+            progression: [],
+            currentKey: 'C',
+            lastEmotion: null
         };
 
         // ========================================
@@ -10369,31 +10930,34 @@
                         break;
 
                     case 9: // CAGED
-                        controlPanel.querySelectorAll('[data-caged]').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                controlPanel.querySelectorAll('[data-caged]').forEach(b => b.classList.remove('active'));
-                                e.currentTarget.classList.add('active');
-                                this.currentCAGED = e.currentTarget.dataset.caged;
-                                this.showCAGEDShape();
-                            });
-                        });
+                        // Render SVG pentagon on load
+                        this.renderCAGEDMap();
 
                         // Toggle para mostrar todas las formas
                         const cagedToggle = document.getElementById('cagedShowAllToggle');
                         if (cagedToggle) {
-                            const toggleDot = cagedToggle.querySelector('div');
+                            const toggleDot = document.getElementById('caged-toggle-dot');
                             cagedToggle.addEventListener('click', () => {
                                 this.cagedShowAll = !this.cagedShowAll;
                                 if (this.cagedShowAll) {
-                                    cagedToggle.style.background = '#dc2626';
-                                    toggleDot.style.left = '26px';
+                                    cagedToggle.style.background = '#84cc16';
+                                    toggleDot.style.transform = 'translateX(2.5rem)';
+                                    this.renderAllCAGEDDiagrams();
+                                    document.getElementById('caged-all-diagrams')?.classList.remove('hidden');
+                                    this.showToast('Mostrando todas las formas CAGED', 'info');
                                 } else {
                                     cagedToggle.style.background = '#333';
-                                    toggleDot.style.left = '2px';
+                                    toggleDot.style.transform = 'translateX(0.25rem)';
+                                    document.getElementById('caged-all-diagrams')?.classList.add('hidden');
+                                    this.showToast('Vista de forma individual', 'info');
                                 }
-                                this.showCAGEDShape();
                             });
                         }
+
+                        // Tour CAGED button
+                        document.getElementById('caged-tour-btn')?.addEventListener('click', () => {
+                            this.playCAGEDTour();
+                        });
                         break;
 
                     case 10: // Quiz
@@ -10682,25 +11246,6 @@
                             });
                         });
 
-                        // Filter buttons
-                        controlPanel.querySelectorAll('.chord-lab-filter-btn').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                const filter = e.currentTarget.dataset.filter;
-                                const value = e.currentTarget.dataset.value;
-
-                                // Remove active from siblings
-                                controlPanel.querySelectorAll(`[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
-                                e.currentTarget.classList.add('active');
-
-                                if (filter === 'register') {
-                                    ChordLabState.filterRegister = value;
-                                } else if (filter === 'difficulty') {
-                                    ChordLabState.filterDifficulty = value;
-                                }
-
-                                this.renderChordLabVoicings();
-                            });
-                        });
 
                         // Comparison controls
                         document.getElementById('chord-lab-play-both')?.addEventListener('click', () => {
@@ -10717,6 +11262,38 @@
                                 const exercise = e.currentTarget.dataset.exercise;
                                 this.startChordLabExercise(exercise);
                             });
+                        });
+
+                        // Progression Builder: Initial chord selector
+                        controlPanel.querySelectorAll('.initial-chord-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const chord = e.currentTarget.dataset.chord;
+                                const quality = e.currentTarget.dataset.quality;
+                                this.selectInitialChord(chord, quality);
+                            });
+                        });
+
+                        // Progression Builder: Emotion selector
+                        controlPanel.querySelectorAll('.emotion-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const emotion = e.currentTarget.dataset.emotion;
+                                this.selectEmotion(emotion);
+                            });
+                        });
+
+                        // Progression Builder: Play progression
+                        document.getElementById('play-progression')?.addEventListener('click', () => {
+                            this.playProgression();
+                        });
+
+                        // Progression Builder: Clear progression
+                        document.getElementById('clear-progression')?.addEventListener('click', () => {
+                            this.clearProgression();
+                        });
+
+                        // CAGED Tour button
+                        document.getElementById('caged-tour-btn')?.addEventListener('click', () => {
+                            this.playCAGEDTour();
                         });
 
                         // Initialize
@@ -12151,19 +12728,9 @@
                 this.resetState(['currentCAGED']);
                 if (this.currentCAGED === null) {
                     this.currentCAGED = 'C';
-                    document.querySelector('[data-caged="C"]')?.classList.add('active');
                 }
+                this.renderCAGEDMap();
                 this.showCAGEDShape();
-            },
-
-            calculateCAGEDPosition(shape, root) {
-                const transposition = root;
-                const position = shape === 'C' ? transposition :
-                    shape === 'A' ? transposition + 3 :
-                    shape === 'G' ? transposition + 5 :
-                    shape === 'E' ? transposition + 8 :
-                    transposition + 10; // D
-                return position % 12;
             },
 
             showCAGEDShape() {
@@ -12184,7 +12751,7 @@
 
                     cagedOrder.forEach(shape => {
                         const baseVoicing = MusicTheory.chordVoicings[shape];
-                        const position = this.calculateCAGEDPosition(shape, this.currentRoot);
+                        const position = MusicTheory.calculateCAGEDPosition(shape, rootName);
 
                         const wrapper = document.createElement('div');
                         wrapper.className = 'chord-wrapper';
@@ -12207,7 +12774,7 @@
                     });
 
                     // Mostrar la forma activa en el fretboard
-                    const adjustedPosition = this.calculateCAGEDPosition(this.currentCAGED, this.currentRoot);
+                    const adjustedPosition = MusicTheory.calculateCAGEDPosition(this.currentCAGED, rootName);
                     Fretboard.tonicNote = this.currentRoot;
                     Fretboard.currentScale = MusicTheory.getScale(this.currentRoot, 'major');
                     Fretboard.highlightedNotes.clear();
@@ -12226,7 +12793,7 @@
                     diagramContainer.classList.remove('scrollable-horizontal');
 
                     const baseVoicing = MusicTheory.chordVoicings[this.currentCAGED];
-                    const adjustedPosition = this.calculateCAGEDPosition(this.currentCAGED, this.currentRoot);
+                    const adjustedPosition = MusicTheory.calculateCAGEDPosition(this.currentCAGED, rootName);
 
                     const diagram = ChordDiagram.create(baseVoicing, rootName, adjustedPosition);
                     diagramContainer.appendChild(diagram);
@@ -12249,6 +12816,339 @@
                     );
                 }
                 this.clearInfoPanel();
+            },
+
+            // Render interactive SVG pentagon for CAGED
+            renderCAGEDMap() {
+                const container = document.getElementById('caged-svg-container');
+                if (!container) return;
+
+                const shapes = ['C', 'A', 'G', 'E', 'D'];
+                const radius = 200;
+                const centerX = 300;
+                const centerY = 300;
+
+                let svg = '<svg width="600" height="600" viewBox="0 0 600 600">';
+
+                // Draw connections
+                shapes.forEach((shape, idx) => {
+                    const angle = (idx * 72 - 90) * Math.PI / 180;
+                    const x1 = centerX + radius * Math.cos(angle);
+                    const y1 = centerY + radius * Math.sin(angle);
+
+                    const nextIdx = (idx + 1) % 5;
+                    const nextShape = shapes[nextIdx];
+                    const nextAngle = (nextIdx * 72 - 90) * Math.PI / 180;
+                    const x2 = centerX + radius * Math.cos(nextAngle);
+                    const y2 = centerY + radius * Math.sin(nextAngle);
+
+                    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
+                                  class="caged-connection"
+                                  data-from="${shape}"
+                                  data-to="${nextShape}"
+                                  stroke="#475569" stroke-width="2"
+                                  style="cursor: pointer;"/>`;
+                });
+
+                // Draw nodes
+                shapes.forEach((shape, idx) => {
+                    const angle = (idx * 72 - 90) * Math.PI / 180;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    const shapeData = MusicTheory.cagedRelationshipMap[shape];
+                    const color = shapeData.color;
+
+                    svg += `
+                        <g class="caged-node" data-shape="${shape}" style="cursor: pointer;">
+                            <circle cx="${x}" cy="${y}" r="40" fill="${color}" stroke="#0a0a0a" stroke-width="2"/>
+                            <text x="${x}" y="${y + 8}" text-anchor="middle" fill="#0a0a0a"
+                                  font-size="28" font-weight="bold">${shape}</text>
+                        </g>
+                    `;
+                });
+
+                // Add center text
+                svg += `
+                    <text x="${centerX}" y="${centerY - 10}" text-anchor="middle" fill="#cbd5e1"
+                          font-size="16" font-weight="bold">CAGED</text>
+                    <text x="${centerX}" y="${centerY + 10}" text-anchor="middle" fill="#94a3b8"
+                          font-size="12">System</text>
+                `;
+
+                svg += '</svg>';
+                container.innerHTML = svg;
+
+                // Add event listeners to nodes
+                container.querySelectorAll('.caged-node').forEach(node => {
+                    node.addEventListener('click', (e) => {
+                        const shape = e.currentTarget.dataset.shape;
+                        this.showCAGEDShapeInfo(shape);
+                    });
+                });
+
+                // Add event listeners to connections
+                container.querySelectorAll('.caged-connection').forEach(conn => {
+                    conn.addEventListener('click', (e) => {
+                        const from = e.currentTarget.dataset.from;
+                        const to = e.currentTarget.dataset.to;
+                        this.showCAGEDTransitionInfo(from, to);
+                    });
+                });
+            },
+
+            // Show individual CAGED shape info with audio
+            showCAGEDShapeInfo(shape) {
+                // Update current shape
+                this.currentCAGED = shape;
+
+                // Play audio
+                const baseVoicing = MusicTheory.chordVoicings[shape];
+                if (baseVoicing && this.audioContext) {
+                    this.playChord(baseVoicing.notes);
+                }
+
+                // Highlight active node
+                document.querySelectorAll('.caged-node').forEach(n => {
+                    const nodeShape = n.dataset.shape;
+                    const circle = n.querySelector('circle');
+                    if (nodeShape === shape) {
+                        circle.setAttribute('stroke', '#84cc16');
+                        circle.setAttribute('stroke-width', '4');
+                    } else {
+                        circle.setAttribute('stroke', '#0a0a0a');
+                        circle.setAttribute('stroke-width', '2');
+                    }
+                });
+
+                // Show info panel
+                const shapeData = MusicTheory.cagedRelationshipMap[shape];
+                const infoPanel = document.getElementById('caged-info-panel');
+                if (infoPanel && shapeData) {
+                    infoPanel.classList.remove('hidden');
+                    infoPanel.innerHTML = `
+                        <h4 class="text-lg font-medium text-sage-400 mb-3">
+                            Forma ${shape}: ${shapeData.soundCharacter}
+                        </h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3 bg-void-900 rounded">
+                                <strong class="text-chalk-100">💡 Cuándo usarla:</strong>
+                                <p class="text-void-300 mt-1">${shapeData.whenToUse}</p>
+                            </div>
+
+                            <div class="p-3 bg-sage-900/20 border border-sage-700 rounded">
+                                <strong class="text-sage-400">📍 Posición en el mástil:</strong>
+                                <p class="text-chalk-200 mt-1">
+                                    Para tocar ${MusicTheory.getNoteName(this.currentRoot)} mayor con forma ${shape},
+                                    empieza en el traste ${MusicTheory.calculateCAGEDPosition(shape, MusicTheory.getNoteName(this.currentRoot))}
+                                </p>
+                            </div>
+
+                            <div class="pt-3 border-t border-void-600">
+                                <strong class="text-sage-400">➡️ Siguiente forma: ${shapeData.next}</strong>
+                                <p class="text-xs text-void-400 mt-1">
+                                    ${shapeData.transitionToNext.fretMove}
+                                </p>
+                                <button onclick="App.showCAGEDTransitionInfo('${shape}', '${shapeData.next}')"
+                                        class="mt-2 w-full px-3 py-1.5 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded text-sm">
+                                    ▶ Escuchar transición a ${shapeData.next}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Update fretboard display
+                this.showCAGEDShape();
+
+                this.showToast(`Forma ${shape}: ${shapeData?.soundCharacter || ''}`, 'info');
+            },
+
+            // Show transition between two CAGED shapes
+            showCAGEDTransitionInfo(from, to) {
+                const fromData = MusicTheory.cagedRelationshipMap[from];
+                const toData = MusicTheory.cagedRelationshipMap[to];
+                const transition = fromData.transitionToNext;
+
+                if (!transition || transition.to !== to) {
+                    this.showToast('Transición no válida', 'error');
+                    return;
+                }
+
+                // Highlight connection
+                document.querySelectorAll('.caged-connection').forEach(c => {
+                    if (c.dataset.from === from && c.dataset.to === to) {
+                        c.setAttribute('stroke', '#84cc16');
+                        c.setAttribute('stroke-width', '4');
+                    } else {
+                        c.setAttribute('stroke', '#475569');
+                        c.setAttribute('stroke-width', '2');
+                    }
+                });
+
+                // Highlight both nodes
+                document.querySelectorAll('.caged-node').forEach(n => {
+                    const nodeShape = n.dataset.shape;
+                    const circle = n.querySelector('circle');
+                    if (nodeShape === from || nodeShape === to) {
+                        circle.setAttribute('stroke', '#84cc16');
+                        circle.setAttribute('stroke-width', '4');
+                    } else {
+                        circle.setAttribute('stroke', '#0a0a0a');
+                        circle.setAttribute('stroke-width', '2');
+                    }
+                });
+
+                // Show transition info
+                const infoPanel = document.getElementById('caged-info-panel');
+                if (infoPanel) {
+                    infoPanel.classList.remove('hidden');
+                    infoPanel.innerHTML = `
+                        <h4 class="text-lg font-medium text-sage-400 mb-3">
+                            Transición: ${from} → ${to}
+                        </h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-void-900 rounded">
+                                    <div class="font-medium" style="color: ${fromData.color}">Desde: ${from}</div>
+                                    <div class="text-xs text-void-400 mt-1">${fromData.soundCharacter}</div>
+                                </div>
+                                <div class="p-3 bg-void-900 rounded">
+                                    <div class="font-medium" style="color: ${toData.color}">Hacia: ${to}</div>
+                                    <div class="text-xs text-void-400 mt-1">${toData.soundCharacter}</div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-sage-900/20 border border-sage-700 rounded">
+                                <strong class="text-chalk-100">🎸 Cómo mover:</strong>
+                                <p class="text-void-300 mt-1">${transition.fretMove}</p>
+                            </div>
+
+                            <div class="p-3 bg-sage-900/20 border border-sage-700 rounded">
+                                <strong class="text-chalk-100">👂 Cambio de sonido:</strong>
+                                <p class="text-void-300 mt-1">${transition.soundChange}</p>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-void-900 rounded">
+                                <strong class="text-chalk-100">Dificultad:</strong>
+                                <span class="px-2 py-1 rounded text-xs ${
+                                    transition.difficulty.includes('Fácil') ? 'bg-green-700' :
+                                    transition.difficulty.includes('Media') ? 'bg-yellow-700' :
+                                    'bg-red-700'
+                                }">${transition.difficulty}</span>
+                            </div>
+
+                            <div class="p-3 bg-blue-900/20 border border-blue-700 rounded">
+                                <strong class="text-blue-400">💡 Tip profesional:</strong>
+                                <p class="text-chalk-200 mt-1 italic">${transition.tip}</p>
+                            </div>
+
+                            <div class="mt-4 flex gap-2">
+                                <button onclick="App.playCAGEDTransitionAudio('${from}', '${to}')"
+                                        class="flex-1 px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded">
+                                    ▶ Escuchar transición
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+
+            // Play transition between two shapes with delay
+            playCAGEDTransitionAudio(from, to) {
+                const fromVoicing = MusicTheory.chordVoicings[from];
+                const toVoicing = MusicTheory.chordVoicings[to];
+
+                if (!fromVoicing || !toVoicing || !this.audioContext) {
+                    this.showToast('Audio no disponible', 'error');
+                    return;
+                }
+
+                // Play from
+                this.playChord(fromVoicing.notes);
+                this.showToast(`${from} (traste ${MusicTheory.calculateCAGEDPosition(from, MusicTheory.getNoteName(this.currentRoot))})`, 'info');
+
+                // After 1.2s, play to
+                setTimeout(() => {
+                    this.playChord(toVoicing.notes);
+                    const fromPos = MusicTheory.calculateCAGEDPosition(from, MusicTheory.getNoteName(this.currentRoot));
+                    const toPos = MusicTheory.calculateCAGEDPosition(to, MusicTheory.getNoteName(this.currentRoot));
+                    this.showToast(`${to} (traste ${toPos}) - ${toPos - fromPos > 0 ? '+' : ''}${toPos - fromPos} trastes`, 'info');
+                }, 1200);
+            },
+
+            // Play complete CAGED tour: C → A → G → E → D
+            playCAGEDTour() {
+                const shapes = ['C', 'A', 'G', 'E', 'D'];
+                let currentIdx = 0;
+
+                const playNext = () => {
+                    if (currentIdx >= shapes.length) {
+                        this.showToast('Tour CAGED completo!', 'success');
+                        return;
+                    }
+
+                    const shape = shapes[currentIdx];
+                    const voicing = MusicTheory.chordVoicings[shape];
+
+                    if (voicing && this.audioContext) {
+                        this.playChord(voicing.notes);
+                        this.showCAGEDShapeInfo(shape);
+                        this.showToast(`Forma ${shape} (${currentIdx + 1}/5)`, 'info');
+
+                        currentIdx++;
+                        setTimeout(playNext, 1800);
+                    }
+                };
+
+                this.showToast('Iniciando tour CAGED...', 'info');
+                playNext();
+            },
+
+            // Render all CAGED diagrams in grid
+            renderAllCAGEDDiagrams() {
+                const container = document.getElementById('caged-diagrams-container');
+                if (!container) return;
+
+                const shapes = ['C', 'A', 'G', 'E', 'D'];
+                const rootName = MusicTheory.getNoteName(this.currentRoot);
+
+                container.innerHTML = shapes.map(shape => {
+                    const shapeData = MusicTheory.cagedRelationshipMap[shape];
+                    const position = MusicTheory.calculateCAGEDPosition(shape, rootName);
+                    const voicing = MusicTheory.chordVoicings[shape];
+
+                    return `
+                        <div class="p-3 bg-void-800 border border-void-600 rounded-lg hover:border-sage-500 transition-colors cursor-pointer"
+                             onclick="App.showCAGEDShapeInfo('${shape}')">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-xl font-bold" style="color: ${shapeData.color}">${shape}</div>
+                                <div class="text-xs text-void-400">Traste ${position}</div>
+                            </div>
+
+                            <div class="text-center text-void-400 text-xs my-3">
+                                [Diagrama ${shape}]
+                            </div>
+
+                            <div class="text-xs text-void-400 text-center mt-2">
+                                ${shapeData.soundCharacter}
+                            </div>
+
+                            <button onclick="event.stopPropagation(); App.playCAGEDShapeAudio('${shape}')"
+                                    class="w-full mt-2 px-2 py-1 bg-sage-700 hover:bg-sage-600 text-chalk-100 rounded text-xs">
+                                ▶ Escuchar
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            // Play individual CAGED shape audio
+            playCAGEDShapeAudio(shape) {
+                const voicing = MusicTheory.chordVoicings[shape];
+                if (voicing && this.audioContext) {
+                    this.playChord(voicing.notes);
+                    this.showToast(`Forma ${shape}`, 'info');
+                }
             },
 
             // ========== NIVEL 1 - INTERVALOS MEJORADO ==========
@@ -13944,8 +14844,8 @@
                     case 'explorer':
                         this.renderChordLabVoicings();
                         break;
-                    case 'caged-map':
-                        this.renderCAGEDMap();
+                    case 'progression-builder':
+                        this.showProgressionBuilder();
                         break;
                     case 'practice':
                         // Practice area starts hidden
@@ -13996,19 +14896,6 @@
                 keys.forEach(key => {
                     const voicing = MusicTheory.chordLabVoicings[key];
                     if (!voicing) return;
-
-                    // Apply filters
-                    if (ChordLabState.filterRegister !== 'all' && voicing.register !== ChordLabState.filterRegister) {
-                        return;
-                    }
-
-                    if (ChordLabState.filterDifficulty !== 'all') {
-                        const diffMap = { easy: [1,3], medium: [4,7], hard: [8,10] };
-                        const range = diffMap[ChordLabState.filterDifficulty];
-                        if (!range || voicing.difficulty < range[0] || voicing.difficulty > range[1]) {
-                            return;
-                        }
-                    }
 
                     voicings.push({ key, ...voicing });
                 });
@@ -14073,6 +14960,7 @@
                         this.toggleComparisonVoicing(voicing.key);
                     } else {
                         this.displayChordLabVoicing(voicing);
+                        this.showChordStory(voicing);
                         document.querySelectorAll('.chord-lab-voicing-card').forEach(c => c.classList.remove('selected'));
                         card.classList.add('selected');
                     }
@@ -14090,6 +14978,7 @@
             renderMiniChordDiagram(voicing) {
                 // Simple SVG representation
                 const frets = voicing.frets;
+                const baseFret = voicing.baseFret || 0;
                 const svg = `
                     <svg width="120" height="90" viewBox="0 0 120 90" class="mx-auto">
                         ${[0,1,2,3,4,5].map(string => `
@@ -14100,10 +14989,16 @@
                             <line x1="${30 + fret * 16}" y1="15" x2="${30 + fret * 16}" y2="75"
                                   stroke="#475569" stroke-width="1"/>
                         `).join('')}
+                        ${[0,1,2,3,4].map(fret => `
+                            <text x="${30 + fret * 16}" y="10"
+                                  font-size="8" fill="#94a3b8" text-anchor="middle">
+                                ${baseFret + fret}
+                            </text>
+                        `).join('')}
                         ${frets.map((fret, idx) => {
                             if (fret === -1) return '';
                             const y = 15 + idx * 12;
-                            const x = fret === 0 ? 20 : 30 + (fret - (voicing.baseFret || 0)) * 16;
+                            const x = fret === 0 ? 20 : 30 + (fret - baseFret) * 16;
                             return `<circle cx="${x}" cy="${y}" r="5" fill="#84cc16"/>`;
                         }).join('')}
                     </svg>
@@ -14126,37 +15021,110 @@
             },
 
             displayChordLabVoicing(voicing) {
-                // Display on main fretboard
+                // Display on main fretboard using specificPositions
                 Fretboard.clear();
                 const root = ChordLabState.currentRoot;
                 const rootIndex = MusicTheory.notes.indexOf(root);
 
-                // Calculate notes from frets
-                const notes = [];
+                // Calculate positions from frets
+                const positions = [];
                 voicing.frets.forEach((fret, stringIdx) => {
                     if (fret === -1) return;
                     const openStringNotes = [4, 9, 2, 7, 11, 4]; // E A D G B E
                     const noteIndex = (openStringNotes[stringIdx] + fret) % 12;
-                    const noteName = MusicTheory.notes[noteIndex];
-                    notes.push({
-                        note: noteName,
+                    positions.push({
+                        string: stringIdx,
                         fret: fret,
-                        string: stringIdx + 1,
                         isRoot: noteIndex === rootIndex
                     });
                 });
 
-                notes.forEach(note => {
-                    Fretboard.addNote(note.note, note.fret, note.string, note.isRoot);
-                });
+                // Set tonic and show positions
+                Fretboard.tonicNote = rootIndex;
+                Fretboard.showPositions(positions);
             },
 
             playChordLabVoicing(voicing) {
                 if (!voicing || !voicing.frets) {
                     console.error('Invalid voicing:', voicing);
+                    App.showToast('Error: voicing inválido', 'error');
                     return;
                 }
-                AudioEngine.playChordVoicing(voicing);
+                try {
+                    AudioEngine.playChordVoicing(voicing);
+                } catch (e) {
+                    console.error('Audio error:', e);
+                    App.showToast('Error de audio', 'error');
+                }
+            },
+
+            showChordStory(voicing) {
+                const panel = document.getElementById('chord-story-panel');
+                const content = document.getElementById('chord-story-content');
+
+                if (!panel || !content || !voicing) {
+                    if (panel) panel.classList.add('hidden');
+                    return;
+                }
+
+                // Generar contenido didáctico
+                const brightness = voicing.brightness > 6 ? 'Brillante y abierto' :
+                                  voicing.brightness > 3 ? 'Balanceado' : 'Oscuro y denso';
+
+                const register = voicing.register === 'low' ? 'Grave (profundo, potente)' :
+                                voicing.register === 'mid' ? 'Medio (versátil)' :
+                                'Agudo (brillante, cortante)';
+
+                content.innerHTML = `
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Carácter sonoro:</span>
+                        <span class="text-chalk-200">${brightness}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Registro:</span>
+                        <span class="text-chalk-200">${register}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Tensión:</span>
+                        <span class="text-chalk-200">${voicing.tension}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Mejor para:</span>
+                        <span class="text-chalk-200">${voicing.bestFor.join(', ')}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Géneros típicos:</span>
+                        <span class="text-chalk-200">${voicing.genres.join(', ')}</span>
+                    </div>
+                    <div class="pt-2 border-t border-sage-700 mt-2">
+                        <strong>💡 Uso común:</strong><br>
+                        <span class="text-void-300 italic">"${voicing.commonUse}"</span>
+                    </div>
+                    ${this.generateDidacticTip(voicing)}
+                `;
+
+                panel.classList.remove('hidden');
+            },
+
+            generateDidacticTip(voicing) {
+                let tip = '';
+
+                if (voicing.movable) {
+                    tip = 'Esta forma es movible - puedes trasladarla a cualquier traste para cambiar de tono.';
+                } else if (voicing.register === 'low' && voicing.brightness > 7) {
+                    tip = 'Sonido completo y resonante, ideal para acompañamiento base.';
+                } else if (voicing.register === 'high') {
+                    tip = 'Posición aguda que se "corta" en la mezcla - perfecta para solos o melodías.';
+                } else if (voicing.tension === 'high') {
+                    tip = 'Acorde tenso que busca resolver - úsalo para crear anticipación.';
+                }
+
+                return tip ? `
+                    <div class="pt-2 border-t border-sage-700 mt-2">
+                        <strong>🎯 Tip didáctico:</strong><br>
+                        <span class="text-void-300">${tip}</span>
+                    </div>
+                ` : '';
             },
 
             toggleComparisonVoicing(key) {
@@ -14410,213 +15378,6 @@
                 this.renderChordLabVoicings();
             },
 
-            renderCAGEDMap() {
-                const container = document.getElementById('chord-lab-caged-svg-container');
-                if (!container) return;
-
-                const shapes = ['C', 'A', 'G', 'E', 'D'];
-                const radius = 200;
-                const centerX = 300;
-                const centerY = 300;
-
-                let svg = '<svg width="600" height="600" viewBox="0 0 600 600">';
-
-                // Draw connections with data attributes
-                shapes.forEach((shape, idx) => {
-                    const angle = (idx * 72 - 90) * Math.PI / 180;
-                    const x1 = centerX + radius * Math.cos(angle);
-                    const y1 = centerY + radius * Math.sin(angle);
-
-                    const nextIdx = (idx + 1) % 5;
-                    const nextShape = shapes[nextIdx];
-                    const nextAngle = (nextIdx * 72 - 90) * Math.PI / 180;
-                    const x2 = centerX + radius * Math.cos(nextAngle);
-                    const y2 = centerY + radius * Math.sin(nextAngle);
-
-                    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
-                                  class="caged-connection"
-                                  data-from="${shape}"
-                                  data-to="${nextShape}"
-                                  stroke="#475569" stroke-width="2"/>`;
-                });
-
-                // Draw nodes
-                shapes.forEach((shape, idx) => {
-                    const angle = (idx * 72 - 90) * Math.PI / 180;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    const shapeData = MusicTheory.cagedRelationshipMap[shape];
-                    const color = shapeData.color;
-
-                    svg += `
-                        <g class="caged-node" data-shape="${shape}">
-                            <circle cx="${x}" cy="${y}" r="40" fill="${color}" stroke="#0a0a0a" stroke-width="2"/>
-                            <text x="${x}" y="${y + 8}" text-anchor="middle" fill="#0a0a0a"
-                                  font-size="28" font-weight="bold">${shape}</text>
-                        </g>
-                    `;
-                });
-
-                // Add center text
-                svg += `
-                    <text x="${centerX}" y="${centerY - 10}" text-anchor="middle" fill="#cbd5e1"
-                          font-size="16" font-weight="bold">CAGED</text>
-                    <text x="${centerX}" y="${centerY + 10}" text-anchor="middle" fill="#94a3b8"
-                          font-size="12">System</text>
-                `;
-
-                svg += '</svg>';
-                container.innerHTML = svg;
-
-                // Add event listeners to nodes
-                container.querySelectorAll('.caged-node').forEach(node => {
-                    node.addEventListener('click', (e) => {
-                        const shape = e.currentTarget.dataset.shape;
-                        this.showCAGEDShape(shape);
-                    });
-                });
-
-                // Add event listeners to connections
-                container.querySelectorAll('.caged-connection').forEach(conn => {
-                    conn.addEventListener('click', (e) => {
-                        const from = e.currentTarget.dataset.from;
-                        const to = e.currentTarget.dataset.to;
-                        this.showCAGEDTransition(from, to);
-                    });
-                });
-            },
-
-            showCAGEDShape(shape) {
-                const shapeKey = shape + '_shape_major';
-                const voicing = MusicTheory.chordLabVoicings[shapeKey];
-                if (!voicing) return;
-
-                this.displayChordLabVoicing(voicing);
-
-                // Highlight active node
-                document.querySelectorAll('.caged-node').forEach(n => n.classList.remove('active'));
-                document.querySelector(`[data-shape="${shape}"]`)?.classList.add('active');
-
-                // Show shape info
-                const shapeData = MusicTheory.cagedRelationshipMap[shape];
-                const infoPanel = document.getElementById('chord-lab-transition-info');
-                if (infoPanel) {
-                    infoPanel.classList.remove('hidden');
-                    infoPanel.innerHTML = `
-                        <h4 class="text-lg font-medium text-sage-400 mb-3">Forma ${shape}</h4>
-                        <div class="space-y-2 text-sm">
-                            <div>
-                                <strong class="text-chalk-100">Carácter sonoro:</strong>
-                                <p class="text-void-300">${shapeData.soundCharacter}</p>
-                            </div>
-                            <div>
-                                <strong class="text-chalk-100">Cuándo usar:</strong>
-                                <p class="text-void-300">${shapeData.whenToUse}</p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-void-600">
-                                <strong class="text-sage-400">💡 Siguiente paso:</strong>
-                                <p class="text-chalk-200 mt-1">Haz click en la línea que conecta a <strong>${shapeData.next}</strong>
-                                para ver cómo transicionar entre formas.</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            },
-
-            showCAGEDTransition(from, to) {
-                const fromData = MusicTheory.cagedRelationshipMap[from];
-                const toData = MusicTheory.cagedRelationshipMap[to];
-                const transition = fromData.transitionToNext;
-
-                // Highlight the connection
-                document.querySelectorAll('.caged-connection').forEach(c => {
-                    if (c.dataset.from === from && c.dataset.to === to) {
-                        c.setAttribute('stroke', '#84cc16');
-                        c.setAttribute('stroke-width', '4');
-                    } else {
-                        c.setAttribute('stroke', '#475569');
-                        c.setAttribute('stroke-width', '2');
-                    }
-                });
-
-                // Highlight both nodes
-                document.querySelectorAll('.caged-node').forEach(n => n.classList.remove('active'));
-                document.querySelector(`[data-shape="${from}"]`)?.classList.add('active');
-                document.querySelector(`[data-shape="${to}"]`)?.classList.add('active');
-
-                // Show transition info
-                const infoPanel = document.getElementById('chord-lab-transition-info');
-                if (infoPanel) {
-                    infoPanel.classList.remove('hidden');
-                    infoPanel.innerHTML = `
-                        <h4 class="text-lg font-medium text-sage-400 mb-3">
-                            Transición: ${from} → ${to}
-                        </h4>
-                        <div class="space-y-3 text-sm">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-3 bg-void-900 rounded">
-                                    <div class="font-medium" style="color: ${fromData.color}">Desde: ${from}</div>
-                                    <div class="text-xs text-void-400 mt-1">${fromData.soundCharacter}</div>
-                                </div>
-                                <div class="p-3 bg-void-900 rounded">
-                                    <div class="font-medium" style="color: ${toData.color}">Hacia: ${to}</div>
-                                    <div class="text-xs text-void-400 mt-1">${toData.soundCharacter}</div>
-                                </div>
-                            </div>
-
-                            <div class="p-3 bg-sage-900/20 border border-sage-700 rounded">
-                                <strong class="text-chalk-100">🎸 Cómo mover:</strong>
-                                <p class="text-void-300 mt-1">${transition.fretMove}</p>
-                            </div>
-
-                            <div class="p-3 bg-sage-900/20 border border-sage-700 rounded">
-                                <strong class="text-chalk-100">👂 Cambio de sonido:</strong>
-                                <p class="text-void-300 mt-1">${transition.soundChange}</p>
-                            </div>
-
-                            <div class="flex items-center justify-between p-3 bg-void-900 rounded">
-                                <strong class="text-chalk-100">Dificultad:</strong>
-                                <span class="text-void-300">${transition.difficulty}</span>
-                            </div>
-
-                            <div class="p-3 bg-blue-900/20 border border-blue-700 rounded">
-                                <strong class="text-blue-400">💡 Tip profesional:</strong>
-                                <p class="text-chalk-200 mt-1 italic">${transition.tip}</p>
-                            </div>
-
-                            <div class="mt-4 flex gap-2">
-                                <button onclick="App.playCAGEDTransition('${from}', '${to}')"
-                                        class="flex-1 px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded">
-                                    ▶ Escuchar transición
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-            },
-
-            playCAGEDTransition(from, to) {
-                const fromKey = from + '_shape_major';
-                const toKey = to + '_shape_major';
-
-                const fromVoicing = MusicTheory.chordLabVoicings[fromKey];
-                const toVoicing = MusicTheory.chordLabVoicings[toKey];
-
-                if (!fromVoicing || !toVoicing) return;
-
-                // Play from shape
-                this.playChordLabVoicing(fromVoicing);
-                this.displayChordLabVoicing(fromVoicing);
-
-                // After 1 second, play to shape
-                setTimeout(() => {
-                    this.playChordLabVoicing(toVoicing);
-                    this.displayChordLabVoicing(toVoicing);
-                }, 1200);
-
-                this.showToast(`Escuchando: ${from} → ${to}`, 'info');
-            },
-
             startChordLabExercise(exercise) {
                 const area = document.getElementById('chord-lab-practice-area');
                 if (!area) return;
@@ -14772,6 +15533,13 @@
                                     <p class="text-chalk-200 text-sm mt-1">${journey.exercise}</p>
                                     <p class="text-void-400 text-xs mt-2 italic">Ejemplo real: ${journey.realExample}</p>
                                 </div>
+
+                                <div class="mt-3 text-center">
+                                    <button onclick="App.playSoundJourney('${journeyKey}')"
+                                            class="px-6 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded-lg font-medium">
+                                        🎵 Reproducir Journey Completo
+                                    </button>
+                                </div>
                             </div>
                         `;
                     }).join('')}
@@ -14878,12 +15646,313 @@
                 this.showToast(`${journey.title} - Paso ${stepIdx + 1}`, 'info');
             },
 
+            playSoundJourney(journeyKey) {
+                const journey = MusicTheory.soundJourneys[journeyKey];
+
+                if (!journey) {
+                    this.showToast('Journey no encontrado', 'error');
+                    return;
+                }
+
+                let stepIdx = 0;
+
+                const playStep = () => {
+                    if (stepIdx >= journey.steps.length) {
+                        this.showToast(`✅ ${journey.title} completado`, 'success');
+                        return;
+                    }
+
+                    const step = journey.steps[stepIdx];
+                    const voicing = MusicTheory.chordLabVoicings[step.voicing];
+
+                    if (!voicing) {
+                        console.warn(`Voicing ${step.voicing} no encontrado`);
+                        stepIdx++;
+                        setTimeout(playStep, 100);
+                        return;
+                    }
+
+                    // Reproducir
+                    this.playChordLabVoicing(voicing);
+                    this.displayChordLabVoicing(voicing);
+
+                    // Mostrar descripción como toast largo
+                    this.showToast(
+                        `Paso ${stepIdx + 1}/${journey.steps.length}: ${step.description}`,
+                        'info',
+                        3000
+                    );
+
+                    stepIdx++;
+                    setTimeout(playStep, 3500);
+                };
+
+                this.showToast(`🎵 ${journey.title}`, 'info', 2000);
+                setTimeout(playStep, 2000);
+            },
+
             playScenarioVoicing(voicingKey) {
                 const voicing = MusicTheory.chordLabVoicings[voicingKey];
                 if (!voicing) return;
 
                 this.displayChordLabVoicing(voicing);
                 this.playChordLabVoicing(voicing);
+            },
+
+            // === PROGRESSION BUILDER METHODS ===
+
+            showProgressionBuilder() {
+                // Initial render - show/hide appropriate sections
+                this.updateProgressionUI();
+            },
+
+            selectInitialChord(chord, quality) {
+                // Clear previous progression
+                ProgressionBuilderState.progression = [];
+
+                // Get a voicing for this chord
+                const voicingKey = this.getVoicingKeyForQuality(chord, quality);
+                const voicing = MusicTheory.chordLabVoicings[voicingKey];
+
+                if (!voicing) {
+                    this.showToast('No hay voicing disponible para este acorde', 'error');
+                    return;
+                }
+
+                // Add to progression
+                ProgressionBuilderState.progression.push({
+                    chord,
+                    quality,
+                    voicing,
+                    voicingKey
+                });
+
+                // Update UI
+                this.updateProgressionUI();
+
+                // Show emotion selector
+                document.getElementById('initial-chord-selector')?.classList.add('hidden');
+                document.getElementById('emotion-selector')?.classList.remove('hidden');
+
+                // Play the chord
+                this.displayChordLabVoicing(voicing);
+                this.playChordLabVoicing(voicing);
+
+                this.showToast(`Acorde inicial: ${chord}${quality === 'maj' ? '' : quality}`, 'info');
+            },
+
+            selectEmotion(emotion) {
+                ProgressionBuilderState.lastEmotion = emotion;
+
+                // Get last chord in progression
+                const lastItem = ProgressionBuilderState.progression[ProgressionBuilderState.progression.length - 1];
+                if (!lastItem) return;
+
+                // Get suggestions
+                const suggestions = MusicTheory.suggestNextChords(
+                    lastItem.chord,
+                    emotion,
+                    ProgressionBuilderState.currentKey,
+                    { limit: 4 }
+                );
+
+                // Render suggestions
+                this.renderChordSuggestions(suggestions, emotion);
+
+                // Hide emotion selector temporarily
+                document.getElementById('emotion-selector')?.classList.add('hidden');
+                document.getElementById('chord-suggestions')?.classList.remove('hidden');
+            },
+
+            renderChordSuggestions(suggestions, emotion) {
+                const grid = document.getElementById('suggestions-grid');
+                if (!grid) return;
+
+                grid.innerHTML = suggestions.map(sug => {
+                    const voicingKey = this.getVoicingKeyForQuality(sug.chord, sug.quality);
+                    return `
+                        <div class="suggestion-card">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <div class="text-2xl font-display text-chalk-100">
+                                        ${sug.chord}${sug.quality === 'maj' ? '' : sug.quality}
+                                    </div>
+                                    <div class="text-sm text-sage-400">${sug.romanNumeral || ''}</div>
+                                </div>
+                                <div class="text-sm bg-sage-800 px-2 py-1 rounded">
+                                    Fit: ${(sug.emotionalFit * 100).toFixed(0)}%
+                                </div>
+                            </div>
+                            <p class="text-sm text-void-300 mb-3">${sug.explanation}</p>
+                            <div class="p-2 bg-void-900/50 rounded text-xs mb-3">
+                                <div><strong>Transición:</strong> ${sug.transition.function}</div>
+                                <div><strong>Sensación:</strong> ${sug.transition.feeling}</div>
+                                ${sug.transition.examples && sug.transition.examples.length > 0 ?
+                                    `<div class="mt-1 text-void-400">Ej: ${sug.transition.examples[0]}</div>` : ''}
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="ctrl-btn-small flex-1" onclick="App.playChordSuggestion('${sug.chord}', '${sug.quality}')">
+                                    ▶ Escuchar
+                                </button>
+                                <button class="ctrl-btn-small flex-1" onclick="App.addChordToProgression('${sug.chord}', '${sug.quality}')">
+                                    + Añadir
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            playChordSuggestion(chord, quality) {
+                const voicingKey = this.getVoicingKeyForQuality(chord, quality);
+                const voicing = MusicTheory.chordLabVoicings[voicingKey];
+                if (voicing) {
+                    this.displayChordLabVoicing(voicing);
+                    this.playChordLabVoicing(voicing);
+                }
+            },
+
+            addChordToProgression(chord, quality) {
+                const voicingKey = this.getVoicingKeyForQuality(chord, quality);
+                const voicing = MusicTheory.chordLabVoicings[voicingKey];
+
+                if (!voicing) {
+                    this.showToast('No hay voicing disponible', 'error');
+                    return;
+                }
+
+                ProgressionBuilderState.progression.push({
+                    chord,
+                    quality,
+                    voicing,
+                    voicingKey
+                });
+
+                // Update UI
+                this.updateProgressionUI();
+
+                // Hide suggestions, show emotion selector again
+                document.getElementById('chord-suggestions')?.classList.add('hidden');
+                document.getElementById('emotion-selector')?.classList.remove('hidden');
+
+                // Play the chord
+                this.displayChordLabVoicing(voicing);
+                this.playChordLabVoicing(voicing);
+
+                this.showToast(`Añadido: ${chord}${quality === 'maj' ? '' : quality}`, 'success');
+            },
+
+            updateProgressionUI() {
+                const chain = document.getElementById('progression-chain');
+                if (!chain) return;
+
+                if (ProgressionBuilderState.progression.length === 0) {
+                    chain.innerHTML = '<span class="text-sm text-void-400">Comienza seleccionando un acorde inicial...</span>';
+                    document.getElementById('play-progression')?.setAttribute('disabled', '');
+                    document.getElementById('clear-progression')?.setAttribute('disabled', '');
+                } else {
+                    chain.innerHTML = ProgressionBuilderState.progression.map((item, idx) => `
+                        <div class="progression-chord-chip">
+                            <span class="chord-name">${item.chord}${item.quality === 'maj' ? '' : item.quality}</span>
+                            <button class="remove-chord" onclick="App.removeChordFromProgression(${idx})" title="Eliminar">×</button>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('play-progression')?.removeAttribute('disabled');
+                    document.getElementById('clear-progression')?.removeAttribute('disabled');
+                }
+            },
+
+            removeChordFromProgression(index) {
+                ProgressionBuilderState.progression.splice(index, 1);
+                this.updateProgressionUI();
+
+                // If empty, reset UI
+                if (ProgressionBuilderState.progression.length === 0) {
+                    document.getElementById('initial-chord-selector')?.classList.remove('hidden');
+                    document.getElementById('emotion-selector')?.classList.add('hidden');
+                    document.getElementById('chord-suggestions')?.classList.add('hidden');
+                }
+            },
+
+            clearProgression() {
+                ProgressionBuilderState.progression = [];
+                this.updateProgressionUI();
+
+                // Reset UI
+                document.getElementById('initial-chord-selector')?.classList.remove('hidden');
+                document.getElementById('emotion-selector')?.classList.add('hidden');
+                document.getElementById('chord-suggestions')?.classList.add('hidden');
+
+                Fretboard.clear();
+                this.showToast('Progresión limpiada', 'info');
+            },
+
+            playProgression() {
+                if (ProgressionBuilderState.progression.length === 0) return;
+
+                let delay = 0;
+                ProgressionBuilderState.progression.forEach((item, idx) => {
+                    setTimeout(() => {
+                        this.displayChordLabVoicing(item.voicing);
+                        this.playChordLabVoicing(item.voicing);
+                        this.showToast(`${idx + 1}/${ProgressionBuilderState.progression.length}: ${item.chord}${item.quality === 'maj' ? '' : item.quality}`, 'info');
+                    }, delay);
+                    delay += 2000;
+                });
+            },
+
+            getVoicingKeyForQuality(chord, quality) {
+                // Try to find exact match first (e.g., "C" + "maj7" → "Cmaj7")
+                const directKeys = [
+                    chord + quality,
+                    chord + '_shape_' + quality.replace('maj', 'major').replace('min', 'minor'),
+                    chord + '_shape_' + quality
+                ];
+
+                for (const key of directKeys) {
+                    if (MusicTheory.chordLabVoicings[key]) {
+                        return key;
+                    }
+                }
+
+                // Try shape-based patterns (C_shape_major, A_shape_maj7, etc.)
+                const shapeKeys = [
+                    `${chord}_shape_major`,
+                    `${chord}_shape_maj7`,
+                    `${chord}_shape_dom7`,
+                    `${chord}_shape_m7`,
+                    `${chord}${quality}`,
+                    `${chord}9`,
+                    `${chord}add9`,
+                    `${chord}sus2`,
+                    `${chord}sus4`
+                ];
+
+                for (const key of shapeKeys) {
+                    if (MusicTheory.chordLabVoicings[key]) {
+                        return key;
+                    }
+                }
+
+                // Fallback: try generic voicings that might work
+                const qualityMap = {
+                    'maj': ['C_shape_major', 'A_shape_major', 'G_shape_major', 'E_shape_major', 'D_shape_major'],
+                    'min': ['Am_shape', 'Em_shape', 'Dm_shape', 'E_shape_minor_barre'],
+                    '7': ['C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7', 'G_shape_dom7'],
+                    'maj7': ['C_shape_maj7', 'A_shape_maj7', 'E_shape_maj7', 'D_shape_maj7'],
+                    'm7': ['A_shape_m7', 'G_shape_m7', 'C_shape_m7'],
+                    'sus2': ['Asus2', 'Gsus2', 'Csus2'],
+                    'sus4': ['Csus4', 'Dsus4', 'Gsus4'],
+                    'dim': ['Cdim7'],
+                    '9': ['C9', 'Cmaj9'],
+                    'add9': ['Cadd9', 'Amadd9', 'Dadd9'],
+                    'aug': ['Caug'],
+                    'm7b5': ['Am7b5']
+                };
+
+                const fallbacks = qualityMap[quality] || qualityMap['maj'];
+                return fallbacks[0];
             }
         };
 

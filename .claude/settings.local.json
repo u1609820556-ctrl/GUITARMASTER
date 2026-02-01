@@ -22,7 +22,9 @@
       "Bash(start chrome:*)",
       "Bash(python -m http.server:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(start index.html)",
+      "Bash(echo:*)"
     ]
   }
 }
