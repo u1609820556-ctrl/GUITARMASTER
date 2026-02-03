@@ -2688,6 +2688,210 @@
             background: #334155;
         }
 
+        /* Progression Lab Pro Styles */
+        .progression-mode-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: #94a3b8;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .progression-mode-btn:hover {
+            color: #cbd5e1;
+        }
+
+        .progression-mode-btn.active {
+            color: #84cc16;
+            border-bottom-color: #84cc16;
+        }
+
+        .initial-chord-btn {
+            padding: 0.75rem;
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .initial-chord-btn:hover {
+            background: #334155;
+            border-color: #84cc16;
+            transform: translateY(-1px);
+        }
+
+        .emotion-btn {
+            padding: 1rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .emotion-btn:hover {
+            border-color: #84cc16;
+            background: #334155;
+            transform: translateY(-2px);
+        }
+
+        .emotion-btn.selected {
+            border-color: #84cc16;
+            background: rgba(132, 204, 22, 0.1);
+        }
+
+        .suggestion-card {
+            padding: 1rem;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-card:hover {
+            border-color: #84cc16;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(132, 204, 22, 0.2);
+        }
+
+        .suggestion-card.excellent {
+            border-color: #10b981;
+        }
+
+        .suggestion-card.good {
+            border-color: #f59e0b;
+        }
+
+        .suggestion-card.interesting {
+            border-color: #3b82f6;
+        }
+
+        .suggestion-card.unexpected {
+            border-color: #ef4444;
+        }
+
+        .progression-chord-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .progression-chord-item:hover {
+            border-color: #84cc16;
+        }
+
+        .progression-chord-item .function-label {
+            font-size: 0.625rem;
+            color: #94a3b8;
+            position: absolute;
+            top: -0.5rem;
+            left: 0.5rem;
+            background: #0f172a;
+            padding: 0 0.25rem;
+        }
+
+        .progression-chord-item .remove-btn {
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .progression-chord-item .remove-btn:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .free-mode-chord-btn {
+            padding: 0.75rem;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .free-mode-chord-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .free-mode-chord-btn.compat-excellent {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .free-mode-chord-btn.compat-good {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .free-mode-chord-btn.compat-interesting {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .free-mode-chord-btn.compat-unexpected {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .free-mode-chord-btn .compat-badge {
+            position: absolute;
+            top: -0.375rem;
+            right: -0.375rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            font-size: 0.625rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #voice-leading-viz {
+            position: relative;
+        }
+
+        .voice-line {
+            stroke-width: 2;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .voice-line.smooth {
+            stroke: #10b981;
+        }
+
+        .voice-line.moderate {
+            stroke: #f59e0b;
+        }
+
+        .voice-line.challenging {
+            stroke: #ef4444;
+        }
+
         #chord-lab-caged-svg-container svg {
             max-width: 600px;
             height: 600px;
@@ -4367,87 +4571,165 @@
                 </div>
             </div>
 
-            <!-- Mode: Progression Builder -->
+            <!-- Mode: Progression Lab Pro -->
             <div id="chord-lab-progression-builder" class="chord-lab-mode hidden">
-                <!-- Área de progresión construida -->
-                <div class="mb-6 p-4 bg-void-800 rounded-lg">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">Tu Progresión</h3>
-                    <div id="progression-chain" class="flex items-center gap-2 flex-wrap min-h-[40px]">
-                        <span class="text-sm text-void-400">Comienza seleccionando un acorde inicial...</span>
-                    </div>
-                    <div class="mt-3 flex gap-2">
-                        <button id="play-progression" class="px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            ▶ Escuchar progresión
-                        </button>
-                        <button id="clear-progression" class="px-4 py-2 bg-void-700 hover:bg-void-600 text-chalk-100 rounded disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            Limpiar
-                        </button>
-                    </div>
+                <!-- Sub-tabs for Guided/Free modes -->
+                <div class="flex gap-2 border-b border-void-700 pb-2 mb-4">
+                    <button class="progression-mode-btn active" data-submode="guided">
+                        🎯 Guiado
+                    </button>
+                    <button class="progression-mode-btn" data-submode="free">
+                        🎨 Libre
+                    </button>
                 </div>
 
-                <!-- Selector de acorde inicial -->
-                <div class="mb-6" id="initial-chord-selector">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">1. Elige tu acorde inicial</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                        <button class="initial-chord-btn" data-chord="C" data-quality="maj">C</button>
-                        <button class="initial-chord-btn" data-chord="C" data-quality="min">Cm</button>
-                        <button class="initial-chord-btn" data-chord="D" data-quality="maj">D</button>
-                        <button class="initial-chord-btn" data-chord="D" data-quality="min">Dm</button>
-                        <button class="initial-chord-btn" data-chord="E" data-quality="maj">E</button>
-                        <button class="initial-chord-btn" data-chord="E" data-quality="min">Em</button>
-                        <button class="initial-chord-btn" data-chord="F" data-quality="maj">F</button>
-                        <button class="initial-chord-btn" data-chord="F" data-quality="min">Fm</button>
-                        <button class="initial-chord-btn" data-chord="G" data-quality="maj">G</button>
-                        <button class="initial-chord-btn" data-chord="G" data-quality="min">Gm</button>
-                        <button class="initial-chord-btn" data-chord="A" data-quality="maj">A</button>
-                        <button class="initial-chord-btn" data-chord="A" data-quality="min">Am</button>
-                        <button class="initial-chord-btn" data-chord="B" data-quality="maj">B</button>
-                        <button class="initial-chord-btn" data-chord="B" data-quality="min">Bm</button>
+                <!-- Main Layout: Progression + Analysis -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- LEFT: Progression Chain Panel -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <!-- Progression Chain -->
+                        <div class="p-4 bg-void-800 rounded-lg border border-sage-600">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-lg font-medium text-sage-400">🎵 Progresión</h3>
+                                <div class="text-xs text-void-400">
+                                    <span id="progression-key-display">Tonalidad: C</span>
+                                </div>
+                            </div>
+
+                            <div id="progression-chain" class="flex items-center gap-2 flex-wrap min-h-[60px] p-3 bg-void-900 rounded">
+                                <span class="text-sm text-void-400">Añade acordes para comenzar...</span>
+                            </div>
+
+                            <!-- Voice Leading Visualization -->
+                            <div id="voice-leading-viz" class="mt-4 p-3 bg-void-900 rounded hidden">
+                                <div class="text-xs text-sage-400 mb-2">Voice Leading:</div>
+                                <svg id="voice-leading-svg" width="100%" height="60" class="overflow-visible"></svg>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <button id="play-progression" class="px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    ▶ Play
+                                </button>
+                                <button id="save-progression" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
+                                    💾 Save
+                                </button>
+                                <button id="transpose-progression" class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
+                                    🔄 Transpose
+                                </button>
+                                <button id="reverse-progression" class="px-3 py-2 bg-amber-600 hover:bg-amber-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
+                                    ↩️ Reverse
+                                </button>
+                                <button id="mutate-progression" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
+                                    🎲 Mutate
+                                </button>
+                                <button id="clear-progression" class="px-3 py-2 bg-red-600 hover:bg-red-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
+                                    🗑️ Clear
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- GUIDED MODE Content -->
+                        <div id="guided-mode-content" class="space-y-4">
+                            <!-- Step 1: Initial Chord (only shown when empty) -->
+                            <div id="initial-chord-selector" class="p-4 bg-void-800 rounded-lg">
+                                <h3 class="text-sm font-medium text-sage-400 mb-3">1️⃣ Acorde Inicial</h3>
+                                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                                    <button class="initial-chord-btn" data-chord="C" data-quality="maj">C</button>
+                                    <button class="initial-chord-btn" data-chord="Cm" data-quality="min">Cm</button>
+                                    <button class="initial-chord-btn" data-chord="D" data-quality="maj">D</button>
+                                    <button class="initial-chord-btn" data-chord="Dm" data-quality="min">Dm</button>
+                                    <button class="initial-chord-btn" data-chord="E" data-quality="maj">E</button>
+                                    <button class="initial-chord-btn" data-chord="Em" data-quality="min">Em</button>
+                                    <button class="initial-chord-btn" data-chord="F" data-quality="maj">F</button>
+                                    <button class="initial-chord-btn" data-chord="Fm" data-quality="min">Fm</button>
+                                    <button class="initial-chord-btn" data-chord="G" data-quality="maj">G</button>
+                                    <button class="initial-chord-btn" data-chord="Gm" data-quality="min">Gm</button>
+                                    <button class="initial-chord-btn" data-chord="A" data-quality="maj">A</button>
+                                    <button class="initial-chord-btn" data-chord="Am" data-quality="min">Am</button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Emotion Selector -->
+                            <div id="emotion-selector" class="p-4 bg-void-800 rounded-lg hidden">
+                                <h3 class="text-sm font-medium text-sage-400 mb-3">2️⃣ Color/Emoción</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                    <button class="emotion-btn" data-emotion="bright">
+                                        <div class="text-xl mb-1">☀️</div>
+                                        <div class="text-xs font-medium">Brillante</div>
+                                    </button>
+                                    <button class="emotion-btn" data-emotion="dark">
+                                        <div class="text-xl mb-1">🌙</div>
+                                        <div class="text-xs font-medium">Oscuro</div>
+                                    </button>
+                                    <button class="emotion-btn" data-emotion="tense">
+                                        <div class="text-xl mb-1">⚡</div>
+                                        <div class="text-xs font-medium">Tenso</div>
+                                    </button>
+                                    <button class="emotion-btn" data-emotion="resolved">
+                                        <div class="text-xl mb-1">✨</div>
+                                        <div class="text-xs font-medium">Resolutivo</div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Chord Suggestions -->
+                            <div id="chord-suggestions" class="hidden">
+                                <h3 class="text-sm font-medium text-sage-400 mb-3">3️⃣ Sugerencias</h3>
+                                <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- FREE MODE Content -->
+                        <div id="free-mode-content" class="hidden">
+                            <div class="p-4 bg-void-800 rounded-lg">
+                                <h3 class="text-sm font-medium text-sage-400 mb-3">🎨 Paleta de Acordes</h3>
+                                <div class="space-y-3">
+                                    <!-- Key selector -->
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs text-void-400">Tonalidad:</span>
+                                        <select id="free-mode-key" class="px-2 py-1 bg-void-900 text-chalk-100 rounded border border-void-600 text-sm">
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="E">E</option>
+                                            <option value="F">F</option>
+                                            <option value="G">G</option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Chord palette with color-coding -->
+                                    <div id="free-mode-palette" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                        <!-- Populated by JS with color-coded compatibility -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Selector de emoción -->
-                <div class="mb-6 hidden" id="emotion-selector">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">2. ¿Cómo quieres que suene el siguiente acorde?</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                        <button class="emotion-btn" data-emotion="misterioso">
-                            <div class="text-2xl mb-1">🌙</div>
-                            <div class="font-medium text-sage-300">Misterioso</div>
-                            <div class="text-xs text-void-400">Ambiguo, modal</div>
-                        </button>
-                        <button class="emotion-btn" data-emotion="abierto">
-                            <div class="text-2xl mb-1">☁️</div>
-                            <div class="font-medium text-sage-300">Abierto</div>
-                            <div class="text-xs text-void-400">Espacioso, aire</div>
-                        </button>
-                        <button class="emotion-btn" data-emotion="alegre">
-                            <div class="text-2xl mb-1">☀️</div>
-                            <div class="font-medium text-sage-300">Alegre</div>
-                            <div class="text-xs text-void-400">Brillante, optimista</div>
-                        </button>
-                        <button class="emotion-btn" data-emotion="melancólico">
-                            <div class="text-2xl mb-1">🌧️</div>
-                            <div class="font-medium text-sage-300">Melancólico</div>
-                            <div class="text-xs text-void-400">Triste, introspectivo</div>
-                        </button>
-                        <button class="emotion-btn" data-emotion="tenso">
-                            <div class="text-2xl mb-1">⚡</div>
-                            <div class="font-medium text-sage-300">Tenso</div>
-                            <div class="text-xs text-void-400">Dramático, disonante</div>
-                        </button>
+                    <!-- RIGHT: Analysis Panel -->
+                    <div class="space-y-4">
+                        <!-- Harmonic Analysis -->
+                        <div class="p-4 bg-void-800 rounded-lg border border-sage-600">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">📊 Análisis</h3>
+                            <div id="analysis-content" class="space-y-3 text-xs">
+                                <div class="text-void-400">Añade acordes para ver análisis...</div>
+                            </div>
+                        </div>
+
+                        <!-- Voice Leading Details -->
+                        <div id="voice-leading-panel" class="p-4 bg-void-800 rounded-lg border border-amber-600 hidden">
+                            <h3 class="text-sm font-medium text-amber-400 mb-3">🎼 Voice Leading</h3>
+                            <div id="voice-leading-content" class="space-y-2 text-xs"></div>
+                        </div>
+
+                        <!-- Story/Narrative -->
+                        <div id="progression-story" class="p-4 bg-sage-900/20 rounded-lg border border-sage-600 hidden">
+                            <h3 class="text-sm font-medium text-sage-400 mb-2">📖 Historia</h3>
+                            <div id="story-content" class="text-xs text-void-300 leading-relaxed"></div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Sugerencias de acordes -->
-                <div class="mb-6 hidden" id="chord-suggestions">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">3. Elige tu siguiente acorde</h3>
-                    <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <!-- Panel de explicación -->
-                <div class="mt-6 p-4 bg-sage-900/20 border border-sage-600 rounded-lg hidden" id="transition-explanation">
-                    <h4 class="text-lg font-medium text-sage-400 mb-3">📚 Por qué funciona esta transición</h4>
-                    <div id="explanation-content"></div>
                 </div>
             </div>
 
@@ -6069,6 +6351,462 @@
                     tension: 'low',
                     movable: true,
                     commonUse: 'Easy power chord'
+                },
+                'E5_power': {
+                    name: 'E5 Power',
+                    frets: [0, 2, 2, -1, -1, -1],
+                    fingers: [0, 1, 2, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 5,
+                    bestFor: ['heavy', 'minimal'],
+                    genres: ['metal', 'punk', 'hard-rock'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Simplest power chord'
+                },
+                'D5_power': {
+                    name: 'D5 Power',
+                    frets: [-1, -1, 0, 2, 3, -1],
+                    fingers: [0, 0, 0, 1, 2, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 1,
+                    brightness: 6,
+                    bestFor: ['heavy', 'bright'],
+                    genres: ['rock', 'metal', 'punk'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'High register power chord'
+                },
+                'G5_power': {
+                    name: 'G5 Power',
+                    frets: [3, 5, 5, -1, -1, -1],
+                    fingers: [1, 3, 4, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 2,
+                    brightness: 5,
+                    bestFor: ['heavy', 'full'],
+                    genres: ['metal', 'rock', 'grunge'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Thick power chord'
+                },
+                // More inversions for voice leading
+                'Cmaj_1st_inv': {
+                    name: 'C major (1st inv)',
+                    frets: [-1, 3, 2, 0, 1, 0],
+                    fingers: [0, 3, 2, 0, 1, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 3,
+                    brightness: 8,
+                    bestFor: ['voice-leading', 'smooth'],
+                    genres: ['jazz', 'classical', 'sophisticated'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 3rd (E), smooth transitions'
+                },
+                'Cmaj_2nd_inv': {
+                    name: 'C major (2nd inv)',
+                    frets: [-1, -1, -1, 5, 5, 5],
+                    fingers: [0, 0, 0, 1, 2, 3],
+                    baseFret: 0,
+                    register: 'high',
+                    difficulty: 3,
+                    brightness: 9,
+                    bestFor: ['voice-leading', 'bright'],
+                    genres: ['pop', 'jazz', 'modern'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Bass on 5th (G), highest voicing'
+                },
+                'Am_1st_inv': {
+                    name: 'A minor (1st inv)',
+                    frets: [-1, 0, 2, 2, 1, 0],
+                    fingers: [0, 0, 2, 3, 1, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 6,
+                    bestFor: ['voice-leading', 'transitions'],
+                    genres: ['folk', 'classical', 'pop'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 3rd (C), smooth minor'
+                },
+                'Am_2nd_inv': {
+                    name: 'A minor (2nd inv)',
+                    frets: [-1, -1, -1, 2, 1, 0],
+                    fingers: [0, 0, 0, 3, 2, 1],
+                    baseFret: 0,
+                    register: 'high',
+                    difficulty: 2,
+                    brightness: 7,
+                    bestFor: ['voice-leading', 'delicate'],
+                    genres: ['classical', 'fingerstyle', 'indie'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 5th (E), minimal voicing'
+                },
+                'Em_1st_inv': {
+                    name: 'E minor (1st inv)',
+                    frets: [0, 2, 2, 0, 0, 0],
+                    fingers: [0, 1, 2, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 6,
+                    bestFor: ['open', 'transitions'],
+                    genres: ['folk', 'rock', 'classical'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 3rd (G), very common'
+                },
+                'Dm_1st_inv': {
+                    name: 'D minor (1st inv)',
+                    frets: [-1, -1, 0, 2, 3, 1],
+                    fingers: [0, 0, 0, 2, 3, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 3,
+                    brightness: 5,
+                    bestFor: ['voice-leading', 'classical'],
+                    genres: ['classical', 'jazz', 'folk'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 3rd (F), smooth minor movement'
+                },
+                // More 7th inversions for jazz
+                'Cmaj7_1st_inv': {
+                    name: 'Cmaj7 (1st inv)',
+                    frets: [-1, 3, 5, 4, 0, 0],
+                    fingers: [0, 1, 4, 3, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 5,
+                    brightness: 8,
+                    bestFor: ['jazz', 'voice-leading'],
+                    genres: ['jazz', 'bossa', 'sophisticated'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Bass on 3rd (E), smooth jazz'
+                },
+                'Cmaj7_2nd_inv': {
+                    name: 'Cmaj7 (2nd inv)',
+                    frets: [-1, -1, 5, 5, 5, 7],
+                    fingers: [0, 0, 1, 1, 1, 3],
+                    baseFret: 0,
+                    register: 'high',
+                    difficulty: 6,
+                    brightness: 9,
+                    bestFor: ['jazz', 'bright'],
+                    genres: ['jazz', 'fusion', 'modern'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Bass on 5th (G), high and bright'
+                },
+                'Cmaj7_3rd_inv': {
+                    name: 'Cmaj7 (3rd inv)',
+                    frets: [-1, -1, -1, 0, 0, 0],
+                    fingers: [0, 0, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'high',
+                    difficulty: 1,
+                    brightness: 10,
+                    bestFor: ['minimal', 'ethereal'],
+                    genres: ['ambient', 'indie', 'experimental'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Bass on 7th (B), extremely minimal'
+                },
+                'C7_1st_inv': {
+                    name: 'C7 (1st inv)',
+                    frets: [-1, 3, 5, 3, 5, 3],
+                    fingers: [0, 1, 3, 1, 4, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 7,
+                    brightness: 7,
+                    bestFor: ['jazz', 'blues'],
+                    genres: ['jazz', 'blues', 'swing'],
+                    tension: 'medium',
+                    movable: true,
+                    commonUse: 'Bass on 3rd (E), full jazz voicing'
+                },
+                'Cm7_1st_inv': {
+                    name: 'Cm7 (1st inv)',
+                    frets: [-1, 3, 5, 3, 4, 3],
+                    fingers: [0, 1, 4, 2, 3, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 7,
+                    brightness: 6,
+                    bestFor: ['jazz', 'smooth'],
+                    genres: ['jazz', 'soul', 'neo-soul'],
+                    tension: 'low',
+                    movable: true,
+                    commonUse: 'Bass on 3rd (Eb), ii chord inversion'
+                },
+                // Extended chords for modern/jazz sounds
+                'Dm11': {
+                    name: 'm11',
+                    frets: [-1, -1, 0, 0, 1, 1],
+                    fingers: [0, 0, 0, 0, 1, 2],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 7,
+                    bestFor: ['modal', 'spacious'],
+                    genres: ['jazz', 'fusion', 'neo-soul'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Open, modal sound'
+                },
+                'Em11': {
+                    name: 'Em11',
+                    frets: [0, 0, 0, 0, 0, 0],
+                    fingers: [0, 0, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 9,
+                    bestFor: ['open', 'ambient'],
+                    genres: ['ambient', 'post-rock', 'experimental'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Maximum openness, all strings'
+                },
+                'Am11': {
+                    name: 'Am11',
+                    frets: [0, 0, 0, 0, 1, 0],
+                    fingers: [0, 0, 0, 0, 1, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 8,
+                    bestFor: ['open', 'modern'],
+                    genres: ['indie', 'ambient', 'neo-soul'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Super open minor sound'
+                },
+                'Gmaj13': {
+                    name: 'Gmaj13',
+                    frets: [3, 2, 0, 0, 0, 0],
+                    fingers: [2, 1, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 2,
+                    brightness: 10,
+                    bestFor: ['lush', 'full'],
+                    genres: ['jazz', 'sophisticated', 'pop'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Maximum color, all extensions'
+                },
+                'E13': {
+                    name: 'E13',
+                    frets: [0, 2, 0, 1, 2, 0],
+                    fingers: [0, 2, 0, 1, 3, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 3,
+                    brightness: 8,
+                    bestFor: ['dominant', 'complex'],
+                    genres: ['jazz', 'blues', 'funk'],
+                    tension: 'medium',
+                    movable: false,
+                    commonUse: 'Full dominant with extensions'
+                },
+                'A13': {
+                    name: 'A13',
+                    frets: [0, 0, 2, 1, 2, 2],
+                    fingers: [0, 0, 2, 1, 3, 4],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 4,
+                    brightness: 8,
+                    bestFor: ['jazzy', 'colorful'],
+                    genres: ['jazz', 'swing', 'bebop'],
+                    tension: 'medium',
+                    movable: false,
+                    commonUse: 'Rich dominant color'
+                },
+                // Cluster chords (experimental)
+                'C_cluster_1': {
+                    name: 'C Cluster (dense)',
+                    frets: [0, 3, 4, 5, 6, -1],
+                    fingers: [0, 1, 2, 3, 4, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 5,
+                    brightness: 4,
+                    bestFor: ['dissonant', 'modern'],
+                    genres: ['experimental', 'avant-garde', 'noise'],
+                    tension: 'high',
+                    movable: false,
+                    commonUse: 'Maximum dissonance, chromatic'
+                },
+                'C_cluster_2': {
+                    name: 'C Cluster (open)',
+                    frets: [0, 3, 2, 0, 1, 0],
+                    fingers: [0, 3, 2, 0, 1, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 3,
+                    brightness: 8,
+                    bestFor: ['colorful', 'modern'],
+                    genres: ['indie', 'experimental', 'shoegaze'],
+                    tension: 'medium',
+                    movable: false,
+                    commonUse: 'Controlled dissonance'
+                },
+                // Polychords
+                'C_over_G': {
+                    name: 'C/G (polychord)',
+                    frets: [3, 3, 2, 0, 1, 0],
+                    fingers: [3, 4, 2, 0, 1, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 4,
+                    brightness: 8,
+                    bestFor: ['complex', 'modern'],
+                    genres: ['progressive', 'jazz-fusion', 'modern'],
+                    tension: 'medium',
+                    movable: false,
+                    commonUse: 'Two chords at once'
+                },
+                'Dm_over_C': {
+                    name: 'Dm/C',
+                    frets: [-1, 3, 0, 2, 3, 1],
+                    fingers: [0, 3, 0, 2, 4, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 5,
+                    brightness: 6,
+                    bestFor: ['tension', 'sus'],
+                    genres: ['jazz', 'modern', 'progressive'],
+                    tension: 'medium',
+                    movable: false,
+                    commonUse: 'Suspended feeling, complex'
+                },
+                'F_over_G': {
+                    name: 'F/G (sus)',
+                    frets: [3, 3, 3, 2, 1, 1],
+                    fingers: [3, 4, 5, 2, 1, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 7,
+                    brightness: 7,
+                    bestFor: ['modal', 'tension'],
+                    genres: ['jazz', 'fusion', 'modal'],
+                    tension: 'high',
+                    movable: false,
+                    commonUse: 'Unresolved tension'
+                },
+                // Diminished chords
+                'Cdim7': {
+                    name: 'dim7',
+                    frets: [-1, 3, 4, 2, 4, 2],
+                    fingers: [0, 2, 4, 1, 3, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 6,
+                    brightness: 4,
+                    bestFor: ['passing', 'tension'],
+                    genres: ['jazz', 'classical', 'bebop'],
+                    tension: 'high',
+                    movable: true,
+                    commonUse: 'Passing chord, symmetrical'
+                },
+                'Bdim7': {
+                    name: 'Bdim7',
+                    frets: [-1, 2, 3, 1, 3, 1],
+                    fingers: [0, 2, 4, 1, 3, 1],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 6,
+                    brightness: 4,
+                    bestFor: ['chromatic', 'passing'],
+                    genres: ['jazz', 'swing', 'classical'],
+                    tension: 'high',
+                    movable: true,
+                    commonUse: 'Common passing diminished'
+                },
+                // Augmented chords
+                'Caug': {
+                    name: 'aug',
+                    frets: [-1, 3, 2, 1, 1, 0],
+                    fingers: [0, 4, 3, 1, 2, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 5,
+                    brightness: 6,
+                    bestFor: ['tension', 'unstable'],
+                    genres: ['jazz', 'modern', 'experimental'],
+                    tension: 'high',
+                    movable: false,
+                    commonUse: 'Whole tone feeling, unstable'
+                },
+                'Eaug': {
+                    name: 'Eaug',
+                    frets: [0, 3, 2, 1, 1, 0],
+                    fingers: [0, 4, 3, 1, 2, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 5,
+                    brightness: 6,
+                    bestFor: ['tension', 'chromatic'],
+                    genres: ['jazz', 'bebop', 'modern'],
+                    tension: 'high',
+                    movable: false,
+                    commonUse: 'Augmented resolution'
+                },
+                // Special voicings
+                'Dsus2_bright': {
+                    name: 'Dsus2 (Wonderwall)',
+                    frets: [-1, -1, 0, 2, 3, 0],
+                    fingers: [0, 0, 0, 1, 2, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 10,
+                    bestFor: ['jangly', 'bright'],
+                    genres: ['indie', 'brit-pop', 'alternative'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Oasis, Wonderwall sound'
+                },
+                'Em7_beatles': {
+                    name: 'Em7 (Something)',
+                    frets: [0, 2, 2, 0, 3, 0],
+                    fingers: [0, 2, 3, 0, 4, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 3,
+                    brightness: 7,
+                    bestFor: ['melodic', 'classic'],
+                    genres: ['rock', 'classic-rock', 'pop'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Beatles signature voicing'
+                },
+                'Gmaj7_bright': {
+                    name: 'Gmaj7 (bright)',
+                    frets: [3, -1, 0, 0, 0, 2],
+                    fingers: [2, 0, 0, 0, 0, 1],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 2,
+                    brightness: 10,
+                    bestFor: ['open', 'jangly'],
+                    genres: ['indie', 'folk', 'pop'],
+                    tension: 'low',
+                    movable: false,
+                    commonUse: 'Maximum brightness with open strings'
                 }
             },
 
@@ -8553,6 +9291,379 @@
                 }
 
                 return numeral;
+            },
+
+            // ===== TRANSPOSITION SYSTEM =====
+
+            // Transpose a voicing from one root to another
+            transposeVoicing(voicing, fromRoot, toRoot) {
+                if (!voicing || !voicing.frets) {
+                    console.error('Invalid voicing for transposition:', voicing);
+                    return null;
+                }
+
+                // Calculate chromatic offset
+                const fromIndex = typeof fromRoot === 'number' ? fromRoot : this.getNoteIndex(fromRoot);
+                const toIndex = typeof toRoot === 'number' ? toRoot : this.getNoteIndex(toRoot);
+                const offset = (toIndex - fromIndex + 12) % 12;
+
+                if (offset === 0) {
+                    return voicing; // No transposition needed
+                }
+
+                // Transpose each fret
+                const transposedFrets = voicing.frets.map(fret => {
+                    if (fret === -1) return -1; // Muted string stays muted
+                    if (fret === 0 && !voicing.movable) {
+                        // Open string in non-movable voicing: cannot transpose
+                        return fret + offset;
+                    }
+                    return fret + offset;
+                });
+
+                // Create transposed voicing
+                const transposed = {
+                    ...voicing,
+                    frets: transposedFrets,
+                    baseFret: voicing.baseFret + offset,
+                    transposed: true,
+                    originalRoot: fromRoot,
+                    newRoot: toRoot
+                };
+
+                return transposed;
+            },
+
+            // Get a voicing for a specific chord and quality, with transposition support
+            getVoicingForChord(targetRoot, quality) {
+                // Try to find a voicing in the target key first
+                const targetRootName = typeof targetRoot === 'number' ? this.getNoteName(targetRoot) : targetRoot;
+
+                // Direct lookup attempts
+                const directKeys = [
+                    `${targetRootName}_shape_${quality}`,
+                    `${targetRootName}_shape_major`,
+                    `${targetRootName}_shape_maj7`,
+                    `${targetRootName}${quality}`,
+                    `${targetRootName}maj7`,
+                    `${targetRootName}7`,
+                    `${targetRootName}m7`,
+                    `${targetRootName}add9`,
+                    `${targetRootName}sus2`,
+                    `${targetRootName}sus4`
+                ];
+
+                for (const key of directKeys) {
+                    if (this.chordLabVoicings[key]) {
+                        return { key, voicing: this.chordLabVoicings[key], transposed: false };
+                    }
+                }
+
+                // If not found, find a movable voicing and transpose it
+                const qualityVoicings = {
+                    'maj': ['C_shape_major', 'A_shape_major', 'E_shape_major_barre', 'G_shape_major'],
+                    'min': ['Am_shape', 'Em_shape', 'E_shape_minor_barre'],
+                    '7': ['C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7'],
+                    'maj7': ['C_shape_maj7', 'A_shape_maj7', 'E_shape_maj7'],
+                    'm7': ['A_shape_m7', 'C_shape_m7', 'E_shape_m7'],
+                    'sus2': ['Csus2', 'Asus2'],
+                    'sus4': ['Csus4', 'Asus4'],
+                    '9': ['C9', 'Cmaj9'],
+                    'add9': ['Cadd9', 'Amadd9'],
+                    '6': ['C6', 'Am6'],
+                    'dim7': ['Cdim7', 'Bdim7'],
+                    'aug': ['Caug', 'Eaug']
+                };
+
+                const voicingKeys = qualityVoicings[quality] || qualityVoicings['maj'];
+
+                for (const key of voicingKeys) {
+                    const baseVoicing = this.chordLabVoicings[key];
+                    if (baseVoicing && baseVoicing.movable) {
+                        // Extract base root from key (e.g., "C" from "C_shape_major")
+                        let baseRoot = key.charAt(0);
+                        if (key.charAt(1) === '#' || key.charAt(1) === 'b') {
+                            baseRoot += key.charAt(1);
+                        }
+
+                        const transposed = this.transposeVoicing(baseVoicing, baseRoot, targetRootName);
+                        if (transposed) {
+                            return { key: `${key}_transposed_to_${targetRootName}`, voicing: transposed, transposed: true };
+                        }
+                    }
+                }
+
+                // Fallback: return first voicing for quality
+                const fallbackKey = voicingKeys[0];
+                return {
+                    key: fallbackKey,
+                    voicing: this.chordLabVoicings[fallbackKey] || this.chordLabVoicings['C_shape_major'],
+                    transposed: false
+                };
+            },
+
+            // Transpose an entire progression
+            transposeProgression(progression, fromKey, toKey) {
+                if (!progression || progression.length === 0) return [];
+
+                const fromIndex = typeof fromKey === 'number' ? fromKey : this.getNoteIndex(fromKey);
+                const toIndex = typeof toKey === 'number' ? toKey : this.getNoteIndex(toKey);
+
+                return progression.map(chordData => {
+                    const originalRoot = typeof chordData.root === 'number' ? chordData.root : this.getNoteIndex(chordData.root);
+                    const newRoot = (originalRoot + (toIndex - fromIndex) + 12) % 12;
+                    const newRootName = this.getNoteName(newRoot);
+
+                    const transposedVoicing = chordData.voicing ?
+                        this.transposeVoicing(chordData.voicing, originalRoot, newRoot) :
+                        null;
+
+                    return {
+                        ...chordData,
+                        root: newRootName,
+                        voicing: transposedVoicing
+                    };
+                });
+            },
+
+            // ===== HARMONIC SUGGESTION ENGINE =====
+
+            // Get chord function in a key (I, ii, V, etc.)
+            getChordFunction(chordRoot, key, quality = 'maj') {
+                const keyIndex = typeof key === 'number' ? key : this.getNoteIndex(key);
+                const chordIndex = typeof chordRoot === 'number' ? chordRoot : this.getNoteIndex(chordRoot);
+
+                const interval = (chordIndex - keyIndex + 12) % 12;
+
+                // Map intervals to functions
+                const functionMap = {
+                    0: 'I',    // Tonic
+                    2: 'ii',   // Supertonic
+                    4: 'iii',  // Mediant
+                    5: 'IV',   // Subdominant
+                    7: 'V',    // Dominant
+                    9: 'vi',   // Submediant
+                    11: 'vii°' // Leading tone
+                };
+
+                // Special cases for borrowed chords
+                const borrowedMap = {
+                    3: 'bIII',  // Borrowed from parallel minor
+                    6: 'bV',    // Neapolitan
+                    8: 'bVI',   // Borrowed
+                    10: 'bVII'  // Subtonic
+                };
+
+                return functionMap[interval] || borrowedMap[interval] || 'altered';
+            },
+
+            // Calculate compatibility between two chords
+            calculateCompatibility(currentChord, nextFunction, key) {
+                const currentFunction = this.getChordFunction(currentChord.root || currentChord, key, currentChord.quality);
+
+                // Transition probability matrix (based on functional harmony)
+                const transitions = {
+                    'I': { 'I': 70, 'ii': 85, 'iii': 70, 'IV': 90, 'V': 85, 'vi': 90, 'vii°': 60 },
+                    'ii': { 'I': 60, 'ii': 40, 'iii': 50, 'IV': 70, 'V': 95, 'vi': 60, 'vii°': 70 },
+                    'iii': { 'I': 50, 'ii': 70, 'iii': 40, 'IV': 75, 'V': 60, 'vi': 85, 'vii°': 50 },
+                    'IV': { 'I': 80, 'ii': 75, 'iii': 50, 'IV': 60, 'V': 90, 'vi': 70, 'vii°': 75 },
+                    'V': { 'I': 100, 'ii': 40, 'iii': 50, 'IV': 65, 'V': 50, 'vi': 80, 'vii°': 40 },
+                    'vi': { 'I': 70, 'ii': 85, 'iii': 75, 'IV': 85, 'V': 75, 'vi': 50, 'vii°': 60 },
+                    'vii°': { 'I': 95, 'ii': 50, 'iii': 65, 'IV': 50, 'V': 60, 'vi': 70, 'vii°': 30 }
+                };
+
+                const score = (transitions[currentFunction] && transitions[currentFunction][nextFunction]) || 50;
+
+                // Categorize
+                if (score >= 85) return { score, category: 'excellent', color: '#10b981' };
+                if (score >= 70) return { score, category: 'good', color: '#f59e0b' };
+                if (score >= 50) return { score, category: 'interesting', color: '#3b82f6' };
+                return { score, category: 'unexpected', color: '#ef4444' };
+            },
+
+            // Suggest next chords based on current chord and context
+            suggestNextChords(currentChord, key, context = {}) {
+                const keyIndex = typeof key === 'number' ? key : this.getNoteIndex(key);
+                const currentRoot = typeof currentChord === 'object' ? currentChord.root : currentChord;
+                const currentQuality = typeof currentChord === 'object' ? currentChord.quality : 'maj';
+                const currentFunction = this.getChordFunction(currentRoot, key, currentQuality);
+
+                // Define probable transitions based on function
+                const transitionRules = {
+                    'I': ['ii', 'iii', 'IV', 'V', 'vi'],
+                    'ii': ['V', 'vii°', 'IV'],
+                    'iii': ['vi', 'IV', 'ii'],
+                    'IV': ['I', 'V', 'ii', 'vii°'],
+                    'V': ['I', 'vi', 'IV'],
+                    'vi': ['ii', 'IV', 'V', 'I'],
+                    'vii°': ['I', 'iii']
+                };
+
+                let suggestedFunctions = transitionRules[currentFunction] || ['I', 'IV', 'V'];
+
+                // Apply emotional filter if provided
+                if (context.emotion) {
+                    suggestedFunctions = this.filterByEmotion(suggestedFunctions, context.emotion);
+                }
+
+                // Convert functions to actual chords
+                const functionToInterval = {
+                    'I': 0, 'ii': 2, 'iii': 4, 'IV': 5,
+                    'V': 7, 'vi': 9, 'vii°': 11,
+                    'bIII': 3, 'bVI': 8, 'bVII': 10
+                };
+
+                const functionToQuality = {
+                    'I': 'maj', 'ii': 'min', 'iii': 'min', 'IV': 'maj',
+                    'V': '7', 'vi': 'min', 'vii°': 'dim',
+                    'bIII': 'maj', 'bVI': 'maj', 'bVII': 'maj'
+                };
+
+                const suggestions = suggestedFunctions.map(func => {
+                    const interval = functionToInterval[func];
+                    const chordRoot = (keyIndex + interval) % 12;
+                    const chordRootName = this.getNoteName(chordRoot);
+                    const quality = functionToQuality[func];
+
+                    // Get compatibility score
+                    const compatibility = this.calculateCompatibility(currentRoot, func, key);
+
+                    // Find best voicing
+                    const voicingResult = this.getVoicingForChord(chordRootName, quality);
+
+                    // Calculate voice leading if we have voicings
+                    let voiceLeading = null;
+                    if (currentChord.voicing && voicingResult.voicing) {
+                        voiceLeading = this.calculateVoiceLeading(currentChord.voicing, voicingResult.voicing);
+                    }
+
+                    return {
+                        chord: chordRootName,
+                        quality: quality,
+                        function: func,
+                        compatibility: compatibility,
+                        voicing: voicingResult.voicing,
+                        voicingKey: voicingResult.key,
+                        voiceLeading: voiceLeading,
+                        explanation: this.explainTransition(currentFunction, func, compatibility.category)
+                    };
+                });
+
+                // Sort by compatibility score (descending)
+                return suggestions.sort((a, b) => b.compatibility.score - a.compatibility.score);
+            },
+
+            // Filter suggestions by emotion
+            filterByEmotion(functions, emotion) {
+                const emotionMap = {
+                    'happy': ['I', 'IV', 'V', 'vi'],
+                    'sad': ['vi', 'ii', 'iii', 'bVI'],
+                    'dark': ['vi', 'iii', 'vii°', 'bVI'],
+                    'bright': ['I', 'IV', 'V'],
+                    'tense': ['V', 'vii°', 'ii'],
+                    'resolved': ['I', 'IV'],
+                    'mysterious': ['iii', 'vi', 'bIII', 'bVI'],
+                    'energetic': ['V', 'I', 'IV']
+                };
+
+                const preferred = emotionMap[emotion] || functions;
+                return functions.filter(f => preferred.includes(f)).concat(
+                    functions.filter(f => !preferred.includes(f))
+                );
+            },
+
+            // Explain why a transition works
+            explainTransition(fromFunction, toFunction, category) {
+                const explanations = {
+                    'I_IV': 'Progresión plagal clásica - movimiento suave y resolutivo',
+                    'I_V': 'Tensión hacia dominante - genera expectativa de regreso',
+                    'I_vi': 'Giro menor - añade melancolía sin perder estabilidad',
+                    'I_ii': 'Preparación suave para dominante - muy común en jazz',
+                    'ii_V': 'Cadencia ii-V - la progresión más fuerte en jazz',
+                    'V_I': 'Resolución dominante-tónica - la más fuerte en música occidental',
+                    'V_vi': 'Cadencia rota - sorpresa emotiva, evita resolución',
+                    'IV_I': 'Cadencia plagal ("Amén") - resolución tranquila',
+                    'IV_V': 'Preparación para resolución - genera momentum',
+                    'vi_ii': 'Círculo de quintas descendente - movimiento fluido',
+                    'vi_IV': 'Progresión pop moderna - vi-IV-I-V muy popular',
+                    'iii_vi': 'Movimiento descendente menor - mantiene oscuridad'
+                };
+
+                const key = `${fromFunction}_${toFunction}`;
+                return explanations[key] || this.getGenericExplanation(category);
+            },
+
+            // Generic explanation based on compatibility
+            getGenericExplanation(category) {
+                const generic = {
+                    'excellent': 'Transición muy natural y fluida según teoría armónica clásica',
+                    'good': 'Movimiento coherente que funciona bien en la mayoría de contextos',
+                    'interesting': 'Progresión menos común pero interesante - añade color',
+                    'unexpected': 'Cambio sorpresivo - úsalo para impacto dramático'
+                };
+                return generic[category] || 'Transición experimental';
+            },
+
+            // Calculate voice leading between two voicings
+            calculateVoiceLeading(voicingA, voicingB) {
+                if (!voicingA || !voicingB || !voicingA.frets || !voicingB.frets) {
+                    return null;
+                }
+
+                const openStringNotes = [4, 9, 2, 7, 11, 4]; // E A D G B E
+                let totalMovement = 0;
+                let commonTones = 0;
+                let movingVoices = 0;
+
+                // Compare each string
+                for (let i = 0; i < 6; i++) {
+                    const fretA = voicingA.frets[i];
+                    const fretB = voicingB.frets[i];
+
+                    // Skip muted strings
+                    if (fretA === -1 || fretB === -1) continue;
+
+                    const noteA = (openStringNotes[i] + fretA) % 12;
+                    const noteB = (openStringNotes[i] + fretB) % 12;
+
+                    if (noteA === noteB) {
+                        commonTones++;
+                    } else {
+                        const semitones = Math.abs(noteA - noteB);
+                        const movement = Math.min(semitones, 12 - semitones);
+                        totalMovement += movement;
+                        movingVoices++;
+                    }
+                }
+
+                const smoothness = Math.max(0, 100 - (totalMovement * 8));
+                let recommendation = 'excellent';
+                if (totalMovement > 4) recommendation = 'good';
+                if (totalMovement > 8) recommendation = 'moderate';
+                if (totalMovement > 12) recommendation = 'challenging';
+
+                return {
+                    movement: totalMovement,
+                    commonTones: commonTones,
+                    movingVoices: movingVoices,
+                    smoothness: smoothness,
+                    recommendation: recommendation,
+                    description: this.describeVoiceLeading(totalMovement, commonTones)
+                };
+            },
+
+            // Describe voice leading quality
+            describeVoiceLeading(movement, commonTones) {
+                if (commonTones >= 2 && movement <= 3) {
+                    return `Excelente: ${commonTones} notas comunes, movimiento mínimo`;
+                }
+                if (movement <= 5) {
+                    return `Bueno: movimiento suave de ${movement} semitonos`;
+                }
+                if (movement <= 10) {
+                    return `Moderado: movimiento de ${movement} semitonos, practicable`;
+                }
+                return `Desafiante: salto grande de ${movement} semitonos`;
             }
         };
 
