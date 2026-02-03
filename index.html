@@ -10546,7 +10546,8 @@
         const ProgressionBuilderState = {
             progression: [],
             currentKey: 'C',
-            lastEmotion: null
+            lastEmotion: null,
+            subMode: 'guided' // 'guided' or 'free'
         };
 
         // ========================================
@@ -12400,6 +12401,39 @@
                         // Progression Builder: Clear progression
                         document.getElementById('clear-progression')?.addEventListener('click', () => {
                             this.clearProgression();
+                        });
+
+                        // Progression Builder: Sub-mode tabs
+                        controlPanel.querySelectorAll('.progression-mode-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const submode = e.currentTarget.dataset.submode;
+                                this.showProgressionSubMode(submode);
+                            });
+                        });
+
+                        // Progression Builder: Save progression
+                        document.getElementById('save-progression')?.addEventListener('click', () => {
+                            this.saveProgression();
+                        });
+
+                        // Progression Builder: Transpose
+                        document.getElementById('transpose-progression')?.addEventListener('click', () => {
+                            this.transposeProgressionDialog();
+                        });
+
+                        // Progression Builder: Reverse
+                        document.getElementById('reverse-progression')?.addEventListener('click', () => {
+                            this.reverseProgression();
+                        });
+
+                        // Progression Builder: Mutate
+                        document.getElementById('mutate-progression')?.addEventListener('click', () => {
+                            this.mutateProgression();
+                        });
+
+                        // Free mode key selector
+                        document.getElementById('free-mode-key')?.addEventListener('change', () => {
+                            this.renderFreeModeChordPalette();
                         });
 
                         // CAGED Tour button
@@ -16815,6 +16849,100 @@
             showProgressionBuilder() {
                 // Initial render - show/hide appropriate sections
                 this.updateProgressionUI();
+
+                // Initialize sub-mode if not set
+                if (!ProgressionBuilderState.subMode) {
+                    ProgressionBuilderState.subMode = 'guided';
+                }
+
+                // Show appropriate sub-mode
+                this.showProgressionSubMode(ProgressionBuilderState.subMode);
+            },
+
+            showProgressionSubMode(subMode) {
+                // Update sub-mode state
+                ProgressionBuilderState.subMode = subMode;
+
+                // Update tab buttons
+                document.querySelectorAll('.progression-mode-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.submode === subMode);
+                });
+
+                // Show/hide content
+                document.getElementById('guided-mode-content')?.classList.toggle('hidden', subMode !== 'guided');
+                document.getElementById('free-mode-content')?.classList.toggle('hidden', subMode !== 'free');
+
+                // Initialize free mode if switching to it
+                if (subMode === 'free') {
+                    this.renderFreeModeChordPalette();
+                }
+            },
+
+            renderFreeModeChordPalette() {
+                const palette = document.getElementById('free-mode-palette');
+                if (!palette) return;
+
+                const key = document.getElementById('free-mode-key')?.value || 'C';
+                const keyIndex = MusicTheory.getNoteIndex(key);
+
+                // Generate diatonic chords plus some borrowed chords
+                const chords = [
+                    // Diatonic
+                    { interval: 0, quality: 'maj', numeral: 'I' },
+                    { interval: 2, quality: 'min', numeral: 'ii' },
+                    { interval: 4, quality: 'min', numeral: 'iii' },
+                    { interval: 5, quality: 'maj', numeral: 'IV' },
+                    { interval: 7, quality: '7', numeral: 'V' },
+                    { interval: 9, quality: 'min', numeral: 'vi' },
+                    { interval: 11, quality: 'dim', numeral: 'vii°' },
+                    // Extended
+                    { interval: 0, quality: 'maj7', numeral: 'Imaj7' },
+                    { interval: 2, quality: 'm7', numeral: 'ii7' },
+                    { interval: 5, quality: 'maj7', numeral: 'IVmaj7' },
+                    { interval: 9, quality: 'm7', numeral: 'vi7' }
+                ];
+
+                const lastChord = ProgressionBuilderState.progression.length > 0 ?
+                    ProgressionBuilderState.progression[ProgressionBuilderState.progression.length - 1] : null;
+
+                palette.innerHTML = chords.map(chordData => {
+                    const root = (keyIndex + chordData.interval) % 12;
+                    const rootName = MusicTheory.getNoteName(root);
+                    const chordSymbol = this.getChordSymbol(rootName, chordData.quality);
+
+                    // Calculate compatibility if there's a last chord
+                    let compatClass = '';
+                    let compatScore = null;
+
+                    if (lastChord) {
+                        const compat = MusicTheory.calculateCompatibility(
+                            lastChord.chord,
+                            chordData.numeral,
+                            key
+                        );
+                        compatClass = `compat-${compat.category}`;
+                        compatScore = compat.score;
+                    }
+
+                    return `
+                        <button class="free-mode-chord-btn ${compatClass}"
+                                onclick="App.addChordFromFreePalette('${rootName}', '${chordData.quality}')">
+                            <div class="font-medium">${chordSymbol}</div>
+                            <div class="text-xs text-void-400">${chordData.numeral}</div>
+                            ${compatScore !== null ? `
+                                <span class="compat-badge" style="background: ${MusicTheory.calculateCompatibility(lastChord.chord, chordData.numeral, key).color}">
+                                    ${compatScore}
+                                </span>
+                            ` : ''}
+                        </button>
+                    `;
+                }).join('');
+            },
+
+            addChordFromFreePalette(chord, quality) {
+                this.addChordToProgression(chord, quality);
+                // Re-render palette to update compatibility colors
+                this.renderFreeModeChordPalette();
             },
 
             selectInitialChord(chord, quality) {
@@ -16859,16 +16987,23 @@
                 const lastItem = ProgressionBuilderState.progression[ProgressionBuilderState.progression.length - 1];
                 if (!lastItem) return;
 
-                // Get suggestions
-                const suggestions = MusicTheory.suggestNextChords(
-                    lastItem.chord,
-                    emotion,
-                    ProgressionBuilderState.currentKey,
-                    { limit: 4 }
-                );
+                // Get suggestions using new engine
+                const key = ProgressionBuilderState.currentKey || 'C';
+                const currentChord = {
+                    root: lastItem.chord,
+                    quality: lastItem.quality,
+                    voicing: lastItem.voicing
+                };
+
+                const suggestions = MusicTheory.suggestNextChords(currentChord, key, {
+                    emotion: emotion
+                });
+
+                // Take top 5 suggestions
+                const topSuggestions = suggestions.slice(0, 5);
 
                 // Render suggestions
-                this.renderChordSuggestions(suggestions, emotion);
+                this.renderChordSuggestions(topSuggestions, emotion);
 
                 // Hide emotion selector temporarily
                 document.getElementById('emotion-selector')?.classList.add('hidden');
@@ -16880,30 +17015,38 @@
                 if (!grid) return;
 
                 grid.innerHTML = suggestions.map(sug => {
-                    const voicingKey = this.getVoicingKeyForQuality(sug.chord, sug.quality);
+                    const chordSymbol = this.getChordSymbol(sug.chord, sug.quality);
+                    const compatClass = sug.compatibility.category;
+                    const compatColor = sug.compatibility.color;
+
                     return `
-                        <div class="suggestion-card">
+                        <div class="suggestion-card ${compatClass}" style="border-color: ${compatColor}">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
                                     <div class="text-2xl font-display text-chalk-100">
-                                        ${sug.chord}${sug.quality === 'maj' ? '' : sug.quality}
+                                        ${chordSymbol}
                                     </div>
-                                    <div class="text-sm text-sage-400">${sug.romanNumeral || ''}</div>
+                                    <div class="text-xs text-sage-400">${sug.function}</div>
                                 </div>
-                                <div class="text-sm bg-sage-800 px-2 py-1 rounded">
-                                    Fit: ${(sug.emotionalFit * 100).toFixed(0)}%
+                                <div class="text-xs px-2 py-1 rounded" style="background: ${compatColor}22; color: ${compatColor}">
+                                    ${sug.compatibility.score}%
                                 </div>
                             </div>
-                            <p class="text-sm text-void-300 mb-3">${sug.explanation}</p>
-                            <div class="p-2 bg-void-900/50 rounded text-xs mb-3">
-                                <div><strong>Transición:</strong> ${sug.transition.function}</div>
-                                <div><strong>Sensación:</strong> ${sug.transition.feeling}</div>
-                                ${sug.transition.examples && sug.transition.examples.length > 0 ?
-                                    `<div class="mt-1 text-void-400">Ej: ${sug.transition.examples[0]}</div>` : ''}
-                            </div>
+                            <p class="text-xs text-void-300 mb-3">${sug.explanation}</p>
+                            ${sug.voiceLeading ? `
+                                <div class="p-2 bg-void-900/50 rounded text-xs mb-3">
+                                    <div class="flex justify-between">
+                                        <span>Voice Leading:</span>
+                                        <span class="text-sage-400">${sug.voiceLeading.recommendation}</span>
+                                    </div>
+                                    <div class="text-void-400 text-[10px] mt-1">
+                                        ${sug.voiceLeading.description}
+                                    </div>
+                                </div>
+                            ` : ''}
                             <div class="flex gap-2">
                                 <button class="ctrl-btn-small flex-1" onclick="App.playChordSuggestion('${sug.chord}', '${sug.quality}')">
-                                    ▶ Escuchar
+                                    ▶
                                 </button>
                                 <button class="ctrl-btn-small flex-1" onclick="App.addChordToProgression('${sug.chord}', '${sug.quality}')">
                                     + Añadir
@@ -16957,21 +17100,200 @@
                 const chain = document.getElementById('progression-chain');
                 if (!chain) return;
 
+                const key = ProgressionBuilderState.currentKey || 'C';
+
                 if (ProgressionBuilderState.progression.length === 0) {
-                    chain.innerHTML = '<span class="text-sm text-void-400">Comienza seleccionando un acorde inicial...</span>';
+                    chain.innerHTML = '<span class="text-sm text-void-400">Añade acordes para comenzar...</span>';
                     document.getElementById('play-progression')?.setAttribute('disabled', '');
                     document.getElementById('clear-progression')?.setAttribute('disabled', '');
-                } else {
-                    chain.innerHTML = ProgressionBuilderState.progression.map((item, idx) => `
-                        <div class="progression-chord-chip">
-                            <span class="chord-name">${item.chord}${item.quality === 'maj' ? '' : item.quality}</span>
-                            <button class="remove-chord" onclick="App.removeChordFromProgression(${idx})" title="Eliminar">×</button>
-                        </div>
-                    `).join('');
+                    document.getElementById('save-progression')?.setAttribute('disabled', '');
+                    document.getElementById('transpose-progression')?.setAttribute('disabled', '');
+                    document.getElementById('reverse-progression')?.setAttribute('disabled', '');
+                    document.getElementById('mutate-progression')?.setAttribute('disabled', '');
 
+                    // Clear analysis panel
+                    this.updateAnalysisPanel([]);
+                } else {
+                    // Render chord chips with function labels
+                    chain.innerHTML = ProgressionBuilderState.progression.map((item, idx) => {
+                        const func = MusicTheory.getChordFunction(item.chord, key, item.quality);
+                        return `
+                            <div class="progression-chord-item">
+                                <span class="function-label">${func}</span>
+                                <span class="chord-name">${item.chord}${item.quality === 'maj' ? '' : item.quality}</span>
+                                <span class="remove-btn" onclick="App.removeChordFromProgression(${idx})" title="Eliminar">×</span>
+                            </div>
+                        `;
+                    }).join('→');
+
+                    // Enable controls
                     document.getElementById('play-progression')?.removeAttribute('disabled');
                     document.getElementById('clear-progression')?.removeAttribute('disabled');
+                    document.getElementById('save-progression')?.removeAttribute('disabled');
+                    document.getElementById('transpose-progression')?.removeAttribute('disabled');
+                    document.getElementById('reverse-progression')?.removeAttribute('disabled');
+                    document.getElementById('mutate-progression')?.removeAttribute('disabled');
+
+                    // Update analysis
+                    this.updateAnalysisPanel(ProgressionBuilderState.progression);
+
+                    // Update voice leading visualization if multiple chords
+                    if (ProgressionBuilderState.progression.length >= 2) {
+                        this.updateVoiceLeadingViz(ProgressionBuilderState.progression);
+                    }
                 }
+            },
+
+            updateAnalysisPanel(progression) {
+                const panel = document.getElementById('analysis-content');
+                if (!panel) return;
+
+                if (progression.length === 0) {
+                    panel.innerHTML = '<div class="text-void-400">Añade acordes para ver análisis...</div>';
+                    document.getElementById('progression-story')?.classList.add('hidden');
+                    return;
+                }
+
+                const key = ProgressionBuilderState.currentKey || 'C';
+
+                // Calculate functions
+                const functions = progression.map(item =>
+                    MusicTheory.getChordFunction(item.chord, key, item.quality)
+                );
+
+                // Calculate total voice leading movement
+                let totalMovement = 0;
+                let smoothnessScores = [];
+                for (let i = 1; i < progression.length; i++) {
+                    const vl = MusicTheory.calculateVoiceLeading(
+                        progression[i-1].voicing,
+                        progression[i].voicing
+                    );
+                    if (vl) {
+                        totalMovement += vl.movement;
+                        smoothnessScores.push(vl.smoothness);
+                    }
+                }
+                const avgSmoothness = smoothnessScores.length > 0 ?
+                    smoothnessScores.reduce((a, b) => a + b, 0) / smoothnessScores.length : 0;
+
+                // Build analysis HTML
+                panel.innerHTML = `
+                    <div class="space-y-3">
+                        <div>
+                            <div class="text-void-400 mb-1">Funciones Armónicas</div>
+                            <div class="text-chalk-200 font-medium">
+                                ${functions.join(' → ')}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-void-400 mb-1">Tonalidad</div>
+                            <div class="text-chalk-200">${key} Mayor</div>
+                        </div>
+                        ${smoothnessScores.length > 0 ? `
+                            <div>
+                                <div class="text-void-400 mb-1">Voice Leading</div>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 h-2 bg-void-900 rounded overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-sage-600 to-sage-400"
+                                             style="width: ${avgSmoothness}%"></div>
+                                    </div>
+                                    <div class="text-xs text-chalk-200">${avgSmoothness.toFixed(0)}%</div>
+                                </div>
+                                <div class="text-[10px] text-void-400 mt-1">
+                                    Movimiento total: ${totalMovement} semitonos
+                                </div>
+                            </div>
+                        ` : ''}
+                        <div>
+                            <div class="text-void-400 mb-1">Acordes</div>
+                            <div class="text-chalk-200">${progression.length} acordes</div>
+                        </div>
+                    </div>
+                `;
+
+                // Generate and show story
+                this.updateProgressionStory(progression, functions);
+
+                // Show voice leading panel if applicable
+                if (smoothnessScores.length > 0) {
+                    this.updateVoiceLeadingPanel(progression);
+                }
+            },
+
+            updateProgressionStory(progression, functions) {
+                const storyPanel = document.getElementById('progression-story');
+                const storyContent = document.getElementById('story-content');
+                if (!storyPanel || !storyContent) return;
+
+                if (progression.length < 2) {
+                    storyPanel.classList.add('hidden');
+                    return;
+                }
+
+                // Generate narrative
+                let narrative = 'Esta progresión ';
+
+                // Analyze pattern
+                if (functions.includes('I') && functions.includes('V')) {
+                    narrative += 'establece una fuerte relación tónica-dominante, ';
+                }
+
+                if (functions.includes('ii') && functions.includes('V') && functions.includes('I')) {
+                    narrative += 'utiliza la cadencia ii-V-I clásica del jazz, ';
+                }
+
+                if (functions.filter(f => f.includes('i')).length > functions.length / 2) {
+                    narrative += 'tiene un carácter predominantemente menor, ';
+                } else {
+                    narrative += 'mantiene un carácter mayor, ';
+                }
+
+                narrative += 'creando un viaje armónico coherente.';
+
+                storyContent.textContent = narrative;
+                storyPanel.classList.remove('hidden');
+            },
+
+            updateVoiceLeadingPanel(progression) {
+                const panel = document.getElementById('voice-leading-panel');
+                const content = document.getElementById('voice-leading-content');
+                if (!panel || !content) return;
+
+                const movements = [];
+                for (let i = 1; i < progression.length; i++) {
+                    const vl = MusicTheory.calculateVoiceLeading(
+                        progression[i-1].voicing,
+                        progression[i].voicing
+                    );
+                    if (vl) {
+                        const from = this.getChordSymbol(progression[i-1].chord, progression[i-1].quality);
+                        const to = this.getChordSymbol(progression[i].chord, progression[i].quality);
+                        movements.push({ from, to, vl });
+                    }
+                }
+
+                if (movements.length === 0) {
+                    panel.classList.add('hidden');
+                    return;
+                }
+
+                content.innerHTML = movements.map(m => `
+                    <div class="flex justify-between items-start">
+                        <div class="text-chalk-200">${m.from} → ${m.to}</div>
+                        <div class="text-${m.vl.recommendation === 'excellent' ? 'green' : m.vl.recommendation === 'good' ? 'amber' : 'red'}-400">
+                            ${m.vl.recommendation}
+                        </div>
+                    </div>
+                    <div class="text-void-400 text-[10px]">${m.vl.description}</div>
+                `).join('<div class="border-t border-void-700 my-2"></div>');
+
+                panel.classList.remove('hidden');
+            },
+
+            updateVoiceLeadingViz(progression) {
+                // TODO: Implement SVG visualization of voice movement
+                // This would draw lines showing how each note moves between chords
             },
 
             removeChordFromProgression(index) {
@@ -17011,6 +17333,145 @@
                     }, delay);
                     delay += 2000;
                 });
+            },
+
+            saveProgression() {
+                const progression = ProgressionBuilderState.progression;
+                if (progression.length === 0) return;
+
+                // Create progression data
+                const progressionData = {
+                    chords: progression.map(item => ({
+                        chord: item.chord,
+                        quality: item.quality
+                    })),
+                    key: ProgressionBuilderState.currentKey,
+                    timestamp: Date.now()
+                };
+
+                // Save to localStorage
+                const saved = JSON.parse(localStorage.getItem('savedProgressions') || '[]');
+                saved.push(progressionData);
+                localStorage.setItem('savedProgressions', JSON.stringify(saved));
+
+                this.showToast('✅ Progresión guardada', 'success');
+            },
+
+            transposeProgressionDialog() {
+                // Simple prompt for now (could be a modal in future)
+                const currentKey = ProgressionBuilderState.currentKey || 'C';
+                const newKey = prompt(`Transponer de ${currentKey} a qué tonalidad? (C, D, E, F, G, A, B)`, currentKey);
+
+                if (newKey && newKey !== currentKey) {
+                    this.transposeProgressionTo(newKey);
+                }
+            },
+
+            transposeProgressionTo(newKey) {
+                const currentKey = ProgressionBuilderState.currentKey || 'C';
+                const progression = ProgressionBuilderState.progression;
+
+                if (progression.length === 0) return;
+
+                // Transpose each chord
+                const transposed = MusicTheory.transposeProgression(progression, currentKey, newKey);
+
+                // Update progression with new voicings
+                ProgressionBuilderState.progression = transposed.map(item => {
+                    const voicingResult = MusicTheory.getVoicingForChord(item.root, item.quality);
+                    return {
+                        chord: item.root,
+                        quality: item.quality,
+                        voicing: voicingResult.voicing,
+                        voicingKey: voicingResult.key
+                    };
+                });
+
+                // Update key
+                ProgressionBuilderState.currentKey = newKey;
+
+                // Update UI
+                this.updateProgressionUI();
+                this.showToast(`🔄 Transpuesto a ${newKey}`, 'success');
+            },
+
+            reverseProgression() {
+                if (ProgressionBuilderState.progression.length === 0) return;
+
+                ProgressionBuilderState.progression.reverse();
+                this.updateProgressionUI();
+                this.showToast('↩️ Progresión invertida', 'info');
+            },
+
+            mutateProgression() {
+                const progression = ProgressionBuilderState.progression;
+                if (progression.length < 2) {
+                    this.showToast('Necesitas al menos 2 acordes para mutar', 'info');
+                    return;
+                }
+
+                // Random mutation strategies
+                const strategies = [
+                    'replace_one',   // Replace one random chord
+                    'swap_two',      // Swap two random chords
+                    'insert_passing' // Insert passing chord
+                ];
+
+                const strategy = strategies[Math.floor(Math.random() * strategies.length)];
+                const key = ProgressionBuilderState.currentKey || 'C';
+
+                switch (strategy) {
+                    case 'replace_one': {
+                        const idx = Math.floor(Math.random() * progression.length);
+                        const currentChord = progression[idx];
+
+                        // Get suggestions for neighbor
+                        const prevChord = idx > 0 ? progression[idx - 1] : null;
+                        if (prevChord) {
+                            const suggestions = MusicTheory.suggestNextChords(prevChord, key, {});
+                            if (suggestions.length > 0) {
+                                const newSugg = suggestions[Math.floor(Math.random() * suggestions.length)];
+                                const voicingResult = MusicTheory.getVoicingForChord(newSugg.chord, newSugg.quality);
+                                progression[idx] = {
+                                    chord: newSugg.chord,
+                                    quality: newSugg.quality,
+                                    voicing: voicingResult.voicing,
+                                    voicingKey: voicingResult.key
+                                };
+                                this.showToast(`🎲 Reemplazado acorde ${idx + 1}`, 'info');
+                            }
+                        }
+                        break;
+                    }
+
+                    case 'swap_two': {
+                        if (progression.length >= 2) {
+                            const idx1 = Math.floor(Math.random() * progression.length);
+                            let idx2 = Math.floor(Math.random() * progression.length);
+                            while (idx2 === idx1) {
+                                idx2 = Math.floor(Math.random() * progression.length);
+                            }
+                            [progression[idx1], progression[idx2]] = [progression[idx2], progression[idx1]];
+                            this.showToast(`🎲 Intercambiados acordes ${idx1 + 1} y ${idx2 + 1}`, 'info');
+                        }
+                        break;
+                    }
+
+                    case 'insert_passing': {
+                        if (progression.length >= 2) {
+                            const idx = Math.floor(Math.random() * (progression.length - 1));
+                            // Simple passing chord logic: chromatic approach
+                            const fromChord = progression[idx].chord;
+                            const toChord = progression[idx + 1].chord;
+
+                            // TODO: More sophisticated passing chord logic
+                            this.showToast('🎲 Mutación experimental', 'info');
+                        }
+                        break;
+                    }
+                }
+
+                this.updateProgressionUI();
             },
 
             getVoicingKeyForQuality(chord, quality) {
