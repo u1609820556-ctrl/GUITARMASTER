@@ -2892,6 +2892,34 @@
             stroke: #ef4444;
         }
 
+        /* Chord Builder Styles */
+        .chord-builder-fret {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            color: #94a3b8;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chord-builder-fret:hover {
+            background: #334155;
+            border-color: #84cc16;
+            transform: scale(1.1);
+        }
+
+        .chord-builder-fret.selected {
+            background: #84cc16;
+            border-color: #84cc16;
+            color: #0a0a0a;
+            font-weight: 600;
+            transform: scale(1.15);
+        }
+
         #chord-lab-caged-svg-container svg {
             max-width: 600px;
             height: 600px;
@@ -4506,13 +4534,16 @@
             <!-- Mode Tabs -->
             <div class="flex gap-2 border-b border-void-700 pb-2">
                 <button class="chord-lab-mode-btn active" data-mode="explorer">
-                    Explorer
+                    🔍 Explorer
                 </button>
                 <button class="chord-lab-mode-btn" data-mode="progression-builder">
-                    Progression Builder
+                    🎵 Progression Lab
+                </button>
+                <button class="chord-lab-mode-btn" data-mode="chord-builder">
+                    🎨 Chord Builder
                 </button>
                 <button class="chord-lab-mode-btn" data-mode="practice">
-                    Practice Builder
+                    💪 Practice
                 </button>
             </div>
 
@@ -4733,7 +4764,6 @@
                 </div>
             </div>
 
-            <!-- Mode: CAGED Map -->
             <!-- Mode: Practice Builder -->
             <div id="chord-lab-practice" class="chord-lab-mode hidden">
                 <div class="space-y-4">
@@ -4756,6 +4786,106 @@
                     </div>
                     <div id="chord-lab-practice-area" class="p-4 bg-void-800 rounded-lg hidden">
                         <!-- Practice content loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mode: Chord Builder -->
+            <div id="chord-lab-chord-builder" class="chord-lab-mode hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- LEFT: Interactive Fretboard -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="p-4 bg-void-800 rounded-lg border border-sage-600">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">🎸 Diapasón Interactivo</h3>
+                            <p class="text-xs text-void-400 mb-4">Click en las notas para construir tu acorde</p>
+
+                            <!-- Interactive Fretboard -->
+                            <div id="chord-builder-fretboard" class="relative">
+                                <!-- Populated by JS -->
+                            </div>
+
+                            <div class="mt-4 flex gap-2">
+                                <button id="chord-builder-play" class="px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded text-sm">
+                                    ▶ Play
+                                </button>
+                                <button id="chord-builder-clear" class="px-3 py-2 bg-void-700 hover:bg-void-600 text-chalk-100 rounded text-sm">
+                                    Clear
+                                </button>
+                                <button id="chord-builder-save" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-chalk-100 rounded text-sm">
+                                    💾 Save
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Suggestions Panel -->
+                        <div id="chord-builder-suggestions" class="p-4 bg-void-800 rounded-lg hidden">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">💡 Sugerencias</h3>
+                            <div id="chord-builder-suggestions-content" class="space-y-2 text-xs">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Analysis & Info -->
+                    <div class="space-y-4">
+                        <!-- Chord Identification -->
+                        <div class="p-4 bg-void-800 rounded-lg border border-sage-600">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">🎯 Identificación</h3>
+                            <div id="chord-builder-identification" class="space-y-3">
+                                <div>
+                                    <div class="text-void-400 text-xs mb-1">Acorde:</div>
+                                    <div id="chord-builder-name" class="text-2xl font-bold text-chalk-100">
+                                        ---
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-void-400 text-xs mb-1">Notas:</div>
+                                    <div id="chord-builder-notes" class="text-sm text-chalk-200">
+                                        Selecciona notas...
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-void-400 text-xs mb-1">Intervalos:</div>
+                                    <div id="chord-builder-intervals" class="text-sm text-chalk-200">
+                                        ---
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Voicing Analysis -->
+                        <div id="chord-builder-analysis" class="p-4 bg-void-800 rounded-lg hidden">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">📊 Análisis</h3>
+                            <div id="chord-builder-analysis-content" class="space-y-2 text-xs">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Saved Voicings Library -->
+                        <div class="p-4 bg-void-800 rounded-lg">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">📚 Mis Voicings</h3>
+                            <div id="chord-builder-library" class="space-y-2">
+                                <div class="text-xs text-void-400 text-center py-4">
+                                    Guarda voicings para crear tu biblioteca
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Famous Voicings -->
+                        <div class="p-4 bg-void-800 rounded-lg">
+                            <h3 class="text-sm font-medium text-sage-400 mb-3">⭐ Voicings Famosos</h3>
+                            <div id="chord-builder-famous" class="space-y-1">
+                                <button class="w-full text-left px-2 py-1 text-xs bg-void-900 hover:bg-void-700 rounded" data-voicing="Dsus2_bright">
+                                    Dsus2 - Wonderwall
+                                </button>
+                                <button class="w-full text-left px-2 py-1 text-xs bg-void-900 hover:bg-void-700 rounded" data-voicing="Em7_beatles">
+                                    Em7 - Something
+                                </button>
+                                <button class="w-full text-left px-2 py-1 text-xs bg-void-900 hover:bg-void-700 rounded" data-voicing="Gmaj7_bright">
+                                    Gmaj7 - Bright
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -9664,6 +9794,134 @@
                     return `Moderado: movimiento de ${movement} semitonos, practicable`;
                 }
                 return `Desafiante: salto grande de ${movement} semitonos`;
+            },
+
+            // ===== CHORD IDENTIFICATION ENGINE =====
+
+            identifyChordFromNotes(noteIndices) {
+                if (noteIndices.length < 2) return null;
+
+                // Get unique notes sorted
+                const uniqueNotes = [...new Set(noteIndices)].sort((a, b) => a - b);
+
+                // Try each note as potential root
+                const interpretations = [];
+
+                for (let rootIdx = 0; rootIdx < uniqueNotes.length; rootIdx++) {
+                    const root = uniqueNotes[rootIdx];
+                    const intervals = uniqueNotes.map(n => (n - root + 12) % 12).sort((a, b) => a - b);
+
+                    // Match against known chord patterns
+                    const quality = this.matchChordPattern(intervals);
+
+                    if (quality) {
+                        interpretations.push({
+                            root: this.getNoteName(root),
+                            rootIndex: root,
+                            quality: quality,
+                            intervals: intervals,
+                            confidence: this.calculateChordConfidence(intervals, quality)
+                        });
+                    }
+                }
+
+                // Return best match
+                if (interpretations.length === 0) return null;
+
+                interpretations.sort((a, b) => b.confidence - a.confidence);
+                return interpretations[0];
+            },
+
+            matchChordPattern(intervals) {
+                // Chord patterns: intervals from root
+                const patterns = {
+                    // Triads
+                    'maj': [0, 4, 7],
+                    'min': [0, 3, 7],
+                    'dim': [0, 3, 6],
+                    'aug': [0, 4, 8],
+                    'sus2': [0, 2, 7],
+                    'sus4': [0, 5, 7],
+
+                    // 7th chords
+                    'maj7': [0, 4, 7, 11],
+                    '7': [0, 4, 7, 10],
+                    'm7': [0, 3, 7, 10],
+                    'dim7': [0, 3, 6, 9],
+                    'm7b5': [0, 3, 6, 10],
+
+                    // Extensions
+                    'add9': [0, 2, 4, 7],
+                    '9': [0, 2, 4, 7, 10],
+                    'maj9': [0, 2, 4, 7, 11],
+                    'm9': [0, 2, 3, 7, 10],
+                    '6': [0, 4, 7, 9],
+                    'm6': [0, 3, 7, 9],
+
+                    // Power chord
+                    '5': [0, 7]
+                };
+
+                // Find best match
+                let bestMatch = null;
+                let bestScore = 0;
+
+                for (const [quality, pattern] of Object.entries(patterns)) {
+                    const score = this.matchPatternScore(intervals, pattern);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMatch = quality;
+                    }
+                }
+
+                // Require at least 60% match
+                return bestScore >= 0.6 ? bestMatch : null;
+            },
+
+            matchPatternScore(intervals, pattern) {
+                // Calculate how well intervals match pattern
+                let matches = 0;
+                let total = Math.max(intervals.length, pattern.length);
+
+                for (const interval of pattern) {
+                    if (intervals.includes(interval)) {
+                        matches++;
+                    }
+                }
+
+                // Bonus for exact match
+                if (matches === pattern.length && intervals.length === pattern.length) {
+                    return 1.0;
+                }
+
+                return matches / total;
+            },
+
+            calculateChordConfidence(intervals, quality) {
+                // Higher confidence if:
+                // 1. Root is present (0)
+                // 2. Pattern matches well
+                // 3. No unexpected intervals
+
+                let confidence = 0.5;
+
+                if (intervals[0] === 0) confidence += 0.3; // Root present
+
+                const patterns = {
+                    'maj': [0, 4, 7],
+                    'min': [0, 3, 7],
+                    '7': [0, 4, 7, 10],
+                    'maj7': [0, 4, 7, 11]
+                    // ... etc
+                };
+
+                const pattern = patterns[quality];
+                if (pattern) {
+                    const score = this.matchPatternScore(intervals, pattern);
+                    confidence += score * 0.2;
+                }
+
+                return Math.min(confidence, 1.0);
             }
         };
 
@@ -10548,6 +10806,12 @@
             currentKey: 'C',
             lastEmotion: null,
             subMode: 'guided' // 'guided' or 'free'
+        };
+
+        const ChordBuilderState = {
+            selectedNotes: [], // [{string: 0-5, fret: 0-12, note: 'C'}]
+            currentChord: null,
+            savedVoicings: []
         };
 
         // ========================================
@@ -12434,6 +12698,29 @@
                         // Free mode key selector
                         document.getElementById('free-mode-key')?.addEventListener('change', () => {
                             this.renderFreeModeChordPalette();
+                        });
+
+                        // Chord Builder: Play button
+                        document.getElementById('chord-builder-play')?.addEventListener('click', () => {
+                            this.playChordBuilder();
+                        });
+
+                        // Chord Builder: Clear button
+                        document.getElementById('chord-builder-clear')?.addEventListener('click', () => {
+                            this.clearChordBuilder();
+                        });
+
+                        // Chord Builder: Save button
+                        document.getElementById('chord-builder-save')?.addEventListener('click', () => {
+                            this.saveChordBuilderVoicing();
+                        });
+
+                        // Chord Builder: Famous voicings
+                        document.querySelectorAll('#chord-builder-famous button').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const voicingKey = e.currentTarget.dataset.voicing;
+                                this.loadFamousVoicing(voicingKey);
+                            });
                         });
 
                         // CAGED Tour button
@@ -15992,6 +16279,9 @@
                     case 'progression-builder':
                         this.showProgressionBuilder();
                         break;
+                    case 'chord-builder':
+                        this.initChordBuilder();
+                        break;
                     case 'practice':
                         // Practice area starts hidden
                         break;
@@ -17472,6 +17762,432 @@
                 }
 
                 this.updateProgressionUI();
+            },
+
+            // ========================================
+            // CHORD BUILDER METHODS
+            // ========================================
+
+            initChordBuilder() {
+                // Clear state
+                ChordBuilderState.selectedNotes = [];
+                ChordBuilderState.currentChord = null;
+
+                // Render interactive fretboard
+                this.renderChordBuilderFretboard();
+
+                // Load saved voicings from localStorage
+                this.loadSavedVoicings();
+
+                // Update display
+                this.updateChordBuilderDisplay();
+            },
+
+            renderChordBuilderFretboard() {
+                const container = document.getElementById('chord-builder-fretboard');
+                if (!container) return;
+
+                const openStringNotes = [4, 9, 2, 7, 11, 4]; // E A D G B E
+                const stringNames = ['E', 'A', 'D', 'G', 'B', 'e'];
+
+                let html = '<div class="space-y-1">';
+
+                // Render each string
+                for (let string = 0; string < 6; string++) {
+                    html += `<div class="flex items-center gap-1">`;
+                    html += `<div class="w-6 text-xs text-void-400">${stringNames[string]}</div>`;
+
+                    // Frets 0-12
+                    for (let fret = 0; fret <= 12; fret++) {
+                        const noteIndex = (openStringNotes[string] + fret) % 12;
+                        const noteName = MusicTheory.getNoteName(noteIndex);
+                        const isSelected = ChordBuilderState.selectedNotes.some(n => n.string === string && n.fret === fret);
+
+                        html += `
+                            <button class="chord-builder-fret ${isSelected ? 'selected' : ''}"
+                                    data-string="${string}" data-fret="${fret}" data-note="${noteName}"
+                                    style="width: 32px; height: 32px;">
+                                ${fret === 0 ? 'O' : fret}
+                            </button>
+                        `;
+                    }
+
+                    html += `</div>`;
+                }
+
+                html += '</div>';
+                container.innerHTML = html;
+
+                // Add event listeners
+                container.querySelectorAll('.chord-builder-fret').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const string = parseInt(e.currentTarget.dataset.string);
+                        const fret = parseInt(e.currentTarget.dataset.fret);
+                        const note = e.currentTarget.dataset.note;
+                        this.toggleChordBuilderNote(string, fret, note);
+                    });
+                });
+            },
+
+            toggleChordBuilderNote(string, fret, note) {
+                const existingIdx = ChordBuilderState.selectedNotes.findIndex(n => n.string === string);
+
+                if (existingIdx >= 0) {
+                    // If same fret, remove; otherwise replace
+                    if (ChordBuilderState.selectedNotes[existingIdx].fret === fret) {
+                        ChordBuilderState.selectedNotes.splice(existingIdx, 1);
+                    } else {
+                        ChordBuilderState.selectedNotes[existingIdx] = { string, fret, note };
+                    }
+                } else {
+                    // Add new note
+                    ChordBuilderState.selectedNotes.push({ string, fret, note });
+                }
+
+                // Re-render fretboard
+                this.renderChordBuilderFretboard();
+
+                // Identify chord
+                this.identifyChordBuilderChord();
+
+                // Update display
+                this.updateChordBuilderDisplay();
+            },
+
+            identifyChordBuilderChord() {
+                const notes = ChordBuilderState.selectedNotes;
+
+                if (notes.length < 2) {
+                    ChordBuilderState.currentChord = null;
+                    return;
+                }
+
+                // Get unique note indices
+                const openStringNotes = [4, 9, 2, 7, 11, 4];
+                const noteIndices = notes.map(n => (openStringNotes[n.string] + n.fret) % 12);
+                const uniqueIndices = [...new Set(noteIndices)].sort((a, b) => a - b);
+
+                // Try to identify chord
+                const identified = MusicTheory.identifyChordFromNotes(uniqueIndices);
+
+                ChordBuilderState.currentChord = identified;
+
+                // Generate suggestions
+                this.generateChordBuilderSuggestions(notes, identified);
+            },
+
+            updateChordBuilderDisplay() {
+                const notes = ChordBuilderState.selectedNotes;
+                const chord = ChordBuilderState.currentChord;
+
+                // Update name
+                const nameEl = document.getElementById('chord-builder-name');
+                if (nameEl) {
+                    if (chord && chord.root) {
+                        nameEl.textContent = `${chord.root}${chord.quality}`;
+                    } else if (notes.length >= 2) {
+                        nameEl.textContent = '???';
+                    } else {
+                        nameEl.textContent = '---';
+                    }
+                }
+
+                // Update notes
+                const notesEl = document.getElementById('chord-builder-notes');
+                if (notesEl) {
+                    if (notes.length > 0) {
+                        const noteNames = notes.map(n => n.note).join(', ');
+                        notesEl.textContent = noteNames;
+                    } else {
+                        notesEl.textContent = 'Selecciona notas...';
+                    }
+                }
+
+                // Update intervals
+                const intervalsEl = document.getElementById('chord-builder-intervals');
+                if (intervalsEl) {
+                    if (chord && chord.intervals) {
+                        intervalsEl.textContent = chord.intervals.join(', ');
+                    } else {
+                        intervalsEl.textContent = '---';
+                    }
+                }
+
+                // Show/hide analysis
+                const analysisPanel = document.getElementById('chord-builder-analysis');
+                if (analysisPanel && chord) {
+                    this.updateChordBuilderAnalysis(notes, chord);
+                    analysisPanel.classList.remove('hidden');
+                } else if (analysisPanel) {
+                    analysisPanel.classList.add('hidden');
+                }
+            },
+
+            updateChordBuilderAnalysis(notes, chord) {
+                const content = document.getElementById('chord-builder-analysis-content');
+                if (!content) return;
+
+                // Calculate voicing properties
+                const frets = notes.map(n => n.fret);
+                const minFret = Math.min(...frets.filter(f => f > 0));
+                const maxFret = Math.max(...frets);
+                const span = maxFret - minFret;
+
+                // Estimate difficulty
+                let difficulty = 1;
+                if (span > 4) difficulty += 3;
+                else if (span > 3) difficulty += 2;
+                else if (span > 2) difficulty += 1;
+
+                if (notes.length >= 5) difficulty += 1;
+                if (notes.length === 6) difficulty += 1;
+
+                // Estimate register
+                const avgFret = frets.reduce((a, b) => a + b, 0) / frets.length;
+                let register = 'low';
+                if (avgFret > 7) register = 'high';
+                else if (avgFret > 4) register = 'mid';
+
+                content.innerHTML = `
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Dificultad:</span>
+                        <span class="text-chalk-200">${difficulty}/10</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Registro:</span>
+                        <span class="text-chalk-200">${register}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Span:</span>
+                        <span class="text-chalk-200">${span} trastes</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-void-400">Cuerdas:</span>
+                        <span class="text-chalk-200">${notes.length}</span>
+                    </div>
+                `;
+            },
+
+            generateChordBuilderSuggestions(notes, chord) {
+                const panel = document.getElementById('chord-builder-suggestions');
+                const content = document.getElementById('chord-builder-suggestions-content');
+
+                if (!panel || !content) return;
+
+                if (!chord || notes.length < 2) {
+                    panel.classList.add('hidden');
+                    return;
+                }
+
+                const suggestions = [];
+
+                // Suggest adding extensions
+                if (chord.quality === 'maj' && !chord.intervals.includes('7')) {
+                    suggestions.push({
+                        action: 'add',
+                        note: '7ma',
+                        result: 'maj7',
+                        message: 'Añade la 7ma mayor para crear maj7'
+                    });
+                }
+
+                if (chord.quality === 'maj' && !chord.intervals.includes('9')) {
+                    suggestions.push({
+                        action: 'add',
+                        note: '9na',
+                        result: 'add9',
+                        message: 'Añade la 9na para más color'
+                    });
+                }
+
+                // Suggest simplifications if too many notes
+                if (notes.length > 4) {
+                    suggestions.push({
+                        action: 'simplify',
+                        message: 'Considera usar menos cuerdas para facilitar'
+                    });
+                }
+
+                if (suggestions.length > 0) {
+                    content.innerHTML = suggestions.map(s => `
+                        <div class="p-2 bg-void-900 rounded">
+                            <div class="text-chalk-200">${s.message}</div>
+                            ${s.result ? `<div class="text-sage-400 text-[10px] mt-1">→ ${s.result}</div>` : ''}
+                        </div>
+                    `).join('');
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            },
+
+            playChordBuilder() {
+                const notes = ChordBuilderState.selectedNotes;
+                if (notes.length === 0) return;
+
+                // Convert to voicing format
+                const frets = new Array(6).fill(-1);
+                notes.forEach(n => {
+                    frets[n.string] = n.fret;
+                });
+
+                const voicing = {
+                    frets: frets,
+                    name: 'Custom',
+                    register: 'mid',
+                    difficulty: 5
+                };
+
+                this.playChordLabVoicing(voicing);
+            },
+
+            clearChordBuilder() {
+                ChordBuilderState.selectedNotes = [];
+                ChordBuilderState.currentChord = null;
+                this.renderChordBuilderFretboard();
+                this.updateChordBuilderDisplay();
+                document.getElementById('chord-builder-suggestions')?.classList.add('hidden');
+            },
+
+            saveChordBuilderVoicing() {
+                const notes = ChordBuilderState.selectedNotes;
+                const chord = ChordBuilderState.currentChord;
+
+                if (notes.length < 2) {
+                    this.showToast('Necesitas al menos 2 notas', 'info');
+                    return;
+                }
+
+                const name = prompt('Nombre para este voicing:', chord ? `${chord.root}${chord.quality} custom` : 'Custom');
+                if (!name) return;
+
+                // Convert to voicing format
+                const frets = new Array(6).fill(-1);
+                notes.forEach(n => {
+                    frets[n.string] = n.fret;
+                });
+
+                const voicing = {
+                    name: name,
+                    frets: frets,
+                    chord: chord ? `${chord.root}${chord.quality}` : 'Unknown',
+                    timestamp: Date.now()
+                };
+
+                ChordBuilderState.savedVoicings.push(voicing);
+
+                // Save to localStorage
+                localStorage.setItem('customVoicings', JSON.stringify(ChordBuilderState.savedVoicings));
+
+                // Update library display
+                this.updateChordBuilderLibrary();
+
+                this.showToast('✅ Voicing guardado', 'success');
+            },
+
+            loadSavedVoicings() {
+                const saved = localStorage.getItem('customVoicings');
+                if (saved) {
+                    try {
+                        ChordBuilderState.savedVoicings = JSON.parse(saved);
+                        this.updateChordBuilderLibrary();
+                    } catch (e) {
+                        console.error('Error loading saved voicings:', e);
+                    }
+                }
+            },
+
+            updateChordBuilderLibrary() {
+                const library = document.getElementById('chord-builder-library');
+                if (!library) return;
+
+                const voicings = ChordBuilderState.savedVoicings;
+
+                if (voicings.length === 0) {
+                    library.innerHTML = `
+                        <div class="text-xs text-void-400 text-center py-4">
+                            Guarda voicings para crear tu biblioteca
+                        </div>
+                    `;
+                    return;
+                }
+
+                library.innerHTML = voicings.map((v, idx) => `
+                    <div class="flex items-center justify-between p-2 bg-void-900 rounded text-xs">
+                        <div>
+                            <div class="text-chalk-200 font-medium">${v.name}</div>
+                            <div class="text-void-400 text-[10px]">${v.chord}</div>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="App.loadCustomVoicing(${idx})" class="px-2 py-1 bg-sage-600 hover:bg-sage-500 rounded">
+                                Load
+                            </button>
+                            <button onclick="App.deleteCustomVoicing(${idx})" class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            loadCustomVoicing(index) {
+                const voicing = ChordBuilderState.savedVoicings[index];
+                if (!voicing) return;
+
+                // Clear current
+                ChordBuilderState.selectedNotes = [];
+
+                // Load frets
+                const openStringNotes = [4, 9, 2, 7, 11, 4];
+                voicing.frets.forEach((fret, string) => {
+                    if (fret >= 0) {
+                        const noteIndex = (openStringNotes[string] + fret) % 12;
+                        const noteName = MusicTheory.getNoteName(noteIndex);
+                        ChordBuilderState.selectedNotes.push({ string, fret, note: noteName });
+                    }
+                });
+
+                // Update display
+                this.renderChordBuilderFretboard();
+                this.identifyChordBuilderChord();
+                this.updateChordBuilderDisplay();
+
+                this.showToast(`Cargado: ${voicing.name}`, 'info');
+            },
+
+            deleteCustomVoicing(index) {
+                if (!confirm('¿Eliminar este voicing?')) return;
+
+                ChordBuilderState.savedVoicings.splice(index, 1);
+                localStorage.setItem('customVoicings', JSON.stringify(ChordBuilderState.savedVoicings));
+                this.updateChordBuilderLibrary();
+
+                this.showToast('Voicing eliminado', 'info');
+            },
+
+            loadFamousVoicing(voicingKey) {
+                const voicing = MusicTheory.chordLabVoicings[voicingKey];
+                if (!voicing) return;
+
+                // Clear current
+                ChordBuilderState.selectedNotes = [];
+
+                // Load frets
+                const openStringNotes = [4, 9, 2, 7, 11, 4];
+                voicing.frets.forEach((fret, string) => {
+                    if (fret >= 0) {
+                        const noteIndex = (openStringNotes[string] + fret) % 12;
+                        const noteName = MusicTheory.getNoteName(noteIndex);
+                        ChordBuilderState.selectedNotes.push({ string, fret, note: noteName });
+                    }
+                });
+
+                // Update display
+                this.renderChordBuilderFretboard();
+                this.identifyChordBuilderChord();
+                this.updateChordBuilderDisplay();
+
+                this.showToast(`Cargado: ${voicing.name}`, 'info');
             },
 
             getVoicingKeyForQuality(chord, quality) {
