@@ -2870,6 +2870,50 @@
             justify-content: center;
         }
 
+        /* FASE 4: Estilos para badges de extensiones */
+        .extension-badge {
+            display: inline-block;
+            font-size: 0.625rem;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        .emotional-tags {
+            font-size: 0.625rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .chord-analysis-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: #1e293b;
+            border-radius: 0.375rem;
+            border: 1px solid #334155;
+        }
+
+        .chord-function {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .extensions-badge {
+            font-size: 0.625rem;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            width: fit-content;
+            font-weight: 600;
+        }
+
         #voice-leading-viz {
             position: relative;
         }
@@ -4644,6 +4688,9 @@
                                 </button>
                                 <button id="save-progression" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
                                     💾 Save
+                                </button>
+                                <button id="load-progression" class="px-3 py-2 bg-teal-600 hover:bg-teal-500 text-chalk-100 rounded text-sm">
+                                    📂 Load
                                 </button>
                                 <button id="transpose-progression" class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-chalk-100 rounded text-sm disabled:opacity-50" disabled>
                                     🔄 Transpose
@@ -6937,6 +6984,286 @@
                     tension: 'low',
                     movable: false,
                     commonUse: 'Maximum brightness with open strings'
+                },
+
+                // ========================================
+                // FASE 1: VOICINGS PREMIUM CON EXTENSIONES
+                // ========================================
+
+                // DOMINANTES CON 9NA
+                'E_shape_dom9': {
+                    name: 'E9 Shape (movable)',
+                    frets: [0, 2, 0, 1, 0, 2],
+                    fingers: [0, 2, 0, 1, 0, 3],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 4,
+                    brightness: 7,
+                    tension: 'medium',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['funky', 'rich', 'dominant'],
+                    commonUse: 'Funky dom9 voicing with characteristic 9th'
+                },
+
+                'A_shape_dom9': {
+                    name: 'A9 Shape (movable)',
+                    frets: [-1, 0, 2, 1, 0, 0],
+                    fingers: [0, 0, 3, 2, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 3,
+                    brightness: 8,
+                    tension: 'medium',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['funky', 'sophisticated'],
+                    commonUse: 'Classic dom9 shape - warm and rich'
+                },
+
+                'G_shape_dom9': {
+                    name: 'G9 (open)',
+                    frets: [3, 0, 0, 0, 0, 1],
+                    fingers: [2, 0, 0, 0, 0, 1],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 2,
+                    brightness: 7,
+                    tension: 'medium',
+                    movable: false,
+                    extensions: ['9'],
+                    emotionalTags: ['funky', 'bright'],
+                    commonUse: 'Open G9 - very bright and chimey'
+                },
+
+                // DOMINANTES CON 13VA
+                'E_shape_dom13': {
+                    name: 'E13 Shape (movable)',
+                    frets: [0, 2, 2, 1, 2, 2],
+                    fingers: [0, 2, 3, 1, 4, 4],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 5,
+                    brightness: 8,
+                    tension: 'high',
+                    movable: true,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['jazzy', 'complex', 'colorful'],
+                    commonUse: 'Complex dom13 voicing with rich color'
+                },
+
+                'A_shape_dom13': {
+                    name: 'A13 Shape (movable)',
+                    frets: [-1, 0, 2, 0, 2, 2],
+                    fingers: [0, 0, 2, 0, 3, 4],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 4,
+                    brightness: 8,
+                    tension: 'high',
+                    movable: true,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['jazzy', 'sophisticated'],
+                    commonUse: 'Classic dom13 shape - full and lush'
+                },
+
+                'G_shape_dom13': {
+                    name: 'G13 (open)',
+                    frets: [3, 0, 0, 0, 0, 0],
+                    fingers: [2, 0, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 9,
+                    tension: 'medium',
+                    movable: false,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['bright', 'open', 'jazzy'],
+                    commonUse: 'Simple open G13 - maximum brightness'
+                },
+
+                // MAYORES CON 9NA
+                'E_shape_maj9': {
+                    name: 'Emaj9 Shape (movable)',
+                    frets: [0, 2, 1, 1, 0, 2],
+                    fingers: [0, 3, 1, 2, 0, 4],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 4,
+                    brightness: 8,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['modern', 'spacious', 'colorful'],
+                    commonUse: 'Modern maj9 voicing - very spacious'
+                },
+
+                'A_shape_maj9': {
+                    name: 'Amaj9 Shape (movable)',
+                    frets: [-1, 0, 2, 1, 0, 0],
+                    fingers: [0, 0, 2, 1, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 8,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['modern', 'lush'],
+                    commonUse: 'Easy maj9 shape - warm and sophisticated'
+                },
+
+                'C_shape_maj9': {
+                    name: 'Cmaj9 (open)',
+                    frets: [-1, 3, 2, 0, 3, 0],
+                    fingers: [0, 2, 1, 0, 3, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 3,
+                    brightness: 9,
+                    tension: 'low',
+                    movable: false,
+                    extensions: ['9'],
+                    emotionalTags: ['modern', 'bright', 'dreamy'],
+                    commonUse: 'Open Cmaj9 - shimming and beautiful'
+                },
+
+                // MAYORES CON 13VA
+                'E_shape_maj13': {
+                    name: 'Emaj13 Shape (movable)',
+                    frets: [0, 2, 1, 1, 2, 2],
+                    fingers: [0, 2, 1, 1, 3, 4],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 5,
+                    brightness: 9,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['complex', 'luxurious', 'jazzy'],
+                    commonUse: 'Luxurious maj13 voicing - full spectrum'
+                },
+
+                'A_shape_maj13': {
+                    name: 'Amaj13 Shape (movable)',
+                    frets: [-1, 0, 2, 1, 2, 2],
+                    fingers: [0, 0, 2, 1, 3, 4],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 4,
+                    brightness: 8,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['sophisticated', 'colorful'],
+                    commonUse: 'Rich maj13 - sophisticated and warm'
+                },
+
+                'C_shape_maj13': {
+                    name: 'Cmaj13 (open)',
+                    frets: [-1, 3, 2, 0, 0, 0],
+                    fingers: [0, 3, 2, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 9,
+                    tension: 'low',
+                    movable: false,
+                    extensions: ['9', '13'],
+                    emotionalTags: ['bright', 'luxurious'],
+                    commonUse: 'Simple open Cmaj13 - lush and bright'
+                },
+
+                // MENORES CON 9NA
+                'E_shape_m9': {
+                    name: 'Em9 Shape (movable)',
+                    frets: [0, 2, 0, 0, 0, 2],
+                    fingers: [0, 2, 0, 0, 0, 3],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 3,
+                    brightness: 6,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['lush', 'sophisticated', 'ambient'],
+                    commonUse: 'Lush m9 voicing - ambient and spacious'
+                },
+
+                'A_shape_m9': {
+                    name: 'Am9 Shape (movable)',
+                    frets: [-1, 0, 2, 0, 0, 0],
+                    fingers: [0, 0, 2, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 2,
+                    brightness: 7,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9'],
+                    emotionalTags: ['smooth', 'modern'],
+                    commonUse: 'Easy m9 shape - smooth and sophisticated'
+                },
+
+                'Em_shape_m9': {
+                    name: 'Em9 (open)',
+                    frets: [0, 2, 0, 0, 0, 0],
+                    fingers: [0, 2, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 7,
+                    tension: 'low',
+                    movable: false,
+                    extensions: ['9'],
+                    emotionalTags: ['ambient', 'spacious'],
+                    commonUse: 'Simple Em9 - ethereal and open'
+                },
+
+                // MENORES CON 11VA
+                'E_shape_m11': {
+                    name: 'Em11 Shape (movable)',
+                    frets: [0, 2, 0, 0, 3, 0],
+                    fingers: [0, 2, 0, 0, 3, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 3,
+                    brightness: 6,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9', '11'],
+                    emotionalTags: ['spacious', 'modal', 'floating'],
+                    commonUse: 'Spacious m11 voicing - modal and floating'
+                },
+
+                'A_shape_m11': {
+                    name: 'Am11 Shape (movable)',
+                    frets: [-1, 0, 0, 0, 0, 0],
+                    fingers: [0, 0, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'mid',
+                    difficulty: 1,
+                    brightness: 6,
+                    tension: 'low',
+                    movable: true,
+                    extensions: ['9', '11'],
+                    emotionalTags: ['floating', 'suspended'],
+                    commonUse: 'Ultra-simple m11 - pure and floating'
+                },
+
+                'Em_shape_m11': {
+                    name: 'Em11 (open)',
+                    frets: [0, 0, 0, 0, 0, 0],
+                    fingers: [0, 0, 0, 0, 0, 0],
+                    baseFret: 0,
+                    register: 'low',
+                    difficulty: 1,
+                    brightness: 7,
+                    tension: 'low',
+                    movable: false,
+                    extensions: ['9', '11'],
+                    emotionalTags: ['ethereal', 'suspended'],
+                    commonUse: 'All open strings - maximum resonance'
                 }
             },
 
@@ -9318,14 +9645,21 @@
                     return fret + offset;
                 });
 
-                // Create transposed voicing
+                // Create transposed voicing with preserved metadata (FASE 2)
                 const transposed = {
                     ...voicing,
                     frets: transposedFrets,
                     baseFret: voicing.baseFret + offset,
                     transposed: true,
                     originalRoot: fromRoot,
-                    newRoot: toRoot
+                    newRoot: toRoot,
+                    source: 'transposed',
+                    // NUEVO: Preservar metadata crítica
+                    extensions: voicing.extensions || [],
+                    emotionalTags: voicing.emotionalTags || [],
+                    brightness: voicing.brightness,
+                    tension: voicing.tension,
+                    register: voicing.register
                 };
 
                 return transposed;
@@ -9357,15 +9691,25 @@
                 }
 
                 // If not found, find a movable voicing and transpose it
+                // FASE 2: Mapeo expandido con nuevos voicings de extensiones
                 const qualityVoicings = {
                     'maj': ['C_shape_major', 'A_shape_major', 'E_shape_major_barre', 'G_shape_major'],
                     'min': ['Am_shape', 'Em_shape', 'E_shape_minor_barre'],
-                    '7': ['C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7'],
+                    '7': ['G_shape_dom7', 'C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7'],
                     'maj7': ['C_shape_maj7', 'A_shape_maj7', 'E_shape_maj7'],
                     'm7': ['A_shape_m7', 'C_shape_m7', 'E_shape_m7'],
+                    // NUEVOS: Extensiones 9
+                    '9': ['E_shape_dom9', 'A_shape_dom9', 'G_shape_dom9', 'C9'],
+                    'maj9': ['E_shape_maj9', 'A_shape_maj9', 'C_shape_maj9', 'Cmaj9'],
+                    'm9': ['E_shape_m9', 'A_shape_m9', 'Em_shape_m9'],
+                    // NUEVOS: Extensiones 13
+                    '13': ['E_shape_dom13', 'A_shape_dom13', 'G_shape_dom13'],
+                    'maj13': ['E_shape_maj13', 'A_shape_maj13', 'C_shape_maj13'],
+                    // NUEVOS: Extensiones 11
+                    'm11': ['E_shape_m11', 'A_shape_m11', 'Em_shape_m11'],
+                    // Existentes
                     'sus2': ['Csus2', 'Asus2'],
                     'sus4': ['Csus4', 'Asus4'],
-                    '9': ['C9', 'Cmaj9'],
                     'add9': ['Cadd9', 'Amadd9'],
                     '6': ['C6', 'Am6'],
                     'dim7': ['Cdim7', 'Bdim7'],
@@ -9407,7 +9751,9 @@
                 const toIndex = typeof toKey === 'number' ? toKey : this.getNoteIndex(toKey);
 
                 return progression.map(chordData => {
-                    const originalRoot = typeof chordData.root === 'number' ? chordData.root : this.getNoteIndex(chordData.root);
+                    // Support both 'chord' and 'root' field names
+                    const chordRoot = chordData.chord || chordData.root;
+                    const originalRoot = typeof chordRoot === 'number' ? chordRoot : this.getNoteIndex(chordRoot);
                     const newRoot = (originalRoot + (toIndex - fromIndex) + 12) % 12;
                     const newRootName = this.getNoteName(newRoot);
 
@@ -9417,6 +9763,7 @@
 
                     return {
                         ...chordData,
+                        chord: newRootName,
                         root: newRootName,
                         voicing: transposedVoicing
                     };
@@ -9516,38 +9863,120 @@
                     'bIII': 'maj', 'bVI': 'maj', 'bVII': 'maj'
                 };
 
-                const suggestions = suggestedFunctions.map(func => {
+                // FASE 3: Sistema Emocional Expandido
+                // Layer 2: Emociones por calidad de acorde
+                const qualityEmotions = {
+                    'maj':   ['pure', 'clear', 'stable'],
+                    'maj7':  ['dreamy', 'sophisticated', 'lush'],
+                    'maj9':  ['modern', 'spacious', 'colorful'],
+                    'maj13': ['complex', 'luxurious', 'jazzy'],
+                    '6':     ['nostalgic', 'sweet', 'vintage'],
+                    'add9':  ['bright', 'contemporary'],
+                    '7':     ['bluesy', 'dominant', 'driving'],
+                    '9':     ['funky', 'sophisticated', 'rich'],
+                    '13':    ['jazzy', 'complex', 'colorful'],
+                    'min':   ['dark', 'sad', 'simple'],
+                    'm7':    ['smooth', 'mellow', 'jazzy'],
+                    'm9':    ['lush', 'sophisticated', 'ambient'],
+                    'm11':   ['spacious', 'modal', 'floating'],
+                    'dim':   ['unstable', 'dissonant', 'transitional'],
+                    'aug':   ['surreal', 'ambiguous', 'dreamlike'],
+                    'sus2':  ['open', 'bright', 'ethereal'],
+                    'sus4':  ['suspended', 'anticipation', 'floating']
+                };
+
+                // Layer 3: Descripciones contextuales específicas
+                const contextualDescriptions = {
+                    'V_7_to_I':    'Resolución clásica V7→I - la cadencia más fuerte',
+                    'V_9_to_I':    'Resolución rica V9→I - color añadido por la 9na',
+                    'V_13_to_I':   'Resolución completa V13→I - máximo color (9na + 13va)',
+                    'ii_m7_to_V':  'Preparación ii-V clásica - progresión jazz fundamental',
+                    'ii_m9_to_V':  'Preparación ii9-V sofisticada - color moderno añadido',
+                    'I_maj7_to_vi': 'Tónica sofisticada a relativo menor - elegante',
+                    'I_maj9_to_vi': 'Tónica moderna a relativo menor - espaciosa',
+                    'vi_m9_to_ii': 'Círculo de quintas rico - movimiento fluido con extensiones',
+                    'IV_maj9_to_I': 'Resolución plagal moderna - "Amén" sofisticado',
+                    'V_sus4_to_I': 'Suspensión resuelta - tensión y liberación',
+                    'I_6_to_vi':   'Movimiento vintage - sonido nostálgico años 50',
+                    'ii_to_V_7':   'Setup clásico ii-V7 - preparación fundamental',
+                    'ii_to_V_9':   'Setup sofisticado ii-V9 - color añadido',
+                    'ii_to_V_13':  'Setup complejo ii-V13 - máxima sofisticación jazz'
+                };
+
+                // Quality variations for more sophisticated suggestions
+                const qualityVariations = {
+                    'I': ['maj', 'maj7', 'maj9', '6', 'add9'],
+                    'ii': ['min', 'm7', 'm9'],
+                    'iii': ['min', 'm7'],
+                    'IV': ['maj', 'maj7', 'maj9', '6', 'add9'],
+                    'V': ['7', '9', '13', 'sus4'],
+                    'vi': ['min', 'm7', 'm9'],
+                    'vii°': ['dim', 'm7b5'],
+                    'bIII': ['maj', 'maj7'],
+                    'bVI': ['maj', 'maj7'],
+                    'bVII': ['maj', '7']
+                };
+
+                const suggestions = [];
+
+                suggestedFunctions.forEach(func => {
                     const interval = functionToInterval[func];
                     const chordRoot = (keyIndex + interval) % 12;
                     const chordRootName = this.getNoteName(chordRoot);
-                    const quality = functionToQuality[func];
+
+                    // Get base quality
+                    const baseQuality = functionToQuality[func];
 
                     // Get compatibility score
                     const compatibility = this.calculateCompatibility(currentRoot, func, key);
 
-                    // Find best voicing
-                    const voicingResult = this.getVoicingForChord(chordRootName, quality);
+                    // Add base quality suggestion
+                    const voicingResult = this.getVoicingForChord(chordRootName, baseQuality);
 
-                    // Calculate voice leading if we have voicings
                     let voiceLeading = null;
                     if (currentChord.voicing && voicingResult.voicing) {
                         voiceLeading = this.calculateVoiceLeading(currentChord.voicing, voicingResult.voicing);
                     }
 
-                    return {
+                    // Generar tags emocionales combinados
+                    const emotionalTags = this.generateEmotionalTags(func, baseQuality, voicingResult.voicing);
+
+                    suggestions.push({
                         chord: chordRootName,
-                        quality: quality,
+                        quality: baseQuality,
                         function: func,
                         compatibility: compatibility,
                         voicing: voicingResult.voicing,
                         voicingKey: voicingResult.key,
                         voiceLeading: voiceLeading,
-                        explanation: this.explainTransition(currentFunction, func, compatibility.category)
-                    };
+                        explanation: this.explainTransition(currentFunction, currentQuality, func, baseQuality, compatibility.category),
+                        emotionalTags: emotionalTags
+                    });
+
+                    // Add quality variations (limit to top 3 functions to avoid too many suggestions)
+                    if (suggestions.length < 10) {
+                        const variations = qualityVariations[func] || [baseQuality];
+                        variations.slice(1, 3).forEach(quality => {
+                            const varVoicingResult = this.getVoicingForChord(chordRootName, quality);
+                            const varEmotionalTags = this.generateEmotionalTags(func, quality, varVoicingResult.voicing);
+
+                            suggestions.push({
+                                chord: chordRootName,
+                                quality: quality,
+                                function: func,
+                                compatibility: { ...compatibility, score: compatibility.score - 5 }, // Slightly lower score for variations
+                                voicing: varVoicingResult.voicing,
+                                voicingKey: varVoicingResult.key,
+                                voiceLeading: null,
+                                explanation: this.explainTransition(currentFunction, currentQuality, func, quality, compatibility.category),
+                                emotionalTags: varEmotionalTags
+                            });
+                        });
+                    }
                 });
 
-                // Sort by compatibility score (descending)
-                return suggestions.sort((a, b) => b.compatibility.score - a.compatibility.score);
+                // Sort by compatibility score (descending) and limit to top 12
+                return suggestions.sort((a, b) => b.compatibility.score - a.compatibility.score).slice(0, 12);
             },
 
             // Filter suggestions by emotion
@@ -9570,7 +9999,34 @@
             },
 
             // Explain why a transition works
-            explainTransition(fromFunction, toFunction, category) {
+            // FASE 3: Sistema contextual expandido con cualidades
+            explainTransition(fromFunction, fromQuality, toFunction, toQuality, category) {
+                // Primero buscar descripción contextual específica con cualidades
+                const contextKey = `${fromFunction}_${fromQuality}_to_${toFunction}`;
+
+                // contextualDescriptions está definido en suggestNextChords, pero necesitamos acceso aquí
+                const contextualDescriptions = {
+                    'V_7_to_I':    'Resolución clásica V7→I - la cadencia más fuerte',
+                    'V_9_to_I':    'Resolución rica V9→I - color añadido por la 9na',
+                    'V_13_to_I':   'Resolución completa V13→I - máximo color (9na + 13va)',
+                    'ii_m7_to_V':  'Preparación ii-V clásica - progresión jazz fundamental',
+                    'ii_m9_to_V':  'Preparación ii9-V sofisticada - color moderno añadido',
+                    'I_maj7_to_vi': 'Tónica sofisticada a relativo menor - elegante',
+                    'I_maj9_to_vi': 'Tónica moderna a relativo menor - espaciosa',
+                    'vi_m9_to_ii': 'Círculo de quintas rico - movimiento fluido con extensiones',
+                    'IV_maj9_to_I': 'Resolución plagal moderna - "Amén" sofisticado',
+                    'V_sus4_to_I': 'Suspensión resuelta - tensión y liberación',
+                    'I_6_to_vi':   'Movimiento vintage - sonido nostálgico años 50',
+                    'ii_to_V_7':   'Setup clásico ii-V7 - preparación fundamental',
+                    'ii_to_V_9':   'Setup sofisticado ii-V9 - color añadido',
+                    'ii_to_V_13':  'Setup complejo ii-V13 - máxima sofisticación jazz'
+                };
+
+                if (contextualDescriptions[contextKey]) {
+                    return contextualDescriptions[contextKey];
+                }
+
+                // Fallback a explicaciones funcionales básicas
                 const explanations = {
                     'I_IV': 'Progresión plagal clásica - movimiento suave y resolutivo',
                     'I_V': 'Tensión hacia dominante - genera expectativa de regreso',
@@ -9587,7 +10043,14 @@
                 };
 
                 const key = `${fromFunction}_${toFunction}`;
-                return explanations[key] || this.getGenericExplanation(category);
+                const baseExplanation = explanations[key] || this.getGenericExplanation(category);
+
+                // Añadir nota sobre la cualidad si es diferente del básico
+                if (toQuality && toQuality !== 'maj' && toQuality !== 'min' && toQuality !== '7') {
+                    return `${baseExplanation} (variación ${toQuality})`;
+                }
+
+                return baseExplanation;
             },
 
             // Generic explanation based on compatibility
@@ -9599,6 +10062,73 @@
                     'unexpected': 'Cambio sorpresivo - úsalo para impacto dramático'
                 };
                 return generic[category] || 'Transición experimental';
+            },
+
+            // FASE 3: Generar tags emocionales combinados (función, cualidad, voicing)
+            generateEmotionalTags(chordFunction, quality, voicing) {
+                const tags = [];
+
+                // Layer 1: Función armónica
+                const functionalTags = {
+                    'I': ['resolved', 'bright', 'stable'],
+                    'ii': ['smooth', 'preparatory'],
+                    'iii': ['ambiguous', 'mysterious'],
+                    'IV': ['lifting', 'expansive'],
+                    'V': ['tense', 'expectant'],
+                    'vi': ['sad', 'introspective'],
+                    'vii°': ['unstable', 'leading']
+                };
+                if (functionalTags[chordFunction]) {
+                    tags.push(...functionalTags[chordFunction]);
+                }
+
+                // Layer 2: Cualidad del acorde
+                const qualityEmotions = {
+                    'maj':   ['pure', 'clear', 'stable'],
+                    'maj7':  ['dreamy', 'sophisticated', 'lush'],
+                    'maj9':  ['modern', 'spacious', 'colorful'],
+                    'maj13': ['complex', 'luxurious', 'jazzy'],
+                    '6':     ['nostalgic', 'sweet', 'vintage'],
+                    'add9':  ['bright', 'contemporary'],
+                    '7':     ['bluesy', 'dominant', 'driving'],
+                    '9':     ['funky', 'sophisticated', 'rich'],
+                    '13':    ['jazzy', 'complex', 'colorful'],
+                    'min':   ['dark', 'sad', 'simple'],
+                    'm7':    ['smooth', 'mellow', 'jazzy'],
+                    'm9':    ['lush', 'sophisticated', 'ambient'],
+                    'm11':   ['spacious', 'modal', 'floating'],
+                    'dim':   ['unstable', 'dissonant', 'transitional'],
+                    'aug':   ['surreal', 'ambiguous', 'dreamlike'],
+                    'sus2':  ['open', 'bright', 'ethereal'],
+                    'sus4':  ['suspended', 'anticipation', 'floating']
+                };
+                if (qualityEmotions[quality]) {
+                    tags.push(...qualityEmotions[quality]);
+                }
+
+                // Layer 3: Metadata del voicing (si está disponible)
+                if (voicing) {
+                    if (voicing.register === 'high') {
+                        tags.push('bright', 'cutting');
+                    } else if (voicing.register === 'low') {
+                        tags.push('warm', 'foundational');
+                    }
+
+                    // Layer 4: Extensiones
+                    if (voicing.extensions) {
+                        if (voicing.extensions.includes('9')) tags.push('colorful', 'modern');
+                        if (voicing.extensions.includes('11')) tags.push('modal', 'suspended');
+                        if (voicing.extensions.includes('13')) tags.push('jazzy', 'complex');
+                    }
+
+                    // Tags del voicing si existen
+                    if (voicing.emotionalTags) {
+                        tags.push(...voicing.emotionalTags);
+                    }
+                }
+
+                // Remove duplicates and return top 5
+                return [...new Set(tags)].slice(0, 5);
             },
 
             // Calculate voice leading between two voicings
@@ -10418,20 +10948,38 @@
                 }
 
                 const standardTuning = [64, 59, 55, 50, 45, 40]; // E A D G B E en MIDI
-                const notes = [];
+                const midiNotes = [];
 
-                // Convertir frets a notas MIDI
+                // Convertir frets a notas MIDI completas (manteniendo octava)
                 voicing.frets.forEach((fret, stringIndex) => {
                     if (fret >= 0) { // -1 significa cuerda silenciada
                         const midiNote = standardTuning[stringIndex] + fret;
-                        const noteIndex = midiNote % 12;
-                        notes.push(noteIndex);
+                        midiNotes.push(midiNote);
                     }
                 });
 
-                if (notes.length > 0) {
-                    this.playChord(notes, duration);
+                if (midiNotes.length > 0) {
+                    this.playChordFromMidi(midiNotes, duration);
                 }
+            },
+
+            // Reproduce un acorde desde notas MIDI directas (con octava correcta)
+            playChordFromMidi(midiNotes, duration = 1.5) {
+                if (!this.enabled || !this.audioContext) return;
+
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+
+                // Ordenar de grave a agudo para strum natural
+                const sortedNotes = [...midiNotes].sort((a, b) => b - a);
+
+                // Strum con delay entre cuerdas (35ms)
+                sortedNotes.forEach((midiNote, i) => {
+                    setTimeout(() => {
+                        this.playMidiNote(midiNote, duration);
+                    }, i * 35);
+                });
             },
 
             // Reproduce una progresión para ear training
@@ -12545,6 +13093,11 @@
                         // Progression Builder: Save progression
                         document.getElementById('save-progression')?.addEventListener('click', () => {
                             this.saveProgression();
+                        });
+
+                        // Progression Builder: Load progression
+                        document.getElementById('load-progression')?.addEventListener('click', () => {
+                            this.showLoadProgressionDialog();
                         });
 
                         // Progression Builder: Transpose
@@ -17042,21 +17595,59 @@
                 const key = document.getElementById('free-mode-key')?.value || 'C';
                 const keyIndex = MusicTheory.getNoteIndex(key);
 
-                // Generate diatonic chords plus some borrowed chords
+                // FASE 4: Generate diatonic chords plus extensions (organizados y expandidos)
                 const chords = [
-                    // Diatonic
+                    // Basic Triads
                     { interval: 0, quality: 'maj', numeral: 'I' },
                     { interval: 2, quality: 'min', numeral: 'ii' },
                     { interval: 4, quality: 'min', numeral: 'iii' },
                     { interval: 5, quality: 'maj', numeral: 'IV' },
-                    { interval: 7, quality: '7', numeral: 'V' },
+                    { interval: 7, quality: 'maj', numeral: 'V' },
                     { interval: 9, quality: 'min', numeral: 'vi' },
                     { interval: 11, quality: 'dim', numeral: 'vii°' },
-                    // Extended
+
+                    // Seventh Chords
                     { interval: 0, quality: 'maj7', numeral: 'Imaj7' },
-                    { interval: 2, quality: 'm7', numeral: 'ii7' },
+                    { interval: 2, quality: 'm7', numeral: 'iim7' },
+                    { interval: 4, quality: 'm7', numeral: 'iiim7' },
                     { interval: 5, quality: 'maj7', numeral: 'IVmaj7' },
-                    { interval: 9, quality: 'm7', numeral: 'vi7' }
+                    { interval: 7, quality: '7', numeral: 'V7' },
+                    { interval: 9, quality: 'm7', numeral: 'vim7' },
+                    { interval: 11, quality: 'm7b5', numeral: 'viim7b5' },
+
+                    // EXPANDIDO: Ninths (más opciones)
+                    { interval: 0, quality: 'maj9', numeral: 'Imaj9' },
+                    { interval: 2, quality: 'm9', numeral: 'iim9' },
+                    { interval: 4, quality: 'm9', numeral: 'iiim9' },
+                    { interval: 5, quality: 'maj9', numeral: 'IVmaj9' },
+                    { interval: 7, quality: '9', numeral: 'V9' },
+                    { interval: 9, quality: 'm9', numeral: 'vim9' },
+
+                    // NUEVO: Elevenths
+                    { interval: 2, quality: 'm11', numeral: 'iim11' },
+                    { interval: 9, quality: 'm11', numeral: 'vim11' },
+
+                    // EXPANDIDO: Thirteenths
+                    { interval: 0, quality: 'maj13', numeral: 'Imaj13' },
+                    { interval: 5, quality: 'maj13', numeral: 'IVmaj13' },
+                    { interval: 7, quality: '13', numeral: 'V13' },
+
+                    // Suspended
+                    { interval: 0, quality: 'sus2', numeral: 'Isus2' },
+                    { interval: 0, quality: 'sus4', numeral: 'Isus4' },
+                    { interval: 5, quality: 'sus2', numeral: 'IVsus2' },
+                    { interval: 5, quality: 'sus4', numeral: 'IVsus4' },
+                    { interval: 7, quality: 'sus4', numeral: 'Vsus4' },
+
+                    // Added Tones
+                    { interval: 0, quality: 'add9', numeral: 'Iadd9' },
+                    { interval: 0, quality: '6', numeral: 'I6' },
+                    { interval: 2, quality: 'add9', numeral: 'iiadd9' },
+                    { interval: 9, quality: 'add9', numeral: 'viadd9' },
+
+                    // Augmented & Diminished
+                    { interval: 0, quality: 'aug', numeral: 'Iaug' },
+                    { interval: 5, quality: 'aug', numeral: 'IVaug' }
                 ];
 
                 const lastChord = ProgressionBuilderState.progression.length > 0 ?
@@ -17066,6 +17657,14 @@
                     const root = (keyIndex + chordData.interval) % 12;
                     const rootName = MusicTheory.getNoteName(root);
                     const chordSymbol = this.getChordSymbol(rootName, chordData.quality);
+
+                    // Get voicing to extract emotional tags
+                    const voicingResult = MusicTheory.getVoicingForChord(rootName, chordData.quality);
+                    const emotionalTags = MusicTheory.generateEmotionalTags(
+                        chordData.numeral.replace(/[^IViv°]+/g, ''), // Extract function (I, ii, etc)
+                        chordData.quality,
+                        voicingResult.voicing
+                    );
 
                     // Calculate compatibility if there's a last chord
                     let compatClass = '';
@@ -17083,9 +17682,13 @@
 
                     return `
                         <button class="free-mode-chord-btn ${compatClass}"
-                                onclick="App.addChordFromFreePalette('${rootName}', '${chordData.quality}')">
+                                onclick="App.addChordFromFreePalette('${rootName}', '${chordData.quality}')"
+                                title="${emotionalTags.slice(0, 3).join(' • ')}">
                             <div class="font-medium">${chordSymbol}</div>
                             <div class="text-xs text-void-400">${chordData.numeral}</div>
+                            ${voicingResult.voicing?.extensions?.length > 0 ? `
+                                <span class="extension-badge">${voicingResult.voicing.extensions.join(',')}</span>
+                            ` : ''}
                             ${compatScore !== null ? `
                                 <span class="compat-badge" style="background: ${MusicTheory.calculateCompatibility(lastChord.chord, chordData.numeral, key).color}">
                                     ${compatScore}
@@ -17171,10 +17774,13 @@
                 const grid = document.getElementById('suggestions-grid');
                 if (!grid) return;
 
+                // FASE 4: Enhanced suggestions display with extensions and emotional tags
                 grid.innerHTML = suggestions.map(sug => {
                     const chordSymbol = this.getChordSymbol(sug.chord, sug.quality);
                     const compatClass = sug.compatibility.category;
                     const compatColor = sug.compatibility.color;
+                    const extensions = sug.voicing?.extensions || [];
+                    const emotionalTags = sug.emotionalTags || [];
 
                     return `
                         <div class="suggestion-card ${compatClass}" style="border-color: ${compatColor}">
@@ -17182,8 +17788,14 @@
                                 <div>
                                     <div class="text-2xl font-display text-chalk-100">
                                         ${chordSymbol}
+                                        ${extensions.length > 0 ? `
+                                            <span class="extension-badge ml-2">${extensions.join(',')}</span>
+                                        ` : ''}
                                     </div>
                                     <div class="text-xs text-sage-400">${sug.function}</div>
+                                    ${emotionalTags.length > 0 ? `
+                                        <div class="emotional-tags mt-1">${emotionalTags.slice(0, 3).join(' • ')}</div>
+                                    ` : ''}
                                 </div>
                                 <div class="text-xs px-2 py-1 rounded" style="background: ${compatColor}22; color: ${compatColor}">
                                     ${sug.compatibility.score}%
@@ -17334,13 +17946,37 @@
                 const avgSmoothness = smoothnessScores.length > 0 ?
                     smoothnessScores.reduce((a, b) => a + b, 0) / smoothnessScores.length : 0;
 
-                // Build analysis HTML
+                // FASE 4: Build enhanced analysis HTML with extensions and emotional tags
+                const chordsAnalysis = progression.map((item, idx) => {
+                    const func = functions[idx];
+                    const extensions = item.voicing?.extensions || [];
+                    const emotionalTags = MusicTheory.generateEmotionalTags(func, item.quality, item.voicing);
+                    const chordSymbol = this.getChordSymbol(item.chord, item.quality);
+
+                    return `
+                        <div class="chord-analysis-item">
+                            <div class="chord-function">${func}</div>
+                            <div class="text-chalk-200 font-medium">${chordSymbol}</div>
+                            ${extensions.length > 0 ? `
+                                <div class="extensions-badge">${extensions.join(', ')}</div>
+                            ` : ''}
+                            <div class="emotional-tags">${emotionalTags.slice(0, 3).join(' • ')}</div>
+                        </div>
+                    `;
+                }).join('');
+
                 panel.innerHTML = `
                     <div class="space-y-3">
                         <div>
                             <div class="text-void-400 mb-1">Funciones Armónicas</div>
                             <div class="text-chalk-200 font-medium">
                                 ${functions.join(' → ')}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-void-400 mb-1">Análisis Detallado</div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem;">
+                                ${chordsAnalysis}
                             </div>
                         </div>
                         <div>
@@ -17514,6 +18150,112 @@
                 this.showToast('✅ Progresión guardada', 'success');
             },
 
+            showLoadProgressionDialog() {
+                const saved = JSON.parse(localStorage.getItem('savedProgressions') || '[]');
+
+                if (saved.length === 0) {
+                    this.showToast('No hay progresiones guardadas', 'info');
+                    return;
+                }
+
+                // Create modal
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black/70 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-void-900 border border-sage-700 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                        <h2 class="text-xl font-bold text-sage-400 mb-4">📂 Progresiones Guardadas</h2>
+                        <div class="space-y-2 mb-4">
+                            ${saved.map((prog, idx) => {
+                                const date = new Date(prog.timestamp).toLocaleString('es-ES', {
+                                    dateStyle: 'short',
+                                    timeStyle: 'short'
+                                });
+                                const chordString = prog.chords.map(c =>
+                                    `${c.chord}${c.quality === 'maj' ? '' : c.quality}`
+                                ).join(' → ');
+                                return `
+                                    <div class="bg-void-800 border border-void-700 rounded p-3 hover:border-sage-600 transition-colors">
+                                        <div class="flex justify-between items-start gap-3">
+                                            <div class="flex-1">
+                                                <div class="text-sage-400 font-medium mb-1">
+                                                    ${prog.key ? `Tonalidad: ${prog.key}` : 'Sin tonalidad'}
+                                                </div>
+                                                <div class="text-chalk-200 text-sm mb-2">
+                                                    ${chordString}
+                                                </div>
+                                                <div class="text-void-400 text-xs">
+                                                    ${date}
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button
+                                                    class="px-3 py-1 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded text-sm"
+                                                    onclick="App.loadSavedProgression(${idx}); this.closest('.fixed').remove();"
+                                                >
+                                                    Cargar
+                                                </button>
+                                                <button
+                                                    class="px-3 py-1 bg-red-600 hover:bg-red-500 text-chalk-100 rounded text-sm"
+                                                    onclick="App.deleteSavedProgression(${idx}); this.closest('.fixed').remove(); App.showLoadProgressionDialog();"
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <button
+                            class="w-full px-4 py-2 bg-void-700 hover:bg-void-600 text-chalk-100 rounded"
+                            onclick="this.closest('.fixed').remove()"
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+            },
+
+            loadSavedProgression(index) {
+                const saved = JSON.parse(localStorage.getItem('savedProgressions') || '[]');
+                const progressionData = saved[index];
+
+                if (!progressionData) {
+                    this.showToast('Error al cargar la progresión', 'error');
+                    return;
+                }
+
+                // Clear current progression
+                ProgressionBuilderState.progression = [];
+
+                // Set key
+                ProgressionBuilderState.currentKey = progressionData.key || 'C';
+
+                // Load chords
+                progressionData.chords.forEach(chordData => {
+                    const voicingResult = MusicTheory.getVoicingForChord(chordData.chord, chordData.quality);
+                    ProgressionBuilderState.progression.push({
+                        chord: chordData.chord,
+                        quality: chordData.quality,
+                        voicing: voicingResult.voicing,
+                        voicingKey: voicingResult.key
+                    });
+                });
+
+                // Update UI
+                this.updateProgressionUI();
+                this.showToast('✅ Progresión cargada', 'success');
+            },
+
+            deleteSavedProgression(index) {
+                const saved = JSON.parse(localStorage.getItem('savedProgressions') || '[]');
+                saved.splice(index, 1);
+                localStorage.setItem('savedProgressions', JSON.stringify(saved));
+                this.showToast('🗑️ Progresión eliminada', 'info');
+            },
+
             transposeProgressionDialog() {
                 // Simple prompt for now (could be a modal in future)
                 const currentKey = ProgressionBuilderState.currentKey || 'C';
@@ -17585,7 +18327,7 @@
                         // Get suggestions for neighbor
                         const prevChord = idx > 0 ? progression[idx - 1] : null;
                         if (prevChord) {
-                            const suggestions = MusicTheory.suggestNextChords(prevChord, key, {});
+                            const suggestions = MusicTheory.suggestNextChords(prevChord.chord, key, {});
                             if (suggestions.length > 0) {
                                 const newSugg = suggestions[Math.floor(Math.random() * suggestions.length)];
                                 const voicingResult = MusicTheory.getVoicingForChord(newSugg.chord, newSugg.quality);
@@ -18094,16 +18836,22 @@
                 const qualityMap = {
                     'maj': ['C_shape_major', 'A_shape_major', 'G_shape_major', 'E_shape_major', 'D_shape_major'],
                     'min': ['Am_shape', 'Em_shape', 'Dm_shape', 'E_shape_minor_barre'],
+                    'm': ['Am_shape', 'Em_shape', 'Dm_shape', 'E_shape_minor_barre'],
                     '7': ['C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7', 'G_shape_dom7'],
                     'maj7': ['C_shape_maj7', 'A_shape_maj7', 'E_shape_maj7', 'D_shape_maj7'],
-                    'm7': ['A_shape_m7', 'G_shape_m7', 'C_shape_m7'],
+                    'm7': ['A_shape_m7', 'G_shape_m7', 'C_shape_m7', 'E_shape_m7'],
                     'sus2': ['Asus2', 'Gsus2', 'Csus2'],
                     'sus4': ['Csus4', 'Dsus4', 'Gsus4'],
                     'dim': ['Cdim7'],
                     '9': ['C9', 'Cmaj9'],
+                    'maj9': ['Cmaj9', 'C9'],
+                    'm9': ['A_shape_m7', 'G_shape_m7'],
                     'add9': ['Cadd9', 'Amadd9', 'Dadd9'],
                     'aug': ['Caug'],
-                    'm7b5': ['Am7b5']
+                    'm7b5': ['Am7b5', 'A_shape_m7'],
+                    '6': ['C6', 'C_shape_major'],
+                    '11': ['C11', 'C_shape_dom7'],
+                    '13': ['Cmaj13', 'C_shape_maj7']
                 };
 
                 const fallbacks = qualityMap[quality] || qualityMap['maj'];
