@@ -10974,8 +10974,9 @@
                     this.audioContext.resume();
                 }
 
-                // Ordenar de grave a agudo para strum natural
-                const sortedNotes = [...midiNotes].sort((a, b) => b - a);
+                // FIX: Ordenar de grave a agudo para downstroke natural (menor a mayor)
+                // a - b = orden ascendente (grave a agudo) = downstroke natural
+                const sortedNotes = [...midiNotes].sort((a, b) => a - b);
 
                 // Strum con delay entre cuerdas (35ms)
                 sortedNotes.forEach((midiNote, i) => {
@@ -17831,19 +17832,19 @@
             },
 
             playChordSuggestion(chord, quality) {
-                const voicingKey = this.getVoicingKeyForQuality(chord, quality);
-                const voicing = MusicTheory.chordLabVoicings[voicingKey];
-                if (voicing) {
-                    this.displayChordLabVoicing(voicing);
-                    this.playChordLabVoicing(voicing);
+                // FIX: Use MusicTheory.getVoicingForChord() for proper extension support
+                const result = MusicTheory.getVoicingForChord(chord, quality);
+                if (result && result.voicing) {
+                    this.displayChordLabVoicing(result.voicing);
+                    this.playChordLabVoicing(result.voicing);
                 }
             },
 
             addChordToProgression(chord, quality) {
-                const voicingKey = this.getVoicingKeyForQuality(chord, quality);
-                const voicing = MusicTheory.chordLabVoicings[voicingKey];
+                // FIX: Use MusicTheory.getVoicingForChord() directly for proper extension support
+                const result = MusicTheory.getVoicingForChord(chord, quality);
 
-                if (!voicing) {
+                if (!result || !result.voicing) {
                     this.showToast('No hay voicing disponible', 'error');
                     return;
                 }
@@ -17851,8 +17852,8 @@
                 ProgressionBuilderState.progression.push({
                     chord,
                     quality,
-                    voicing,
-                    voicingKey
+                    voicing: result.voicing,
+                    voicingKey: result.key
                 });
 
                 // Update UI
@@ -18804,58 +18805,30 @@
             },
 
             getVoicingKeyForQuality(chord, quality) {
-                // Try to find exact match first (e.g., "C" + "maj7" → "Cmaj7")
-                const directKeys = [
-                    chord + quality,
-                    chord + '_shape_' + quality.replace('maj', 'major').replace('min', 'minor'),
-                    chord + '_shape_' + quality
-                ];
+                // FIX: Use MusicTheory.getVoicingForChord() which has proper extension support
+                // This ensures D and Dm use different voicings, and 9/13 extensions work
+                const result = MusicTheory.getVoicingForChord(chord, quality);
 
-                for (const key of directKeys) {
-                    if (MusicTheory.chordLabVoicings[key]) {
-                        return key;
-                    }
+                if (result && result.key) {
+                    return result.key;
                 }
 
-                // Try shape-based patterns (C_shape_major, A_shape_maj7, etc.)
-                const shapeKeys = [
-                    `${chord}_shape_major`,
-                    `${chord}_shape_maj7`,
-                    `${chord}_shape_dom7`,
-                    `${chord}_shape_m7`,
-                    `${chord}${quality}`,
-                    `${chord}9`,
-                    `${chord}add9`,
-                    `${chord}sus2`,
-                    `${chord}sus4`
-                ];
+                // Fallback to old behavior only if MusicTheory fails
+                console.warn(`Could not find voicing for ${chord}${quality}, using fallback`);
 
-                for (const key of shapeKeys) {
-                    if (MusicTheory.chordLabVoicings[key]) {
-                        return key;
-                    }
-                }
-
-                // Fallback: try generic voicings that might work
                 const qualityMap = {
-                    'maj': ['C_shape_major', 'A_shape_major', 'G_shape_major', 'E_shape_major', 'D_shape_major'],
-                    'min': ['Am_shape', 'Em_shape', 'Dm_shape', 'E_shape_minor_barre'],
-                    'm': ['Am_shape', 'Em_shape', 'Dm_shape', 'E_shape_minor_barre'],
-                    '7': ['C_shape_dom7', 'A_shape_dom7', 'E_shape_dom7', 'G_shape_dom7'],
-                    'maj7': ['C_shape_maj7', 'A_shape_maj7', 'E_shape_maj7', 'D_shape_maj7'],
-                    'm7': ['A_shape_m7', 'G_shape_m7', 'C_shape_m7', 'E_shape_m7'],
-                    'sus2': ['Asus2', 'Gsus2', 'Csus2'],
-                    'sus4': ['Csus4', 'Dsus4', 'Gsus4'],
-                    'dim': ['Cdim7'],
-                    '9': ['C9', 'Cmaj9'],
-                    'maj9': ['Cmaj9', 'C9'],
-                    'm9': ['A_shape_m7', 'G_shape_m7'],
-                    'add9': ['Cadd9', 'Amadd9', 'Dadd9'],
-                    'aug': ['Caug'],
-                    'm7b5': ['Am7b5', 'A_shape_m7'],
-                    '6': ['C6', 'C_shape_major'],
-                    '11': ['C11', 'C_shape_dom7'],
-                    '13': ['Cmaj13', 'C_shape_maj7']
+                    'maj': ['C_shape_major', 'A_shape_major', 'G_shape_major'],
+                    'min': ['Am_shape', 'Em_shape', 'Dm_shape'],
+                    'm': ['Am_shape', 'Em_shape', 'Dm_shape'],
+                    '7': ['G_shape_dom7', 'C_shape_dom7', 'A_shape_dom7'],
+                    'maj7': ['C_shape_maj7', 'A_shape_maj7'],
+                    'm7': ['A_shape_m7', 'C_shape_m7'],
+                    '9': ['G_shape_dom9', 'E_shape_dom9', 'A_shape_dom9'],
+                    'maj9': ['C_shape_maj9', 'E_shape_maj9', 'A_shape_maj9'],
+                    'm9': ['E_shape_m9', 'A_shape_m9'],
+                    '13': ['G_shape_dom13', 'E_shape_dom13'],
+                    'maj13': ['C_shape_maj13', 'E_shape_maj13'],
+                    'm11': ['E_shape_m11', 'A_shape_m11']
                 };
 
                 const fallbacks = qualityMap[quality] || qualityMap['maj'];
