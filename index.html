@@ -9670,9 +9670,12 @@
                 // Try to find a voicing in the target key first
                 const targetRootName = typeof targetRoot === 'number' ? this.getNoteName(targetRoot) : targetRoot;
 
-                // Direct lookup attempts
+                // Direct lookup attempts (expanded for extensions)
                 const directKeys = [
                     `${targetRootName}_shape_${quality}`,
+                    `${targetRootName}_shape_dom${quality}`,  // For dom9, dom13
+                    `${targetRootName}_shape_maj${quality}`,  // For maj9, maj13
+                    `${targetRootName}_shape_m${quality}`,    // For m9, m11
                     `${targetRootName}_shape_major`,
                     `${targetRootName}_shape_maj7`,
                     `${targetRootName}${quality}`,
@@ -11821,6 +11824,7 @@
             currentMode: 1,
             currentPentatonic: 'minor',
             currentBox: 0,
+            templates: {}, // Template storage
             currentChord7: null,
             currentProgression: null,
             currentProgressionChordIndex: 0,
