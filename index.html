@@ -122,12 +122,16 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Chord Lab specific sticky adjustments */
-        .chord-lab-active .fretboard-sticky-wrapper {
-            top: 0;
-            border-bottom: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        /* Hide main fretboard when in Chord Lab (uses integrated one) */
+        body[data-level="16"] .fretboard-sticky-wrapper {
+            display: none;
         }
+
+        /* Hide display title/subtitle in Chord Lab */
+        body[data-level="16"] #mainFretboardArea > .mb-6.text-center {
+            display: none;
+        }
+
 
         .fretboard-container {
             background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
@@ -177,12 +181,13 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
 
-        .string:nth-child(1)::before { height: 1px; opacity: 0.85; }
-        .string:nth-child(2)::before { height: 1.5px; opacity: 0.8; }
-        .string:nth-child(3)::before { height: 2px; opacity: 0.75; }
-        .string:nth-child(4)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 8%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
-        .string:nth-child(5)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 8%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
-        .string:nth-child(6)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 8%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+        /* Visual representation: thick strings at top, thin at bottom (reversed from actual tuning) */
+        .string:nth-child(1)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 8%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+        .string:nth-child(2)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 8%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
+        .string:nth-child(3)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 8%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
+        .string:nth-child(4)::before { height: 2px; opacity: 0.75; }
+        .string:nth-child(5)::before { height: 1.5px; opacity: 0.8; }
+        .string:nth-child(6)::before { height: 1px; opacity: 0.85; }
 
         .fret {
             position: relative;
@@ -4626,7 +4631,7 @@
     <template id="tpl-chord-lab">
         <div class="space-y-4">
             <!-- Mode Tabs -->
-            <div class="flex gap-2 border-b border-void-700 pb-2">
+            <div class="flex gap-2 border-b border-void-700 pb-2 mb-4">
                 <button class="chord-lab-mode-btn active" data-mode="explorer">
                     🔍 Explorer
                 </button>
@@ -4639,6 +4644,56 @@
                 <button class="chord-lab-mode-btn" data-mode="practice">
                     💪 Practice
                 </button>
+            </div>
+
+            <!-- Integrated Fretboard (Chord Lab specific) -->
+            <div class="fretboard-chord-lab-wrapper mb-6 p-4 bg-void-900/30 rounded-lg border border-sage-600/20">
+                <div class="w-full max-w-5xl mx-auto">
+                    <!-- Fret Numbers -->
+                    <div class="flex mb-3 pl-8">
+                        <div class="w-8"></div>
+                        <div class="flex flex-1">
+                            <div class="flex-[0.6] flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 5px;">0</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">1</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">2</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">3</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">4</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">5</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">6</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">7</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">8</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-400 font-bold"><span style="margin-right: 3px;">9</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">10</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 3px;">11</span></div>
+                            <div class="flex-1 flex justify-center font-mono text-sm text-blood-400 font-bold"><span style="margin-right: 3px;">12</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Fretboard Container (Chord Lab) -->
+                    <div class="fretboard-container p-4" id="fretboard-chord-lab">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <!-- Fret markers -->
+                    <div class="flex mt-3 pl-8">
+                        <div class="w-8"></div>
+                        <div class="flex flex-1">
+                            <div class="flex-[0.6]"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center"><div class="w-3 h-3 rounded-full bg-void-500" style="margin-right: 3px;"></div></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                            <div class="flex-1 flex justify-center gap-2" style="margin-right: 3px;"><div class="w-3 h-3 rounded-full bg-blood-500"></div><div class="w-3 h-3 rounded-full bg-blood-500"></div></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Mode: Explorer -->
@@ -4987,23 +5042,11 @@
                 </div>
             </div>
 
-            <!-- Shared Fretboard Display -->
-            <div id="chord-lab-fretboard-display" class="mt-6 overflow-y-auto" style="max-height: calc(100vh - 200px);">
-                <!-- Sticky wrapper for fretboard -->
-                <div class="fretboard-sticky-wrapper">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">Fretboard View</h3>
-                    <div id="chord-lab-fretboard-container"></div>
-                </div>
-
-                <!-- Scrollable content below fretboard -->
-                <div class="mt-4">
-                    <!-- Chord Story Panel -->
-                    <div id="chord-story-panel" class="p-4 bg-sage-900/20 border border-sage-600 rounded-lg hidden">
-                        <h4 class="text-lg font-medium text-sage-400 mb-3">📖 Historia de este acorde</h4>
-                        <div id="chord-story-content" class="space-y-2 text-sm">
-                            <!-- Contenido dinámico -->
-                        </div>
-                    </div>
+            <!-- Chord Story Panel (moved outside sticky wrapper) -->
+            <div id="chord-story-panel" class="mt-6 p-4 bg-sage-900/20 border border-sage-600 rounded-lg hidden">
+                <h4 class="text-lg font-medium text-sage-400 mb-3">📖 Historia de este acorde</h4>
+                <div id="chord-story-content" class="space-y-2 text-sm">
+                    <!-- Contenido dinámico -->
                 </div>
             </div>
         </div>
@@ -9733,23 +9776,34 @@
                     `${targetRootName}_shape_maj${quality}`,  // For maj9, maj13
                     `${targetRootName}_shape_m${quality}`,    // For m9, m11
                     `${targetRootName}${quality}`,
-                    `${targetRootName}m_shape`,               // For Dm_shape, Em_shape, etc.
-                    `${targetRootName}_shape_major`,
-                    `${targetRootName}_shape_minor`,          // For quality='minor'
-                    `${targetRootName}_shape_maj7`,
-                    `${targetRootName}maj7`,
+                ];
+
+                // Add quality-specific patterns FIRST
+                if (quality === 'min' || quality === 'minor' || quality === 'm') {
+                    directKeys.push(`${targetRootName}m_shape`);        // Dm_shape, Em_shape
+                    directKeys.push(`${targetRootName}_shape_minor`);   // D_shape_minor
+                    directKeys.push(`${targetRootName}m7`);             // Dm7
+                } else if (quality === 'maj' || quality === 'major') {
+                    directKeys.push(`${targetRootName}_shape_major`);   // D_shape_major
+                    directKeys.push(`${targetRootName}_shape_maj7`);    // D_shape_maj7
+                    directKeys.push(`${targetRootName}maj7`);           // Dmaj7
+                }
+
+                // Common patterns (fallback)
+                directKeys.push(
                     `${targetRootName}7`,
-                    `${targetRootName}m7`,
                     `${targetRootName}add9`,
                     `${targetRootName}sus2`,
                     `${targetRootName}sus4`
-                ];
+                );
 
                 for (const key of directKeys) {
                     if (this.chordLabVoicings[key]) {
+                        console.log(`✅ Found voicing: ${key}`, this.chordLabVoicings[key].frets);
                         return { key, voicing: this.chordLabVoicings[key], transposed: false };
                     }
                 }
+                console.log(`❌ No direct voicing found, trying transpose...`)
 
                 // If not found, find a movable voicing and transpose it
                 // FASE 2: Mapeo expandido con nuevos voicings de extensiones
@@ -10949,7 +11003,7 @@
             playTabLine(tabs, bpm, loopCount = 1) {
                 if (!this.enabled || !this.audioContext) return null;
 
-                const standardTuning = [64, 59, 55, 50, 45, 40]; // E A D G B E en MIDI
+                const standardTuning = [40, 45, 50, 55, 59, 64]; // E A D G B E en MIDI (low to high)
                 const beatDuration = (60 / bpm) * 1000;
                 let currentLoop = 0;
 
@@ -11008,8 +11062,12 @@
                     this.audioContext.resume();
                 }
 
-                const standardTuning = [64, 59, 55, 50, 45, 40]; // E A D G B E en MIDI
+                // Standard tuning: E A D G B E (from low/thick string 6 to high/thin string 1)
+                // Array index 0 = low E (string 6), index 5 = high E (string 1)
+                const standardTuning = [40, 45, 50, 55, 59, 64]; // E2 A2 D3 G3 B3 E4 en MIDI
                 const midiNotes = [];
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                const stringNames = ['E (low)', 'A', 'D', 'G', 'B', 'E (high)'];
 
                 // Convertir frets a notas MIDI completas (manteniendo octava)
                 voicing.frets.forEach((fret, stringIndex) => {
@@ -11042,6 +11100,27 @@
                         this.playMidiNote(midiNote, duration);
                     }, i * 35);
                 });
+            },
+
+            // Stop all currently playing notes
+            stopAllNotes() {
+                if (!this.audioContext) return;
+                // Create a new audio context to kill all nodes
+                try {
+                    const currentTime = this.audioContext.currentTime;
+                    // Simply advance time to stop all scheduled notes
+                    this.activeOscillators = this.activeOscillators || [];
+                    this.activeOscillators.forEach(osc => {
+                        try {
+                            osc.stop();
+                        } catch(e) {
+                            // Already stopped
+                        }
+                    });
+                    this.activeOscillators = [];
+                } catch(e) {
+                    console.warn('Error stopping notes:', e);
+                }
             },
 
             // Reproduce una progresión para ear training
@@ -11696,10 +11775,14 @@
                         // String 0 (más aguda) = E4 = MIDI 64
                         // String 1 = B3 = MIDI 59
                         // String 2 = G3 = MIDI 55
-                        // String 3 = D3 = MIDI 50
-                        // String 4 = A2 = MIDI 45
-                        // String 5 (más grave) = E2 = MIDI 40
-                        const openStringMidi = [64, 59, 55, 50, 45, 40];
+                        // Standard tuning: E A D G B E (from low to high)
+                        // String 0 (más grave) = E2 = MIDI 40
+                        // String 1 = A2 = MIDI 45
+                        // String 2 = D3 = MIDI 50
+                        // String 3 = G3 = MIDI 55
+                        // String 4 = B3 = MIDI 59
+                        // String 5 (más aguda) = E4 = MIDI 64
+                        const openStringMidi = [40, 45, 50, 55, 59, 64];
 
                         // Calcular nota MIDI: nota abierta + trastes
                         const midiNote = openStringMidi[stringIndex] + fretNum;
@@ -12542,6 +12625,9 @@
             loadLevel(level) {
                 console.log('[LoadLevel] Loading level:', level);
                 this.currentLevel = level;
+
+                // Set data-level attribute for CSS targeting
+                document.body.setAttribute('data-level', level);
 
                 // Cleanup backing track si está corriendo
                 if (this.backingTrackPlaying) {
@@ -16939,12 +17025,22 @@
             },
 
             displayChordLabVoicing(voicing) {
-                // Display on main fretboard using specificPositions
-                Fretboard.clear();
-                const root = ChordLabState.currentRoot;
-                const rootIndex = MusicTheory.notes.indexOf(root);
+                // Use Chord Lab integrated fretboard if available
+                const chordLabFretboard = document.getElementById('fretboard-chord-lab');
+                const targetContainer = chordLabFretboard || document.getElementById('fretboard');
+
+                // Initialize Chord Lab fretboard if needed
+                if (chordLabFretboard && chordLabFretboard.children.length === 0) {
+                    // Clone the main fretboard structure
+                    const mainFretboard = document.getElementById('fretboard');
+                    if (mainFretboard) {
+                        chordLabFretboard.innerHTML = mainFretboard.innerHTML;
+                    }
+                }
 
                 // Calculate positions from frets
+                const root = ChordLabState.currentRoot;
+                const rootIndex = MusicTheory.notes.indexOf(root);
                 const positions = [];
                 voicing.frets.forEach((fret, stringIdx) => {
                     if (fret === -1) return;
@@ -16957,9 +17053,57 @@
                     });
                 });
 
-                // Set tonic and show positions
-                Fretboard.tonicNote = rootIndex;
-                Fretboard.showPositions(positions);
+                // Render on target fretboard
+                this.renderVoicingOnFretboard(targetContainer, positions, rootIndex);
+            },
+
+            renderVoicingOnFretboard(container, positions, rootIndex) {
+                if (!container) return;
+
+                // Clear previous markers
+                container.querySelectorAll('.note-marker').forEach(m => m.remove());
+
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+                // Add new markers
+                positions.forEach(pos => {
+                    const stringEl = container.children[pos.string];
+                    if (!stringEl) return;
+
+                    const fretEl = stringEl.children[pos.fret];
+                    if (!fretEl) return;
+
+                    // Calculate note for this position
+                    const openStringNotes = [4, 11, 7, 2, 9, 4]; // E B G D A E
+                    const noteIndex = (openStringNotes[pos.string] + pos.fret) % 12;
+                    const noteName = noteNames[noteIndex];
+
+                    const marker = document.createElement('div');
+                    marker.className = `note-marker ${pos.isRoot ? 'root-note' : 'scale-note'}`;
+                    marker.textContent = noteName;
+
+                    // Style like original fretboard
+                    marker.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 11px;
+                        font-weight: bold;
+                        z-index: 10;
+                        ${pos.isRoot
+                            ? 'background: #e2e8f0; color: #0f172a; border: 2px solid #cbd5e1;'
+                            : 'background: rgba(226, 232, 240, 0.9); color: #1e293b; border: 2px solid rgba(203, 213, 225, 0.8);'}
+                    `;
+
+                    fretEl.appendChild(marker);
+                });
             },
 
             playChordLabVoicing(voicing) {
@@ -16968,6 +17112,11 @@
                     App.showToast('Error: voicing inválido', 'error');
                     return;
                 }
+                console.log('🎵 Playing voicing:', voicing.name, 'Frets:', voicing.frets);
+
+                // STOP any currently playing audio first
+                AudioEngine.stopAllNotes();
+
                 try {
                     AudioEngine.playChordVoicing(voicing);
                 } catch (e) {
