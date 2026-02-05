@@ -9799,11 +9799,9 @@
 
                 for (const key of directKeys) {
                     if (this.chordLabVoicings[key]) {
-                        console.log(`✅ Found voicing: ${key}`, this.chordLabVoicings[key].frets);
                         return { key, voicing: this.chordLabVoicings[key], transposed: false };
                     }
                 }
-                console.log(`❌ No direct voicing found, trying transpose...`)
 
                 // If not found, find a movable voicing and transpose it
                 // FASE 2: Mapeo expandido con nuevos voicings de extensiones
@@ -12080,7 +12078,6 @@
             },
 
             init() {
-                console.log('[Init] Starting initialization, currentLevel:', this.currentLevel);
                 Fretboard.init();
                 this.loadProgress();           // Load saved progress (updates currentLevel)
                 this.bindEvents();             // Bind all event listeners
@@ -12623,7 +12620,6 @@
             },
 
             loadLevel(level) {
-                console.log('[LoadLevel] Loading level:', level);
                 this.currentLevel = level;
 
                 // Set data-level attribute for CSS targeting
@@ -13429,7 +13425,6 @@
             },
 
             refreshCurrentLevel() {
-                console.log('[RefreshLevel] Refreshing level:', this.currentLevel);
                 switch(this.currentLevel) {
                     case 1: this.showIntervals(); break;
                     case 2: this.showScale(); break;
@@ -16482,11 +16477,9 @@
             // ========== NIVEL 16 - CHORD LAB ==========
 
             showChordLab() {
-                console.log('[Chord Lab] Initializing...');
                 this.resetState();
                 this.updateDisplay('Chord Laboratory', 'Explore chord voicings and relationships');
 
-                // Initialize Chord Lab mode
                 ChordLabState.currentMode = 'explorer';
                 ChordLabState.currentRoot = this.currentRoot || 'C';
                 ChordLabState.currentQuality = 'maj';
@@ -16495,7 +16488,6 @@
                 ChordLabState.comparisonA = null;
                 ChordLabState.comparisonB = null;
 
-                console.log('[Chord Lab] State:', ChordLabState);
                 this.showChordLabMode();
             },
 
@@ -16512,72 +16504,39 @@
                 const track = this.currentBackingTrack;
                 const bpm = this.customBPM || track.bpm;
 
-                console.log('[showJamSession] Track:', track);
-                console.log('[showJamSession] BPM:', bpm);
-
-                // Renderizar tracks primero
-                console.log('[showJamSession] Llamando renderJamTrackGrid...');
                 this.renderJamTrackGrid();
-
-                // Renderizar panel de info
                 const rootName = MusicTheory.getNoteName(this.currentRoot);
-                console.log('[showJamSession] Llamando renderJamSessionPanel...');
                 this.renderJamSessionPanel(track, rootName, bpm);
-
-                // Renderizar diapasón con verificación robusta
-                console.log('[showJamSession] Llamando renderJamFretboard...');
                 this.renderJamFretboard();
-
-                console.log('[showJamSession] TERMINADO');
             },
 
             renderJamFretboard() {
-                console.log('[renderJamFretboard] INICIANDO...');
                 const jamFretboard = document.getElementById('jamFretboard');
-                console.log('[renderJamFretboard] jamFretboard element:', jamFretboard);
-
                 if (!jamFretboard) {
                     console.error('[Jam Session] jamFretboard container not found');
                     return;
                 }
 
-                // Limpiar contenido previo
                 jamFretboard.innerHTML = '';
-                console.log('[renderJamFretboard] Llamando Fretboard.render...');
-
-                // Renderizar diapasón
                 Fretboard.render('jamFretboard');
 
-                console.log('[renderJamFretboard] Fretboard renderizado, HTML length:', jamFretboard.innerHTML.length);
-
-                // Esperar a que el DOM se actualice antes de aplicar escala
                 requestAnimationFrame(() => {
                     const track = this.currentBackingTrack;
-                    console.log('[renderJamFretboard] requestAnimationFrame - track:', track);
                     if (track) {
-                        console.log('[renderJamFretboard] Llamando showScale, root:', this.currentRoot, 'scale:', track.scale);
                         Fretboard.showScale(this.currentRoot, track.scale);
                     }
                 });
-
-                console.log('[renderJamFretboard] TERMINADO');
             },
 
             renderJamTrackGrid() {
-                console.log('[renderJamTrackGrid] INICIANDO...');
                 const grid = document.getElementById('jamTrackGrid');
-                console.log('[renderJamTrackGrid] Grid element:', grid);
-
                 if (!grid) {
                     console.error('[Jam Session] jamTrackGrid container not found');
                     return;
                 }
 
-                console.log('[renderJamTrackGrid] Backing tracks:', MusicTheory.backingTracks);
-
                 grid.innerHTML = MusicTheory.backingTracks.map(track => {
                     const isActive = this.currentBackingTrack && this.currentBackingTrack.id === track.id;
-
                     return `
                         <button class="jam-track-item ${isActive ? 'active' : ''}" data-track="${track.id}">
                             <span class="track-name">${track.name}</span>
@@ -16585,20 +16544,13 @@
                         </button>
                     `;
                 }).join('');
-
-                console.log('[renderJamTrackGrid] Grid HTML length:', grid.innerHTML.length);
-                console.log('[renderJamTrackGrid] TERMINADO');
             },
 
             renderJamSessionPanel(track, rootName, bpm) {
-                console.log('[renderJamSessionPanel] INICIANDO... bpm:', bpm);
                 const keyDisplay = document.getElementById('jamKeyDisplay');
                 const progDisplay = document.getElementById('jamProgressionDisplay');
                 const bpmDisplay = document.getElementById('jamBpmDisplay');
                 const bpmSlider = document.getElementById('bpmSlider');
-
-                console.log('[renderJamSessionPanel] jamBpmDisplay:', bpmDisplay);
-                console.log('[renderJamSessionPanel] bpmSlider:', bpmSlider);
 
                 if (!keyDisplay || !progDisplay) {
                     console.error('[Jam Session] Key display or progression display not found');
@@ -16609,19 +16561,12 @@
                 const scaleName = this.SCALE_NAMES[track.scale] || 'Mayor';
                 keyDisplay.textContent = `${rootName} ${scaleName}`.toUpperCase();
 
-                // Actualizar BPM DISPLAY con estilos inline forzados
                 if (bpmDisplay) {
                     bpmDisplay.textContent = bpm;
-                    // Forzar estilos inline para asegurar visibilidad
                     bpmDisplay.style.cssText = 'color: #dc2626 !important; font-size: 14px !important; font-weight: 600 !important; display: inline-block !important; min-width: 40px !important; text-align: center !important; opacity: 1 !important; visibility: visible !important;';
-                } else {
-                    console.error('[renderJamSessionPanel] bpmDisplay NO ENCONTRADO!');
                 }
                 if (bpmSlider) {
-                    console.log('[renderJamSessionPanel] Estableciendo bpmSlider.value =', bpm);
                     bpmSlider.value = bpm;
-                } else {
-                    console.error('[renderJamSessionPanel] bpmSlider NO ENCONTRADO!');
                 }
 
                 // Actualizar PROGRESSION DISPLAY con animación
