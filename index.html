@@ -18907,9 +18907,7 @@
                         </div>
                         <button class="chord-lab-play-btn" data-voicing-key="${voicing.key}">▶</button>
                     </div>
-                    <div class="mt-3">
-                        ${this.renderMiniChordDiagram(voicing)}
-                    </div>
+                    <div class="mt-3 chord-diagram-container"></div>
                     <div class="chord-lab-metadata">
                         <div class="chord-lab-metadata-row">
                             <span class="chord-lab-metadata-label">Register:</span>
@@ -18932,6 +18930,13 @@
                         </div>
                     </div>
                 `;
+
+                // Insert chord diagram after creating the structure
+                const diagramContainer = card.querySelector('.chord-diagram-container');
+                if (diagramContainer) {
+                    const diagram = this.renderMiniChordDiagram(voicing);
+                    diagramContainer.appendChild(diagram);
+                }
 
                 // Click on card to show on fretboard
                 card.addEventListener('click', (e) => {
@@ -18958,53 +18963,24 @@
             },
 
             renderMiniChordDiagram(voicing) {
-                // Simple SVG representation - visual order: low E (thick) at top, high e (thin) at bottom
-                const frets = voicing.frets;
-                const baseFret = voicing.baseFret || 0;
-
-                // Get current root to mark root notes in red
+                // Use the same ChordDiagram component as the rest of the app
                 const rootName = ChordLabState.currentRoot || 'C';
-                const rootIndex = MusicTheory.notes.indexOf(rootName);
+                const chordName = this.getChordSymbol(rootName, ChordLabState.currentQuality);
 
-                const svg = `
-                    <svg width="120" height="90" viewBox="0 0 120 90" class="mx-auto">
-                        ${[0,1,2,3,4,5].map(visualString => {
-                            const strokeWidth = [2, 1.5, 1.3, 1.1, 0.9, 0.7][visualString]; // Thick to thin
-                            return `
-                            <line x1="20" y1="${15 + visualString * 12}" x2="100" y2="${15 + visualString * 12}"
-                                  stroke="#475569" stroke-width="${strokeWidth}"/>
-                        `}).join('')}
-                        ${[0,1,2,3,4].map(fret => `
-                            <line x1="${30 + fret * 16}" y1="15" x2="${30 + fret * 16}" y2="75"
-                                  stroke="#475569" stroke-width="1"/>
-                        `).join('')}
-                        ${[0,1,2,3,4].map(fret => `
-                            <text x="${30 + fret * 16}" y="10"
-                                  font-size="8" fill="#94a3b8" text-anchor="middle">
-                                ${baseFret + fret}
-                            </text>
-                        `).join('')}
-                        ${frets.map((fretNum, logicalString) => {
-                            if (fretNum === -1) return '';
+                // Calculate position (transpose from base voicing to current root)
+                const baseNote = MusicTheory.notes.indexOf('C'); // Voicings are in C by default
+                const rootNote = MusicTheory.notes.indexOf(rootName);
+                const position = (rootNote - baseNote + 12) % 12;
 
-                            // Calculate if this is a root note
-                            const openStringMidi = [40, 45, 50, 55, 59, 64]; // E2 A2 D3 G3 B3 E4
-                            const midiNote = openStringMidi[logicalString] + fretNum;
-                            const noteIndex = midiNote % 12;
-                            const isRoot = noteIndex === rootIndex;
+                // Create the diagram using ChordDiagram.create
+                const diagram = ChordDiagram.create(voicing, chordName, position);
 
-                            // Map logical string index to visual position
-                            // voicing.frets[0] = E grave (low) → visual position 0 (top, thick)
-                            // voicing.frets[5] = e aguda (high) → visual position 5 (bottom, thin)
-                            const visualString = logicalString;
-                            const y = 15 + visualString * 12;
-                            const x = fretNum === 0 ? 20 : 30 + (fretNum - baseFret) * 16;
-                            const fillColor = isRoot ? '#dc2626' : '#e2e8f0';
-                            return `<circle cx="${x}" cy="${y}" r="5" fill="${fillColor}"/>`;
-                        }).join('')}
-                    </svg>
-                `;
-                return svg;
+                // Add compact styling for the card
+                diagram.style.transform = 'scale(0.8)';
+                diagram.style.transformOrigin = 'top center';
+
+                // Return the DOM element
+                return diagram;
             },
 
             getChordSymbol(root, quality) {
@@ -19232,6 +19208,11 @@
                     if (ChordLabState.comparisonA) {
                         const voicing = MusicTheory.chordLabVoicings[ChordLabState.comparisonA];
                         divA.innerHTML = this.renderComparisonVoicing(voicing, ChordLabState.comparisonA, 'A');
+                        const diagramContainerA = divA.querySelector('.chord-diagram-container');
+                        if (diagramContainerA) {
+                            const diagramA = this.renderMiniChordDiagram(voicing);
+                            diagramContainerA.appendChild(diagramA);
+                        }
                     } else {
                         divA.innerHTML = '<div class="text-void-400 text-center py-8">Click card with Shift to select A</div>';
                     }
@@ -19239,6 +19220,11 @@
                     if (ChordLabState.comparisonB) {
                         const voicing = MusicTheory.chordLabVoicings[ChordLabState.comparisonB];
                         divB.innerHTML = this.renderComparisonVoicing(voicing, ChordLabState.comparisonB, 'B');
+                        const diagramContainerB = divB.querySelector('.chord-diagram-container');
+                        if (diagramContainerB) {
+                            const diagramB = this.renderMiniChordDiagram(voicing);
+                            diagramContainerB.appendChild(diagramB);
+                        }
                     } else {
                         divB.innerHTML = '<div class="text-void-400 text-center py-8">Click card with Shift to select B</div>';
                     }
@@ -19260,7 +19246,7 @@
                     <div class="text-center">
                         <div class="text-lg font-medium mb-2" style="color: ${color}">${label}: ${voicing.name}</div>
                         <div class="text-sm text-void-400 mb-3">${chordSymbol}</div>
-                        ${this.renderMiniChordDiagram(voicing)}
+                        <div class="chord-diagram-container"></div>
                         <div class="mt-3 space-y-2 text-sm text-left px-4">
                             <div class="flex justify-between">
                                 <span class="text-void-400">Dificultad:</span>
@@ -19511,14 +19497,12 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                         ${selected.map((v, idx) => `
-                            <div class="p-4 bg-void-800 border border-void-600 rounded-lg hover:border-sage-500 transition-all">
+                            <div class="p-4 bg-void-800 border border-void-600 rounded-lg hover:border-sage-500 transition-all" data-voicing-idx="${idx}">
                                 <div class="text-center mb-3">
                                     <div class="text-lg font-medium text-chalk-100">${v.name}</div>
                                     <div class="text-xs text-void-400 mb-2">Registro ${v.register}</div>
                                 </div>
-                                <div class="mb-3">
-                                    ${this.renderMiniChordDiagram(v)}
-                                </div>
+                                <div class="mb-3 chord-diagram-container"></div>
                                 <div class="space-y-2 text-xs">
                                     <div class="flex justify-between">
                                         <span class="text-void-400">Sonido:</span>
@@ -19561,6 +19545,18 @@
                         </button>
                     </div>
                 `;
+
+                // Insert chord diagrams after creating the structure
+                selected.forEach((v, idx) => {
+                    const card = area.querySelector(`[data-voicing-idx="${idx}"]`);
+                    if (card) {
+                        const container = card.querySelector('.chord-diagram-container');
+                        if (container) {
+                            const diagram = this.renderMiniChordDiagram(v);
+                            container.appendChild(diagram);
+                        }
+                    }
+                });
 
                 // Store selected for playback
                 ChordLabState.currentExerciseVoicings = selected;
