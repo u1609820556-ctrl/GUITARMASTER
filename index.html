@@ -123,12 +123,17 @@
         }
 
         /* Hide main fretboard when in Chord Lab (uses integrated one) */
-        body[data-level="16"] .fretboard-sticky-wrapper {
+        body[data-level="11"] .fretboard-sticky-wrapper {
             display: none;
         }
 
         /* Hide display title/subtitle in Chord Lab */
-        body[data-level="16"] #mainFretboardArea > .mb-6.text-center {
+        body[data-level="11"] #mainFretboardArea > .mb-6.text-center {
+            display: none;
+        }
+
+        /* Hide the entire main fretboard area in Chord Lab */
+        body[data-level="11"] #mainFretboardArea {
             display: none;
         }
 
@@ -18956,6 +18961,11 @@
                 // Simple SVG representation - visual order: low E (thick) at top, high e (thin) at bottom
                 const frets = voicing.frets;
                 const baseFret = voicing.baseFret || 0;
+
+                // Get current root to mark root notes in red
+                const rootName = ChordLabState.currentRoot || 'C';
+                const rootIndex = MusicTheory.notes.indexOf(rootName);
+
                 const svg = `
                     <svg width="120" height="90" viewBox="0 0 120 90" class="mx-auto">
                         ${[0,1,2,3,4,5].map(visualString => {
@@ -18976,13 +18986,21 @@
                         `).join('')}
                         ${frets.map((fretNum, logicalString) => {
                             if (fretNum === -1) return '';
+
+                            // Calculate if this is a root note
+                            const openStringMidi = [40, 45, 50, 55, 59, 64]; // E2 A2 D3 G3 B3 E4
+                            const midiNote = openStringMidi[logicalString] + fretNum;
+                            const noteIndex = midiNote % 12;
+                            const isRoot = noteIndex === rootIndex;
+
                             // Map logical string index to visual position
                             // voicing.frets[0] = E grave (low) → visual position 0 (top, thick)
                             // voicing.frets[5] = e aguda (high) → visual position 5 (bottom, thin)
                             const visualString = logicalString;
                             const y = 15 + visualString * 12;
                             const x = fretNum === 0 ? 20 : 30 + (fretNum - baseFret) * 16;
-                            return `<circle cx="${x}" cy="${y}" r="5" fill="#84cc16"/>`;
+                            const fillColor = isRoot ? '#dc2626' : '#e2e8f0';
+                            return `<circle cx="${x}" cy="${y}" r="5" fill="${fillColor}"/>`;
                         }).join('')}
                     </svg>
                 `;
@@ -19088,7 +19106,7 @@
                         font-weight: bold;
                         z-index: 10;
                         ${pos.isRoot
-                            ? 'background: #e2e8f0; color: #0f172a; border: 2px solid #cbd5e1;'
+                            ? 'background: #dc2626; color: #fafafa; border: 2px solid #b91c1c;'
                             : 'background: rgba(226, 232, 240, 0.9); color: #1e293b; border: 2px solid rgba(203, 213, 225, 0.8);'}
                     `;
 
