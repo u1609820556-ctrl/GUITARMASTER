@@ -2212,7 +2212,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            padding-left: 32px;
+            padding-left: 0;
         }
 
         .chord-diagram .nut {
@@ -2233,6 +2233,7 @@
             height: 32px;
             position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            padding-left: 24px;
         }
 
         .chord-diagram .string-row::before {
@@ -2312,7 +2313,7 @@
 
         .chord-diagram .open-indicator {
             position: absolute;
-            left: -24px;
+            left: 0;
             width: 18px;
             height: 18px;
             border: 2px solid #fafafa;
@@ -2327,7 +2328,7 @@
 
         .chord-diagram .muted-indicator {
             position: absolute;
-            left: -24px;
+            left: 0;
             font-size: 16px;
             color: #666;
             font-weight: bold;
@@ -2346,7 +2347,7 @@
 
         .chord-diagram .fret-numbers {
             display: flex;
-            padding-left: 32px;
+            padding-left: 24px;
             margin-top: 6px;
         }
 
@@ -2359,22 +2360,13 @@
             color: #525252;
         }
 
-        .chord-diagram .string-labels-left {
+        .chord-diagram .string-label-inline {
             position: absolute;
-            left: 4px;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            width: 24px;
-        }
-
-        .chord-diagram .string-label-item {
-            height: 32px;
+            left: -22px;
+            width: 18px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 6px;
             font-family: 'IBM Plex Mono', monospace;
             font-size: 10px;
             font-weight: 600;
@@ -12475,24 +12467,20 @@
                 grid.className = 'chord-diagram-grid';
                 grid.style.position = 'relative';
 
-                // String labels (left side) - from high E to low E
-                const stringLabels = document.createElement('div');
-                stringLabels.className = 'string-labels-left';
-                const stringNames = ['E', 'A', 'D', 'G', 'B', 'e']; // Low to high (visual order)
-                stringNames.forEach(name => {
-                    const label = document.createElement('div');
-                    label.className = 'string-label-item';
-                    label.textContent = name;
-                    stringLabels.appendChild(label);
-                });
-                container.appendChild(stringLabels);
-
                 // Create string rows (6 strings, horizontal) - inverted to match fretboard
                 // Render from string 5 (low E) to string 0 (high e)
+                const stringNames = ['e', 'B', 'G', 'D', 'A', 'E']; // High to low (visual order top to bottom)
+
                 for (let visualString = 0; visualString < 6; visualString++) {
                     const string = 5 - visualString; // Invert: visual 0 = string 5 (low E)
                     const row = document.createElement('div');
                     row.className = 'string-row';
+
+                    // Add string label INSIDE the row at the same height
+                    const label = document.createElement('div');
+                    label.className = 'string-label-inline';
+                    label.textContent = stringNames[visualString];
+                    row.appendChild(label);
 
                     const actualFret = actualFrets[string];
 
