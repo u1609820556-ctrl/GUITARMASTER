@@ -2193,10 +2193,15 @@
             background: transparent;
             border-radius: 0;
             border: none;
-            padding: 16px;
-            display: inline-block;
+            padding: 8px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
             box-shadow: none;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
         }
 
         .chord-diagram::before {
@@ -2207,6 +2212,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            padding-left: 36px;
         }
 
         .chord-diagram .nut {
@@ -2256,7 +2262,7 @@
 
         .chord-diagram .fret-cell {
             position: relative;
-            width: 50px;
+            width: 45px;
             height: 100%;
             display: flex;
             align-items: center;
@@ -2266,7 +2272,7 @@
         }
 
         .chord-diagram .fret-cell.nut-fret {
-            width: 35px;
+            width: 32px;
             background: linear-gradient(90deg, #f0ead6 0%, #d8cdb8 50%, #c4b89a 100%);
             border-right: 5px solid #1a1a1a;
             box-shadow: inset -4px 0 10px rgba(0,0,0,0.5), 4px 0 12px rgba(0,0,0,0.4);
@@ -2340,50 +2346,54 @@
 
         .chord-diagram .fret-numbers {
             display: flex;
-            padding-left: 35px;
+            padding-left: 32px;
             margin-top: 6px;
         }
 
         .chord-diagram .fret-num {
-            width: 50px;
+            width: 45px;
             text-align: center;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            color: #666;
+            color: #525252;
         }
 
         .chord-diagram .string-labels-left {
             position: absolute;
-            left: -28px;
+            left: 0;
             top: 0;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            width: 28px;
         }
 
         .chord-diagram .string-label-item {
             height: 32px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
+            padding-right: 8px;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            color: #a3a3a3;
+            font-size: 11px;
+            font-weight: 600;
+            color: #737373;
+            letter-spacing: 0.5px;
         }
 
         /* Chord name display - industrial */
         .chord-name-display {
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            width: 100%;
         }
 
         .chord-name-display .chord-symbol {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 36px;
+            font-size: 32px;
             color: #fafafa;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .chord-name-display .chord-type {
@@ -12437,7 +12447,6 @@
             create(voicing, chordName, position = 0) {
                 const container = document.createElement('div');
                 container.className = 'chord-diagram';
-                container.style.paddingLeft = '40px';
 
                 // Validate voicing
                 if (!voicing || !voicing.frets || !Array.isArray(voicing.frets)) {
@@ -18966,9 +18975,8 @@
                 // Create the diagram using ChordDiagram.create
                 const diagram = ChordDiagram.create(voicing, chordName, position);
 
-                // Make it bigger for better visibility
-                diagram.style.transform = 'scale(1.15)';
-                diagram.style.transformOrigin = 'top left';
+                // Remove any scaling - diagram is now properly contained
+                diagram.style.transform = 'none';
 
                 // Return the DOM element
                 return diagram;
