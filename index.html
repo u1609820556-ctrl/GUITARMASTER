@@ -181,13 +181,13 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
 
-        /* Visual representation: thick strings at top, thin at bottom (reversed from actual tuning) */
-        .string:nth-child(1)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 8%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
-        .string:nth-child(2)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 8%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
-        .string:nth-child(3)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 8%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
-        .string:nth-child(4)::before { height: 2px; opacity: 0.75; }
-        .string:nth-child(5)::before { height: 1.5px; opacity: 0.8; }
-        .string:nth-child(6)::before { height: 1px; opacity: 0.85; }
+        /* Visual representation: thin strings at top (high E), thick at bottom (low E) */
+        .string:nth-child(1)::before { height: 1px; opacity: 0.85; }
+        .string:nth-child(2)::before { height: 1.5px; opacity: 0.8; }
+        .string:nth-child(3)::before { height: 2px; opacity: 0.75; }
+        .string:nth-child(4)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 8%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
+        .string:nth-child(5)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 8%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
+        .string:nth-child(6)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 8%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
 
         .fret {
             position: relative;
@@ -2251,12 +2251,13 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
 
-        .chord-diagram .string-row:nth-child(1)::before { height: 1px; opacity: 0.85; }
-        .chord-diagram .string-row:nth-child(2)::before { height: 1.5px; opacity: 0.8; }
-        .chord-diagram .string-row:nth-child(3)::before { height: 2px; opacity: 0.75; }
-        .chord-diagram .string-row:nth-child(4)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 15%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
-        .chord-diagram .string-row:nth-child(5)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 15%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
-        .chord-diagram .string-row:nth-child(6)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 15%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+        /* Chord diagram strings: thin at top (high e), thick at bottom (low E) - matching main fretboard */
+        .chord-diagram .string-row:nth-child(1)::before { height: 3.5px; opacity: 0.6; background: linear-gradient(90deg, rgba(150, 140, 130, 0.2) 0%, rgba(160, 150, 140, 0.45) 15%, rgba(140, 130, 120, 0.28) 50%, rgba(130, 120, 110, 0.15) 100%); }
+        .chord-diagram .string-row:nth-child(2)::before { height: 3px; opacity: 0.65; background: linear-gradient(90deg, rgba(160, 150, 140, 0.2) 0%, rgba(170, 160, 150, 0.55) 15%, rgba(150, 140, 130, 0.35) 50%, rgba(140, 130, 120, 0.18) 100%); }
+        .chord-diagram .string-row:nth-child(3)::before { height: 2.5px; opacity: 0.7; background: linear-gradient(90deg, rgba(180, 165, 150, 0.2) 0%, rgba(190, 175, 160, 0.65) 15%, rgba(170, 155, 140, 0.45) 50%, rgba(160, 145, 130, 0.25) 100%); }
+        .chord-diagram .string-row:nth-child(4)::before { height: 2px; opacity: 0.75; }
+        .chord-diagram .string-row:nth-child(5)::before { height: 1.5px; opacity: 0.8; }
+        .chord-diagram .string-row:nth-child(6)::before { height: 1px; opacity: 0.85; }
 
         .chord-diagram .fret-cell {
             position: relative;
@@ -4851,7 +4852,6 @@
                         <span class="level-nav-title">Intervalos</span>
                         <span class="level-nav-sub">Distancias entre notas</span>
                     </div>
-                    <span class="difficulty-badge difficulty-basic">Básico</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="2" aria-label="Nivel 2: Escalas, Modos y Pentatónicas - Todas las escalas">
@@ -4860,7 +4860,6 @@
                         <span class="level-nav-title">Escalas, Modos y Pentatónicas</span>
                         <span class="level-nav-sub">Todas las escalas</span>
                     </div>
-                    <span class="difficulty-badge difficulty-basic">Básico</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="3" aria-label="Nivel 3: Acordes Básicos - Armonización y voicings">
@@ -4869,7 +4868,6 @@
                         <span class="level-nav-title">Acordes Básicos</span>
                         <span class="level-nav-sub">Armonización y voicings</span>
                     </div>
-                    <span class="difficulty-badge difficulty-basic">Básico</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="4" aria-label="Nivel 4: Acordes Extendidos - Séptima, Novena, Oncena, Trecena">
@@ -4878,7 +4876,6 @@
                         <span class="level-nav-title">Acordes Extendidos</span>
                         <span class="level-nav-sub">7ª, 9ª, 11ª, 13ª</span>
                     </div>
-                    <span class="difficulty-badge difficulty-intermediate">Medio</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="5" aria-label="Nivel 5: Círculo de Quintas - Mapa de tonalidades">
@@ -4887,7 +4884,6 @@
                         <span class="level-nav-title">Círculo de Quintas</span>
                         <span class="level-nav-sub">Mapa de tonalidades</span>
                     </div>
-                    <span class="difficulty-badge difficulty-intermediate">Medio</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="6" aria-label="Nivel 6: Progresiones Armónicas - Secuencias famosas">
@@ -4896,7 +4892,6 @@
                         <span class="level-nav-title">Progresiones</span>
                         <span class="level-nav-sub">Secuencias famosas</span>
                     </div>
-                    <span class="difficulty-badge difficulty-basic">Básico</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="7" aria-label="Nivel 7: Sistema CAGED - Domina el mástil">
@@ -4905,7 +4900,6 @@
                         <span class="level-nav-title">Sistema CAGED</span>
                         <span class="level-nav-sub">Domina el mástil</span>
                     </div>
-                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="8" aria-label="Nivel 8: Dominantes Secundarios - Tensión armónica">
@@ -4914,7 +4908,6 @@
                         <span class="level-nav-title">Dominantes Secundarios</span>
                         <span class="level-nav-sub">Tensión armónica</span>
                     </div>
-                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="9" aria-label="Nivel 9: Entrenamiento - Quiz Visual y Ear Training">
@@ -4923,7 +4916,6 @@
                         <span class="level-nav-title">Entrenamiento</span>
                         <span class="level-nav-sub">Quiz y Ear Training</span>
                     </div>
-                    <span class="difficulty-badge difficulty-intermediate">Medio</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="10" aria-label="Nivel 10: Biblioteca Práctica - Canciones, Jam, Licks">
@@ -4932,7 +4924,6 @@
                         <span class="level-nav-title">Biblioteca</span>
                         <span class="level-nav-sub">Canciones, Jam, Licks</span>
                     </div>
-                    <span class="difficulty-badge difficulty-basic">Variable</span>
                 </button>
 
                 <button class="level-nav-btn" data-level="11" aria-label="Lab: Chord Lab - Sistema de visualización de voicings">
@@ -4941,7 +4932,6 @@
                         <span class="level-nav-title">Chord Lab</span>
                         <span class="level-nav-sub">Voicings completos</span>
                     </div>
-                    <span class="difficulty-badge difficulty-advanced">Avanzado</span>
                 </button>
             </nav>
         </aside>
@@ -12480,10 +12470,10 @@
                 grid.className = 'chord-diagram-grid';
                 grid.style.position = 'relative';
 
-                // String labels (left side)
+                // String labels (left side) - from high E to low E
                 const stringLabels = document.createElement('div');
                 stringLabels.className = 'string-labels-left';
-                const stringNames = ['e', 'B', 'G', 'D', 'A', 'E'];
+                const stringNames = ['E', 'A', 'D', 'G', 'B', 'e']; // Low to high (visual order)
                 stringNames.forEach(name => {
                     const label = document.createElement('div');
                     label.className = 'string-label-item';
@@ -12492,8 +12482,10 @@
                 });
                 container.appendChild(stringLabels);
 
-                // Create string rows (6 strings, horizontal)
-                for (let string = 0; string < 6; string++) {
+                // Create string rows (6 strings, horizontal) - inverted to match fretboard
+                // Render from string 5 (low E) to string 0 (high e)
+                for (let visualString = 0; visualString < 6; visualString++) {
+                    const string = 5 - visualString; // Invert: visual 0 = string 5 (low E)
                     const row = document.createElement('div');
                     row.className = 'string-row';
 
@@ -12530,7 +12522,8 @@
                             dot.className = 'finger-dot';
 
                             // Check if root note
-                            const stringOpenNote = [4, 11, 7, 2, 9, 4][string];
+                            // String tuning: [E2, A2, D3, G3, B3, e4] = [4, 9, 2, 7, 11, 4]
+                            const stringOpenNote = [4, 9, 2, 7, 11, 4][string];
                             const noteAtFret = (stringOpenNote + actualFret) % 12;
                             const rootNote = MusicTheory.getNoteIndex(chordName.replace(/m.*|7.*|maj.*/g, ''));
 
@@ -12551,7 +12544,7 @@
                         if (fret === 0 && isOpenPosition && actualFret === 0) {
                             const dot = document.createElement('div');
                             dot.className = 'finger-dot';
-                            const stringOpenNote = [4, 11, 7, 2, 9, 4][string];
+                            const stringOpenNote = [4, 9, 2, 7, 11, 4][string];
                             const rootNote = MusicTheory.getNoteIndex(chordName.replace(/m.*|7.*|maj.*/g, ''));
                             if (stringOpenNote === rootNote) {
                                 dot.classList.add('root');
