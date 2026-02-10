@@ -473,19 +473,19 @@
         .btn-primary {
             background: #dc2626;
             color: #fafafa;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 10px;
             font-family: 'Bebas Neue', sans-serif;
             font-weight: 400;
-            font-size: 16px;
+            font-size: 17px;
             letter-spacing: 2px;
             text-transform: uppercase;
             border: 2px solid #dc2626;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn-primary:hover {
@@ -498,16 +498,16 @@
         .btn-secondary {
             background: transparent;
             color: #e5e5e5;
-            padding: 10px 18px;
+            padding: 12px 22px;
             border-radius: 8px;
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-size: 15px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             border: 2px solid #444;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-secondary:hover {
@@ -875,18 +875,18 @@
 
         /* Chord button - industrial with rounded */
         .chord-btn {
-            padding: 14px 18px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            border: 2px solid #333;
+            border: 1.5px solid #333;
             background: #151515;
             color: #ccc;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
-            min-width: 70px;
+            min-width: 55px;
         }
 
         .chord-btn:hover {
@@ -901,6 +901,424 @@
             color: #fafafa;
             border-color: #dc2626;
             box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+        }
+
+        /* ========== REFINED MINIMAL LAYOUT SYSTEM ========== */
+        /* Spacing system for breathing room */
+        :root {
+            --spacing-xs: 12px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 40px;
+            --spacing-xl: 64px;
+            --spacing-2xl: 80px;
+        }
+
+        /* Global spacing improvements - ULTRA COMPACT */
+        .gap-2 { gap: 8px !important; }
+        .gap-3 { gap: 12px !important; }
+        .gap-4 { gap: 16px !important; }
+        .gap-6 { gap: 20px !important; }
+        .gap-8 { gap: 24px !important; }
+
+        /* Improve margins - MINIMIZED */
+        .mb-4 { margin-bottom: 12px !important; }
+        .mb-6 { margin-bottom: 16px !important; }
+        .mt-4 { margin-top: 12px !important; }
+        .my-4 { margin-top: 12px !important; margin-bottom: 12px !important; }
+
+        /* Universal minimal container - no boxes, direct content */
+        .minimal-container {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Hide all unnecessary labels across app */
+        .minimal-hide-labels .info-label,
+        .minimal-hide-labels .info-description {
+            display: none;
+        }
+
+        /* ========== NIVEL 3: ULTRA COMPACT LAYOUT ========== */
+
+        /* Compactar todo cuando Nivel 3 está activo */
+        .level3-top-section:not(.hidden) ~ * #displayTitle {
+            font-size: 20px !important;
+            line-height: 1.1 !important;
+            margin-bottom: 2px !important;
+        }
+
+        .level3-top-section:not(.hidden) ~ * #displaySubtitle {
+            font-size: 10px !important;
+            margin-top: 2px !important;
+        }
+
+        .level3-top-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 8px 0 12px 0;
+            min-height: auto;
+        }
+
+        .level3-top-section.hidden {
+            display: none;
+        }
+
+        .level3-content-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1100px;
+        }
+
+        /* Chord Diagrams - Sin modificar tamaño */
+        .level3-content-row .diagrams-container {
+            display: flex;
+            gap: 16px;
+            padding: 0;
+            margin: 0;
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .level3-content-row .diagrams-container .mb-4 {
+            margin-bottom: 0 !important;
+        }
+
+        .level3-content-row .chord-diagram {
+            transform: none;
+            margin: 0;
+        }
+
+        /* Panel T-SD-D - Sin modificar tamaño */
+        .level3-harmonic-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            background: none;
+            border: none;
+            gap: 8px;
+        }
+
+        /* Remove all boxes from harmonic panel - EXCEPT for level 2 scale info */
+        .level3-harmonic-panel > .info-section,
+        .level3-harmonic-panel > .info-section.accent {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Restore styling for scale info boxes in level 2 */
+        .level3-harmonic-panel .scale-info-box {
+            background: #0d0d0d !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            margin-bottom: 16px !important;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(30, 30, 30, 0.6) 100%) !important;
+            border: 1px solid #444 !important;
+            border-left: 3px solid #dc2626 !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            margin: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at center, rgba(220, 38, 38, 0.15), transparent 70%);
+            pointer-events: none;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section:hover {
+            border-left-width: 4px !important;
+            transform: translateX(2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section.accent {
+            background: rgba(220, 38, 38, 0.1) !important;
+            border-color: #dc2626 !important;
+        }
+
+        /* Hide labels - EXCEPT in level 2 scale info boxes */
+        .level3-harmonic-panel .info-label {
+            display: none;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-label {
+            display: block !important;
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1.5px !important;
+            color: #dc2626 !important;
+            margin-bottom: 12px !important;
+            padding-bottom: 6px !important;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.3) !important;
+            position: relative !important;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-label::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #dc2626;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+        }
+
+        /* Description text - ultra compacto */
+        .level3-harmonic-panel .info-value {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+            margin: 6px 0 0 0;
+            max-width: 260px;
+            line-height: 1.3;
+            letter-spacing: 0.1px;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-value {
+            text-align: left !important;
+            max-width: none !important;
+            font-size: 14px !important;
+            color: #e0e0e0 !important;
+            margin: 0 !important;
+        }
+
+        .level3-harmonic-panel .info-description {
+            display: none;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-description {
+            display: block !important;
+            color: #e8e8e8 !important;
+            font-size: 13px !important;
+            line-height: 1.7 !important;
+            margin: 0 !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.2px !important;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-description::first-letter {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        /* Ensure grids display properly in scale info boxes */
+        .level3-harmonic-panel .scale-info-box .grid {
+            display: grid !important;
+        }
+
+        /* Ensure genre tags are visible */
+        .level3-harmonic-panel .scale-info-box .genre-tag {
+            display: inline-block !important;
+            margin: 4px !important;
+        }
+
+        /* Responsive adjustments for scale info sections */
+        @media (max-width: 768px) {
+            .level3-harmonic-panel .scale-info-box .info-section {
+                margin-bottom: 12px !important;
+            }
+
+            .genre-tag {
+                font-size: 9px;
+                padding: 5px 12px;
+            }
+        }
+
+        /* Staggered animation for info sections */
+        .level3-harmonic-panel .scale-info-box .info-section:nth-child(1) {
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section:nth-child(2) {
+            animation: fadeInUp 0.5s ease-out 0.2s both;
+        }
+
+        .level3-harmonic-panel .scale-info-box .info-section:nth-child(3) {
+            animation: fadeInUp 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* STYLES FOR infoPanelOtherLevels (Level 2 and others) */
+        #infoPanelOtherLevels .scale-info-box .info-section {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(30, 30, 30, 0.6) 100%);
+            border: 1px solid #444;
+            border-left: 3px solid #dc2626;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at center, rgba(220, 38, 38, 0.15), transparent 70%);
+            pointer-events: none;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-section:hover {
+            border-left-width: 4px;
+            transform: translateX(2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #dc2626;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.3);
+            position: relative;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-label::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #dc2626;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-description {
+            display: block;
+            color: #e8e8e8;
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 0;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-description::first-letter {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .genre-tag {
+            display: inline-block;
+            margin: 4px;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-section:nth-child(1) {
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-section:nth-child(2) {
+            animation: fadeInUp 0.5s ease-out 0.2s both;
+        }
+
+        #infoPanelOtherLevels .scale-info-box .info-section:nth-child(3) {
+            animation: fadeInUp 0.5s ease-out 0.3s both;
+        }
+
+        /* T-SD-D Diagram - Sin cambios */
+        .level3-harmonic-panel .harmonic-function-diagram {
+            width: 240px;
+            margin: 0;
+        }
+
+        .level3-harmonic-panel .harmonic-function-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* T-SD-D Diagram general */
+        .harmonic-function-diagram {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .harmonic-function-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .function-node {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .function-node:hover {
+            filter: brightness(1.2);
+        }
+
+        .function-node.active {
+            filter: brightness(1.4) saturate(1.15);
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 1280px) {
+            .level3-content-row {
+                flex-direction: column;
+                gap: 24px;
+                align-items: center;
+            }
+
+            .level3-top-section {
+                padding: 6px 0 10px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .level3-top-section {
+                padding: 4px 0 8px 0;
+            }
         }
 
         /* ========== SCALE LEVEL 2 ENHANCEMENTS ========== */
@@ -1184,15 +1602,43 @@
         /* Genre tags for advanced scales */
         .genre-tag {
             display: inline-block;
-            padding: 4px 10px;
-            background: rgba(220, 38, 38, 0.2);
-            border: 1px solid #dc2626;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #fca5a5;
-            margin-right: 6px;
-            margin-bottom: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border: 1.5px solid #dc2626;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #ff6b6b;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .genre-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .genre-tag:hover {
+            transform: translateY(-2px);
+            border-color: #ff4444;
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            color: #ff8888;
+        }
+
+        .genre-tag:hover::before {
+            left: 100%;
         }
 
         .info-section {
@@ -1687,15 +2133,15 @@
         }
 
         .ctrl-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            border: 1px solid var(--steel);
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            border: 1.5px solid var(--steel);
             background: rgba(255,255,255,0.05);
             color: var(--paper);
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .ctrl-btn:hover:not(:disabled) {
@@ -2736,28 +3182,18 @@
             font-weight: 400;
         }
 
-        /* Scale info box - matching app theme */
+        /* Scale info box - REFINED MINIMAL OVERRIDE */
         .scale-info-box {
-            background: linear-gradient(180deg, #1a1412 0%, #0d0a08 100%);
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 20px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            padding: var(--spacing-lg) 0;
             position: relative;
-            box-shadow:
-                inset 0 0 40px rgba(0,0,0,0.5),
-                0 0 0 1px #0a0a0a,
-                0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: none;
         }
 
         .scale-info-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.08;
-            pointer-events: none;
-            border-radius: 12px;
+            display: none;
         }
 
         .scale-info-box .info-header {
@@ -2782,32 +3218,33 @@
         }
 
         .scale-info-box .info-section {
-            background: #151515;
-            border: 2px solid #252525;
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 12px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            padding: var(--spacing-md) 0;
+            margin-bottom: var(--spacing-md);
         }
 
         .scale-info-box .info-section.accent {
-            border-left: 4px solid #dc2626;
+            border-left: none;
         }
 
         .scale-info-box .info-label {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
-            color: #666;
+            color: rgba(255, 255, 255, 0.45);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            letter-spacing: 2px;
+            margin-bottom: var(--spacing-sm);
         }
 
         .scale-info-box .info-value {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
-            color: #fafafa;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
         }
 
         .scale-info-box .info-value.highlight {
@@ -2816,9 +3253,10 @@
 
         .scale-info-box .info-description {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 13px;
-            color: #e5e5e5;
-            margin-top: 6px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: var(--spacing-sm);
+            line-height: 1.5;
         }
 
         .scale-info-box .brightness-bar {
@@ -3981,6 +4419,294 @@
             color: #fafafa;
             box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);
         }
+        .ext-matrix-btn.non-essential {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+        .ext-matrix-btn.non-essential:hover {
+            opacity: 0.8;
+        }
+
+        /* Badge esencial - Metallic foil effect */
+        .essential-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #d4af37 100%);
+            color: #1a1000;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 3px 7px;
+            border-radius: 5px;
+            margin-left: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow:
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: badge-shimmer 3s ease-in-out infinite;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes badge-shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        /* Voicings múltiples - Premium card design */
+        .voicings-container {
+            background:
+                linear-gradient(135deg, #0f0f0f 0%, #0a0a0a 100%);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        .voicings-header {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            color: #dc2626;
+            margin-bottom: 16px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .voicings-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #dc2626 0%, transparent 100%);
+        }
+
+        .voicings-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: #dc2626 #1a1a1a;
+        }
+
+        .voicings-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .voicings-scroll::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .voicings-scroll::-webkit-scrollbar-thumb {
+            background: #dc2626;
+            border-radius: 4px;
+        }
+
+        .voicing-item {
+            flex-shrink: 0;
+            background:
+                linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 170px;
+            text-align: center;
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voicing-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .voicing-item:hover {
+            transform: translateY(-4px);
+            border-color: #dc2626;
+            box-shadow:
+                0 8px 24px rgba(220, 38, 38, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .voicing-item:hover::before {
+            left: 100%;
+        }
+
+        .voicing-name {
+            font-size: 13px;
+            color: #f5f5f5;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        .voicing-difficulty {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .voicing-difficulty.easy {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #000;
+            box-shadow:
+                0 2px 8px rgba(34, 197, 94, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .voicing-difficulty.medium {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a1000;
+            box-shadow:
+                0 2px 8px rgba(251, 191, 36, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .voicing-difficulty.advanced {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+            box-shadow:
+                0 2px 8px rgba(239, 68, 68, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .voicing-item:hover .voicing-difficulty {
+            transform: scale(1.05);
+        }
+
+        /* Comparador de tensiones - Distinct visual identity */
+        .tension-comparator {
+            position: relative;
+            background:
+                linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(107, 33, 168, 0.08) 100%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow:
+                0 4px 16px rgba(107, 33, 168, 0.25),
+                inset 0 1px 0 rgba(139, 92, 246, 0.1);
+            overflow: hidden;
+        }
+
+        .tension-comparator::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .tension-comparator .text-sm {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tension-btn {
+            background:
+                linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+            border: 2px solid #7c3aed;
+            border-radius: 10px;
+            color: #c4b5fd;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tension-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+
+        .tension-btn:hover {
+            background:
+                linear-gradient(135deg, #6b21a8 0%, #5b21a8 100%);
+            color: #fff;
+            border-color: #8b5cf6;
+            transform: translateY(-2px);
+            box-shadow:
+                0 4px 16px rgba(107, 33, 168, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .tension-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .tension-btn.active {
+            background:
+                linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            color: #fff;
+            border-color: #a78bfa;
+            box-shadow:
+                0 6px 20px rgba(124, 58, 237, 0.6),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(139, 92, 246, 0.4);
+            animation: pulse-glow 1.5s ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow:
+                    0 6px 20px rgba(124, 58, 237, 0.6),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+                    0 0 20px rgba(139, 92, 246, 0.4);
+            }
+            50% {
+                box-shadow:
+                    0 6px 20px rgba(124, 58, 237, 0.8),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                    0 0 30px rgba(139, 92, 246, 0.6);
+            }
+        }
 
         /* Extended chord info */
         .ext-chord-info {
@@ -4999,25 +5725,35 @@
             </header>
 
             <!-- Control Panel Area (changes based on level) - Industrial -->
-            <div class="bg-void-800/50 border-b-2 border-void-700 p-5" id="controlPanel">
+            <div class="bg-void-800/50 border-b-2 border-void-700" id="controlPanel" style="padding: 8px 24px;">
                 <!-- Content generated by JS based on current level -->
             </div>
 
             <!-- Fretboard Area - Industrial -->
             <div id="mainFretboardArea" class="flex-1 flex flex-col overflow-y-auto" style="height: calc(100vh - 64px);">
                 <!-- Current Display Info -->
-                <div class="mb-6 text-center p-8 pb-0">
-                    <h2 class="font-display text-4xl text-chalk-100 tracking-widest" id="displayTitle">SELECCIONA UN NIVEL</h2>
-                    <p class="text-void-400 text-sm mt-2 font-body uppercase tracking-wider" id="displaySubtitle">Usa la barra lateral para empezar</p>
+                <div class="mb-2 text-center px-8" style="padding-top: 12px; padding-bottom: 0;">
+                    <h2 class="font-display text-chalk-100 tracking-widest" id="displayTitle" style="font-size: 22px; line-height: 1.2; margin: 0;">SELECCIONA UN NIVEL</h2>
+                    <p class="text-void-400 font-body uppercase tracking-wider" id="displaySubtitle" style="font-size: 11px; margin-top: 4px; opacity: 0.7;">Usa la barra lateral para empezar</p>
                 </div>
 
-                <!-- Chord Diagrams Container -->
-                <div class="diagrams-container mb-4 hidden px-8" id="diagramsContainer">
-                    <!-- Generated by JS -->
+                <!-- Fila superior: Diagramas + T-SD-D (solo visible en Nivel 3) -->
+                <div class="level3-top-section hidden" id="level3TopSection">
+                    <div class="level3-content-row">
+                        <!-- Diagramas de acordes -->
+                        <div class="diagrams-container px-8" id="diagramsContainer" style="margin-bottom: 0;">
+                            <!-- Generated by JS -->
+                        </div>
+
+                        <!-- Panel T-SD-D -->
+                        <div class="level3-harmonic-panel px-8" id="infoPanel">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Box/Position Selector -->
-                <div class="box-selector hidden mb-4 px-8" id="boxSelector">
+                <div class="box-selector hidden px-8" id="boxSelector" style="margin-bottom: 8px;">
                     <!-- Generated by JS -->
                 </div>
 
@@ -5025,7 +5761,7 @@
                 <div class="fretboard-sticky-wrapper">
                     <div class="w-full max-w-5xl mx-auto px-8">
                         <!-- Fret Numbers - Industrial -->
-                        <div class="flex mb-3 pl-8">
+                        <div class="flex pl-8" style="margin-bottom: 8px;">
                             <div class="w-8"></div>
                             <div class="flex flex-1">
                                 <div class="flex-[0.6] flex justify-center font-mono text-sm text-void-500 font-semibold"><span style="margin-right: 5px;">0</span></div>
@@ -5073,8 +5809,8 @@
 
                 <!-- Scrollable Content Below -->
                 <div class="flex-1 px-8">
-                    <!-- Scale/Chord Info Panel - Industrial -->
-                    <div class="mt-4 w-full max-w-5xl mx-auto" id="infoPanel">
+                    <!-- Scale/Chord Info Panel - Industrial (para otros niveles) -->
+                    <div class="mt-4 w-full max-w-5xl mx-auto" id="infoPanelOtherLevels">
                         <!-- Generated by JS -->
                     </div>
                 </div>
@@ -5595,29 +6331,43 @@
 
     <template id="tpl-extended">
         <div class="space-y-4">
-            <!-- Tabs de nivel de extensión con botón play -->
-            <div class="flex gap-2 border-b border-void-700 pb-2 mb-4 items-center">
-                <button class="extension-tab active" data-ext-level="7th">7ª</button>
-                <button class="extension-tab" data-ext-level="9th">9ª</button>
-                <button class="extension-tab" data-ext-level="11th">11ª</button>
-                <button class="extension-tab" data-ext-level="13th">13ª</button>
+            <!-- Tabs de categoría con iconos -->
+            <div class="flex gap-2 border-b border-void-700 pb-2 mb-4 items-center flex-wrap">
+                <button class="extension-tab active" data-ext-category="essential">⭐ Esenciales</button>
+                <button class="extension-tab" data-ext-category="color9">🎨 Color 9ª</button>
+                <button class="extension-tab" data-ext-category="suspension11">🌊 Suspensión 11ª</button>
+                <button class="extension-tab" data-ext-category="density13">💎 Densidad 13ª</button>
+                <button class="extension-tab" data-ext-category="altered">🔥 Alterados</button>
                 <button id="playExtendedChordBtn" class="ctrl-btn ctrl-play ml-auto">▶ Play</button>
             </div>
 
-            <!-- Matriz dinámica 4×4 -->
-            <div class="ext-matrix">
-                <div class="ext-matrix-grid">
-                    <!-- Header row -->
-                    <div class="ext-matrix-corner"></div>
-                    <div class="ext-matrix-col-header">Major</div>
-                    <div class="ext-matrix-col-header">Dom</div>
-                    <div class="ext-matrix-col-header">Minor</div>
-                    <div class="ext-matrix-col-header">Alter.</div>
+            <!-- Toggle para mostrar/ocultar acordes no esenciales -->
+            <div class="flex items-center gap-2 mb-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="showAllExtendedChords" checked>
+                    <span class="text-sm text-void-300">Mostrar todos los acordes</span>
+                </label>
+                <span id="extendedChordCount" class="text-xs text-void-500 ml-auto"></span>
+            </div>
 
-                    <!-- Rows generadas dinámicamente según ext-level seleccionado -->
-                    <div id="extMatrixContent"></div>
+            <!-- Comparador de tensiones (visible solo en Color y Densidad) -->
+            <div id="tensionComparator" class="tension-comparator" style="display: none;">
+                <div class="text-sm font-bold text-violet-300 mb-2">🎼 Comparador de tensiones</div>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="tension-btn" data-tension="basic">Básico (7ª)</button>
+                    <button class="tension-btn" data-tension="with9">Con 9ª</button>
+                    <button class="tension-btn" data-tension="with13">Con 13ª</button>
+                    <button class="tension-btn" data-tension="sequence">▶ Reproducir secuencia</button>
                 </div>
             </div>
+
+            <!-- Matriz simplificada -->
+            <div class="ext-matrix">
+                <div id="extMatrixContent" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Container para voicings múltiples -->
+            <div id="voicingsContainer" class="voicings-container" style="display: none;"></div>
         </div>
     </template>
 
@@ -9690,46 +10440,94 @@
             // Extended chords for level 11
             extendedChords: {
                 // 7th chords
-                'maj7':      { intervals: [0, 4, 7, 11], name: 'Major 7', symbol: 'maj7', formula: '1-3-5-7' },
-                'dom7':      { intervals: [0, 4, 7, 10], name: 'Dominant 7', symbol: '7', formula: '1-3-5-b7' },
-                'min7':      { intervals: [0, 3, 7, 10], name: 'Minor 7', symbol: 'm7', formula: '1-b3-5-b7' },
-                'halfDim7':  { intervals: [0, 3, 6, 10], name: 'Half Diminished 7', symbol: 'ø7', formula: '1-b3-b5-b7' },
+                'maj7':      { intervals: [0, 4, 7, 11], name: 'Major 7', symbol: 'maj7', formula: '1-3-5-7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, bossa nova, soul' },
+                'dom7':      { intervals: [0, 4, 7, 10], name: 'Dominant 7', symbol: '7', formula: '1-3-5-b7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Blues, rock, funk' },
+                'min7':      { intervals: [0, 3, 7, 10], name: 'Minor 7', symbol: 'm7', formula: '1-b3-5-b7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, R&B, latin' },
+                'halfDim7':  { intervals: [0, 3, 6, 10], name: 'Half Diminished 7', symbol: 'ø7', formula: '1-b3-b5-b7', essential: true, category: 'essential', difficulty: 'medium', usage: 'Jazz, tensión armónica' },
                 // 9th chords
-                'maj9':   { intervals: [0, 4, 7, 11, 14], name: 'Major 9', symbol: 'maj9', formula: '1-3-5-7-9' },
-                'min9':   { intervals: [0, 3, 7, 10, 14], name: 'Minor 9', symbol: 'm9', formula: '1-b3-5-b7-9' },
-                'dom9':   { intervals: [0, 4, 7, 10, 14], name: 'Dominant 9', symbol: '9', formula: '1-3-5-b7-9' },
-                '7#9':    { intervals: [0, 4, 7, 10, 15], name: 'Hendrix Chord', symbol: '7#9', formula: '1-3-5-b7-#9' },
-                '7b9':    { intervals: [0, 4, 7, 10, 13], name: 'Dom 7 flat 9', symbol: '7b9', formula: '1-3-5-b7-b9' },
+                'maj9':   { intervals: [0, 4, 7, 11, 14], name: 'Major 9', symbol: 'maj9', formula: '1-3-5-7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, neo-soul, pop sofisticado' },
+                'min9':   { intervals: [0, 3, 7, 10, 14], name: 'Minor 9', symbol: 'm9', formula: '1-b3-5-b7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, R&B, ambient' },
+                'dom9':   { intervals: [0, 4, 7, 10, 14], name: 'Dominant 9', symbol: '9', formula: '1-3-5-b7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Blues, funk, jazz' },
+                '7#9':    { intervals: [0, 4, 7, 10, 15], name: 'Hendrix Chord', symbol: '7#9', formula: '1-3-5-b7-#9', essential: false, category: 'altered', difficulty: 'advanced', usage: 'Blues-rock, tensión disonante' },
+                '7b9':    { intervals: [0, 4, 7, 10, 13], name: 'Dom 7 flat 9', symbol: '7b9', formula: '1-3-5-b7-b9', essential: false, category: 'altered', difficulty: 'advanced', usage: 'Jazz, resolución cromática' },
                 // 11th chords
-                'min11':  { intervals: [0, 3, 7, 10, 14, 17], name: 'Minor 11', symbol: 'm11', formula: '1-b3-5-b7-9-11' },
-                'dom11':  { intervals: [0, 4, 7, 10, 14, 17], name: 'Dominant 11', symbol: '11', formula: '1-3-5-b7-9-11' },
-                'maj11':  { intervals: [0, 4, 7, 11, 14, 17], name: 'Major 11', symbol: 'maj11', formula: '1-3-5-7-9-11' },
+                'min11':  { intervals: [0, 3, 7, 10, 14, 17], name: 'Minor 11', symbol: 'm11', formula: '1-b3-5-b7-9-11', essential: false, category: 'suspension11', difficulty: 'medium', usage: 'Jazz modal, ambient' },
+                'dom11':  { intervals: [0, 4, 7, 10, 14, 17], name: 'Dominant 11', symbol: '11', formula: '1-3-5-b7-9-11', essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Jazz, tensión suspendida' },
+                'maj11':  { intervals: [0, 4, 7, 11, 14, 17], name: 'Major 11', symbol: 'maj11', formula: '1-3-5-7-9-11', essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Neo-soul, jazz contemporáneo' },
                 // 13th chords
-                'maj13':  { intervals: [0, 4, 7, 11, 14, 21], name: 'Major 13', symbol: 'maj13', formula: '1-3-5-7-9-13' },
-                'dom13':  { intervals: [0, 4, 7, 10, 14, 21], name: 'Dominant 13', symbol: '13', formula: '1-3-5-b7-9-13' },
-                'min13':  { intervals: [0, 3, 7, 10, 14, 21], name: 'Minor 13', symbol: 'm13', formula: '1-b3-5-b7-9-13' },
+                'maj13':  { intervals: [0, 4, 7, 11, 14, 21], name: 'Major 13', symbol: 'maj13', formula: '1-3-5-7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz, bossa nova avanzada' },
+                'dom13':  { intervals: [0, 4, 7, 10, 14, 21], name: 'Dominant 13', symbol: '13', formula: '1-3-5-b7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Blues-jazz, funk avanzado' },
+                'min13':  { intervals: [0, 3, 7, 10, 14, 21], name: 'Minor 13', symbol: 'm13', formula: '1-b3-5-b7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz modal avanzado' },
             },
 
             extendedVoicings: {
-                // 7th chord voicings
-                'maj7_E':     { frets: [0, 2, 1, 1, 0, 0], type: 'maj7' },
-                'dom7_E':     { frets: [0, 2, 0, 1, 0, 0], type: '7' },
-                'min7_E':     { frets: [0, 2, 0, 0, 0, 0], type: 'm7' },
-                'halfDim7_E': { frets: [0, 1, 0, 0, 0, 0], type: 'ø7' },
-                // 9th chord voicings
-                'maj9_A':  { frets: [-1, 0, 2, 1, 2, 0], type: 'maj9' },
-                'min9_A':  { frets: [-1, 0, 2, 0, 2, 0], type: 'm9' },
-                'dom9_E':  { frets: [0, 2, 0, 1, 0, 2], type: '9' },
-                '7#9_E':   { frets: [0, 2, 1, 2, 0, -1], type: '7#9' },
-                '7b9_E':   { frets: [0, 2, 1, 2, 1, -1], type: '7b9' },
-                // 11th chord voicings
-                'min11_A': { frets: [-1, 0, 0, 0, 0, 0], type: 'm11' },
-                'dom11_A': { frets: [-1, 0, 0, 1, 0, 0], type: '11' },
-                'maj11_A': { frets: [-1, 0, 0, 1, 2, 0], type: 'maj11' },
-                // 13th chord voicings
-                'maj13_A': { frets: [-1, 0, 2, 1, 2, 2], type: 'maj13' },
-                'dom13_E': { frets: [0, 2, 0, 1, 2, 0], type: '13' },
-                'min13_A': { frets: [-1, 0, 2, 0, 2, 2], type: 'm13' },
+                // 7th chords - múltiples voicings
+                'maj7_voicings': [
+                    { frets: [0, 2, 1, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [-1, 3, 2, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Forma A abierta' },
+                    { frets: [-1, -1, 2, 4, 4, 4], shape: 'D', difficulty: 'medium', name: 'Drop 2 en D' }
+                ],
+                'dom7_voicings': [
+                    { frets: [0, 2, 0, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'easy', name: 'Forma A abierta' },
+                    { frets: [-1, -1, 1, 2, 1, 2], shape: 'D', difficulty: 'medium', name: 'Forma D cerrada' }
+                ],
+                'min7_voicings': [
+                    { frets: [0, 2, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [-1, 0, 2, 2, 1, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' },
+                    { frets: [-1, -1, 0, 2, 1, 1], shape: 'D', difficulty: 'easy', name: 'Forma D abierta' }
+                ],
+                'halfDim7_voicings': [
+                    { frets: [0, 1, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [-1, 0, 1, 2, 1, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' }
+                ],
+                // 9th chords
+                'maj9_voicings': [
+                    { frets: [-1, 0, 2, 1, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A abierta' },
+                    { frets: [0, 2, 1, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' },
+                    { frets: [-1, -1, 2, 4, 3, 4], shape: 'D', difficulty: 'advanced', name: 'Drop 2' }
+                ],
+                'min9_voicings': [
+                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A abierta' },
+                    { frets: [0, 2, 0, 0, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' }
+                ],
+                'dom9_voicings': [
+                    { frets: [0, 2, 0, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' },
+                    { frets: [-1, 0, 2, 0, 3, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' },
+                    { frets: [-1, -1, 2, 1, 3, 3], shape: 'D', difficulty: 'advanced', name: 'Drop 2' }
+                ],
+                '7#9_voicings': [
+                    { frets: [0, 2, 1, 2, 0, -1], shape: 'E', difficulty: 'advanced', name: 'Hendrix voicing' },
+                    { frets: [-1, 0, 2, 1, 3, -1], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
+                ],
+                '7b9_voicings': [
+                    { frets: [0, 2, 1, 2, 1, -1], shape: 'E', difficulty: 'advanced', name: 'Forma E' },
+                    { frets: [-1, 0, 2, 0, 2, 1], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
+                ],
+                // 11th chords
+                'min11_voicings': [
+                    { frets: [-1, 0, 0, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Am11 abierto' },
+                    { frets: [0, 0, 0, 0, 1, 0], shape: 'E', difficulty: 'easy', name: 'Em11 abierto' }
+                ],
+                'dom11_voicings': [
+                    { frets: [-1, 0, 0, 1, 0, 0], shape: 'A', difficulty: 'medium', name: 'Forma A' },
+                    { frets: [0, 0, 0, 0, 1, 1], shape: 'E', difficulty: 'medium', name: 'Forma E' }
+                ],
+                'maj11_voicings': [
+                    { frets: [-1, 0, 0, 1, 2, 0], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
+                ],
+                // 13th chords
+                'maj13_voicings': [
+                    { frets: [-1, 0, 2, 1, 2, 2], shape: 'A', difficulty: 'advanced', name: 'Forma A' },
+                    { frets: [0, 2, 1, 1, 2, 2], shape: 'E', difficulty: 'advanced', name: 'Forma E' }
+                ],
+                'dom13_voicings': [
+                    { frets: [0, 2, 0, 1, 2, 0], shape: 'E', difficulty: 'advanced', name: 'Forma E' },
+                    { frets: [-1, 0, 2, 0, 3, 2], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
+                ],
+                'min13_voicings': [
+                    { frets: [-1, 0, 2, 0, 2, 2], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
+                ],
             },
 
             // Secondary dominants for level 12
@@ -11603,6 +12401,17 @@
                 }
 
                 return Math.min(confidence, 1.0);
+            },
+
+            // Datos de funciones armónicas para el diagrama T-SD-D
+            harmonicFunctionData: {
+                1: { function: 'T', description: 'Tónica - Reposo y estabilidad' },
+                2: { function: 'SD', description: 'Subdominante - Movimiento suave hacia tensión' },
+                3: { function: 'T/D', description: 'Tónica/Dominante - Función ambigua' },
+                4: { function: 'SD', description: 'Subdominante - Tensión media' },
+                5: { function: 'D', description: 'Dominante - Máxima tensión, necesita resolver' },
+                6: { function: 'T', description: 'Tónica menor - Reposo en modo menor' },
+                7: { function: 'D', description: 'Dominante - Tensión extrema por el tritono' }
             }
         };
 
@@ -13280,6 +14089,8 @@
             // Extended chords state
             currentExtensionLevel: '7th',
             currentExtensionQuality: 'maj',
+            currentExtensionCategory: 'essential',
+            currentExtendedChordType: 'maj7',
             // Secondary dominants state
             currentSecondary: 'ii',
             currentSecProg: null,
@@ -13926,6 +14737,14 @@
                     }
                 });
 
+                // Mostrar/ocultar sección específica de Nivel 3
+                const level3TopSection = document.getElementById('level3TopSection');
+                if (level === 3) {
+                    level3TopSection?.classList.remove('hidden');
+                } else {
+                    level3TopSection?.classList.add('hidden');
+                }
+
                 // Hide diagrams by default
                 document.getElementById('diagramsContainer').classList.add('hidden');
                 document.getElementById('boxSelector').classList.add('hidden');
@@ -14154,16 +14973,25 @@
                         });
                         break;
 
-                    case 4: // Extended Chords (7th/9th/11th/13th)
-                        // Extension level tabs
+                    case 4: // Extended Chords (por categoría funcional)
+                        // Extension category tabs
                         controlPanel.querySelectorAll('.extension-tab').forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 controlPanel.querySelectorAll('.extension-tab').forEach(b => b.classList.remove('active'));
                                 e.currentTarget.classList.add('active');
-                                this.currentExtensionLevel = e.currentTarget.dataset.extLevel;
+                                this.currentExtensionCategory = e.currentTarget.dataset.extCategory;
+                                this.updateTensionComparatorVisibility();
                                 this.renderExtendedMatrix();
                             });
                         });
+
+                        // Toggle "Ver todos" los acordes
+                        const showAllToggle = document.getElementById('showAllExtendedChords');
+                        if (showAllToggle) {
+                            showAllToggle.addEventListener('change', () => {
+                                this.renderExtendedMatrix();
+                            });
+                        }
 
                         // Matrix buttons (delegated)
                         const matrixContent = document.getElementById('extMatrixContent');
@@ -14173,13 +15001,27 @@
                                 if (btn) {
                                     controlPanel.querySelectorAll('.ext-matrix-btn').forEach(b => b.classList.remove('active'));
                                     btn.classList.add('active');
-                                    this.currentExtensionQuality = btn.dataset.quality;
+                                    this.currentExtendedChordType = btn.dataset.chordType;
                                     this.showExtendedChord();
                                 }
                             });
                         }
 
-                        // Render initial matrix
+                        // Tension comparator buttons
+                        const tensionComparator = document.getElementById('tensionComparator');
+                        if (tensionComparator) {
+                            tensionComparator.addEventListener('click', (e) => {
+                                const btn = e.target.closest('.tension-btn');
+                                if (btn) {
+                                    const tension = btn.dataset.tension;
+                                    this.playTensionComparison(tension);
+                                }
+                            });
+                        }
+
+                        // Set defaults and render
+                        this.currentExtensionCategory = this.currentExtensionCategory || 'essential';
+                        this.updateTensionComparatorVisibility();
                         this.renderExtendedMatrix();
 
                         // Play button for extended chords
@@ -14190,9 +15032,8 @@
                                     return;
                                 }
 
-                                // Validate state
-                                if (this.currentExtensionLevel === undefined || this.currentExtensionQuality === undefined) {
-                                    console.error('Extension level or quality not set');
+                                if (!this.currentExtendedChordType) {
+                                    console.error('No chord type selected');
                                     return;
                                 }
 
@@ -14205,28 +15046,28 @@
                                     await AudioEngine.audioContext.resume();
                                 }
 
-                                const chordKey = `${this.currentExtensionLevel}-${this.currentExtensionQuality}`;
-                                const extendedChordMap = {
-                                    '7th-maj': 'maj7',   '7th-dom': 'dom7',    '7th-min': 'min7',   '7th-alt': 'halfDim7',
-                                    '9th-maj': 'maj9',   '9th-dom': 'dom9',    '9th-min': 'min9',   '9th-alt': '7#9',
-                                    '11th-maj': 'maj11', '11th-dom': 'dom11',  '11th-min': 'min11', '11th-alt': 'min11',
-                                    '13th-maj': 'maj13', '13th-dom': 'dom13',  '13th-min': 'min13', '13th-alt': 'dom13'
-                                };
-
-                                const dataKey = extendedChordMap[chordKey];
-                                if (!dataKey) {
-                                    console.error('Invalid chord key:', chordKey);
-                                    return;
-                                }
-
-                                const chordData = MusicTheory.extendedChords[dataKey];
+                                const chordData = MusicTheory.extendedChords[this.currentExtendedChordType];
                                 if (!chordData || !chordData.intervals) {
-                                    console.error('Chord data not found for:', dataKey);
+                                    console.error('Chord data not found for:', this.currentExtendedChordType);
                                     return;
                                 }
 
-                                const chordNotes = chordData.intervals.map(interval => (this.currentRoot + interval) % 12);
-                                AudioEngine.playChord(chordNotes, 1.5);
+                                // Usar el primer voicing disponible con octavas reales
+                                const voicingsKey = `${this.currentExtendedChordType}_voicings`;
+                                const voicings = MusicTheory.extendedVoicings[voicingsKey];
+                                if (voicings && voicings.length > 0) {
+                                    const v = voicings[0];
+                                    const isAShape = v.shape === 'A';
+                                    const isDShape = v.shape === 'D';
+                                    // Offset: semitonos desde la nota base de la forma
+                                    const baseNote = isAShape ? 9 : (isDShape ? 2 : 4); // A2=9, D3=2, E2=4
+                                    const rootOffset = (this.currentRoot - baseNote + 12) % 12;
+                                    this.playVoicingFrets(v.frets, rootOffset, 1.5);
+                                } else {
+                                    // Fallback sin voicings
+                                    const chordNotes = chordData.intervals.map(interval => (this.currentRoot + interval) % 12);
+                                    AudioEngine.playChord(chordNotes, 1.5);
+                                }
 
                             } catch (error) {
                                 console.error('Error playing extended chord:', error);
@@ -14935,7 +15776,13 @@
                     case 1: this.showIntervals(); break;
                     case 2: this.showScaleOrPentatonic(); break;
                     case 3: this.showHarmonization(); break;
-                    case 4: this.showExtendedChord(); break;
+                    case 4:
+                        // Inicializar con primer acorde esencial si no hay selección
+                        if (!this.currentExtendedChordType) {
+                            this.currentExtendedChordType = 'maj7';
+                        }
+                        this.showExtendedChord();
+                        break;
                     case 5: this.showCircleOfFifths(); break;
                     case 6: this.showProgressions(); break;
                     case 7: this.showCAGEDShape(); break;
@@ -15073,8 +15920,17 @@
 
             showScaleInfoPanel(info, scaleKey) {
                 try {
-                    const panel = document.getElementById('infoPanel');
-                    if (!panel) return;
+                    // Use different panel depending on level
+                    const panel = this.currentLevel === 3
+                        ? document.getElementById('infoPanel')
+                        : document.getElementById('infoPanelOtherLevels');
+
+                    if (!panel) {
+                        console.error('❌ Panel not found. Level:', this.currentLevel);
+                        return;
+                    }
+
+                    console.log('✅ Using panel:', panel.id, 'for level', this.currentLevel);
 
                     // Validate info object before proceeding
                     if (!info || typeof info !== 'object') {
@@ -15118,34 +15974,82 @@
 
                 // Generate advanced scale info (genres, artists, songs)
                 let advancedInfoHTML = '';
-                if (this.currentScaleCategory === 'advanced' && info.musicalGenres) {
+                console.log('🔍 Checking scale info for:', scaleKey);
+                console.log('  - musicalGenres:', info.musicalGenres);
+                console.log('  - famousArtists:', info.famousArtists);
+                console.log('  - famousSongs:', info.famousSongs);
+
+                if (info.musicalGenres && info.musicalGenres.length > 0) {
+                    console.log('✅ Generating advanced info HTML for:', scaleKey);
                     advancedInfoHTML = `
-                        <div style="border-top: 1px solid #333; padding-top: 16px; margin-top: 16px;">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="info-section">
-                                    <div class="info-label">Géneros Musicales</div>
-                                    <div class="info-value">
+                        <div style="
+                            border-top: 2px solid rgba(220, 38, 38, 0.3);
+                            padding-top: 24px;
+                            margin-top: 24px;
+                            display: block !important;
+                            position: relative;
+                        ">
+                            <div style="
+                                font-family: 'Bebas Neue', sans-serif;
+                                font-size: 18px;
+                                letter-spacing: 2px;
+                                color: #dc2626;
+                                margin-bottom: 16px;
+                                text-transform: uppercase;
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                            ">
+                                <span style="
+                                    display: inline-block;
+                                    width: 4px;
+                                    height: 20px;
+                                    background: linear-gradient(to bottom, #dc2626, #7f1d1d);
+                                    box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+                                "></span>
+                                Referencias Culturales
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" style="display: grid !important;">
+                                <div class="info-section" style="display: block !important;">
+                                    <div class="info-label" style="display: block !important;">
+                                        <span style="margin-right: 6px;">🎸</span>Géneros Musicales
+                                    </div>
+                                    <div class="info-value" style="display: flex !important; flex-wrap: wrap !important; gap: 6px !important;">
                                         ${info.musicalGenres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
                                     </div>
                                 </div>
-                                <div class="info-section">
-                                    <div class="info-label">Artistas Famosos</div>
-                                    <div class="info-description">${info.famousArtists.join(', ')}</div>
+                                ${info.famousArtists && info.famousArtists.length > 0 ? `
+                                <div class="info-section" style="display: block !important;">
+                                    <div class="info-label" style="display: block !important;">
+                                        <span style="margin-right: 6px;">🎤</span>Artistas Icónicos
+                                    </div>
+                                    <div class="info-description" style="display: block !important;">${info.famousArtists.join(' • ')}</div>
                                 </div>
-                                <div class="info-section">
-                                    <div class="info-label">Canciones</div>
-                                    <div class="info-description">${info.famousSongs.join(', ')}</div>
+                                ` : ''}
+                                ${info.famousSongs && info.famousSongs.length > 0 ? `
+                                <div class="info-section" style="display: block !important;">
+                                    <div class="info-label" style="display: block !important;">
+                                        <span style="margin-right: 6px;">🎵</span>Canciones Clásicas
+                                    </div>
+                                    <div class="info-description" style="display: block !important;">${info.famousSongs.join(' • ')}</div>
                                 </div>
+                                ` : ''}
                             </div>
                             ${info.backingTrack ? `
-                                <div style="margin-top: 12px;">
-                                    <audio controls style="width: 100%; max-width: 400px;">
+                                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(220, 38, 38, 0.2);">
+                                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 8px;">
+                                        <span style="margin-right: 6px;">🔊</span>Backing Track
+                                    </div>
+                                    <audio controls style="width: 100%; max-width: 500px; filter: sepia(0.3) hue-rotate(-10deg);">
                                         <source src="${info.backingTrack}" type="audio/mp3">
                                     </audio>
                                 </div>
                             ` : ''}
                         </div>
                     `;
+                    console.log('📝 Generated HTML length:', advancedInfoHTML.length);
+                } else {
+                    console.log('❌ No musical genres found for:', scaleKey);
                 }
 
                 // Build the panel HTML with new styling
@@ -15642,25 +16546,77 @@
                 );
                 document.getElementById('boxSelector').classList.add('hidden');
 
-                // Show function and tension info
+                // Show function and tension info with T-SD-D diagram - MINIMAL
                 const panel = document.getElementById('infoPanel');
                 if (panel) {
+                    const funcData = MusicTheory.harmonicFunctionData[this.currentChord];
                     panel.innerHTML = `
-                        <div class="scale-info-box">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="info-section accent">
-                                    <div class="info-label">Función Armónica</div>
-                                    <div class="info-value" style="font-size: 15px;">${harmonicFunctions[this.currentChord]}</div>
-                                </div>
-                                <div class="info-section">
-                                    <div class="info-label">Tensiones Disponibles</div>
-                                    <div class="info-value" style="font-size: 15px;">${tensions[this.currentChord]}</div>
-                                    <div class="info-description" style="margin-top: 4px;">Notas que se pueden añadir al acorde para enriquecerlo</div>
-                                </div>
-                            </div>
+                        <div class="harmonic-function-diagram">
+                            ${this.renderTSDDiagram()}
                         </div>
+                        <div class="info-value">${funcData.description}</div>
                     `;
                 }
+            },
+
+            renderTSDDiagram() {
+                const centerX = 120, centerY = 120, radius = 65;
+
+                const functions = {
+                    'T': { chords: [1, 6], color: '#10b981', label: 'Tónica', angle: 90 },
+                    'SD': { chords: [2, 4], color: '#f59e0b', label: 'Subdominante', angle: 210 },
+                    'D': { chords: [5, 7], color: '#dc2626', label: 'Dominante', angle: 330 }
+                };
+
+                let svg = '<svg width="240" height="240" viewBox="0 0 240 240">';
+
+                // Definir arrowhead
+                svg += '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#444"/></marker></defs>';
+
+                // Flechas de resolución
+                const arrows = [
+                    { fromAngle: 210, toAngle: 330 }, // SD → D
+                    { fromAngle: 330, toAngle: 90 },  // D → T
+                    { fromAngle: 90, toAngle: 210 }   // T → SD
+                ];
+
+                arrows.forEach(({ fromAngle, toAngle }) => {
+                    const x1 = centerX + (radius - 24) * Math.cos(fromAngle * Math.PI / 180);
+                    const y1 = centerY - (radius - 24) * Math.sin(fromAngle * Math.PI / 180);
+                    const x2 = centerX + (radius - 24) * Math.cos(toAngle * Math.PI / 180);
+                    const y2 = centerY - (radius - 24) * Math.sin(toAngle * Math.PI / 180);
+
+                    svg += `<path d="M ${x1} ${y1} Q ${centerX} ${centerY} ${x2} ${y2}"
+                                 stroke="#444" stroke-width="1.5" fill="none" opacity="0.3"
+                                 marker-end="url(#arrowhead)"/>`;
+                });
+
+                // Nodos de función
+                Object.entries(functions).forEach(([funcKey, funcData]) => {
+                    const x = centerX + radius * Math.cos(funcData.angle * Math.PI / 180);
+                    const y = centerY - radius * Math.sin(funcData.angle * Math.PI / 180);
+                    const isActive = funcData.chords.includes(this.currentChord);
+
+                    svg += `<g class="function-node ${isActive ? 'active' : ''}">
+                                <circle cx="${x}" cy="${y}" r="32"
+                                        fill="${funcData.color}"
+                                        stroke="${isActive ? '#fff' : '#0a0a0a'}"
+                                        stroke-width="${isActive ? '3' : '2'}"
+                                        opacity="${isActive ? '1' : '0.6'}"/>
+                                <text x="${x}" y="${y - 4}" text-anchor="middle"
+                                      fill="#fff" font-size="14" font-weight="bold">
+                                    ${funcKey}
+                                </text>
+                                <text x="${x}" y="${y + 9}" text-anchor="middle"
+                                      fill="#fff" font-size="10" opacity="0.95">
+                                    ${funcData.label}
+                                </text>
+                            </g>`;
+                });
+
+                svg += '</svg>';
+
+                return svg;
             },
 
             showModes() {
@@ -17250,34 +18206,62 @@
                 const matrixContent = document.getElementById('extMatrixContent');
                 if (!matrixContent) return;
 
-                const qualities = ['maj', 'dom', 'min', 'alt'];
+                // Mapeo de categorías a acordes
+                const categoryToChords = {
+                    'essential': ['maj7', 'dom7', 'min7', 'halfDim7', 'maj9', 'dom9', 'min9'],
+                    'color9': ['maj9', 'dom9', 'min9', '7#9', '7b9'],
+                    'suspension11': ['min11', 'dom11', 'maj11'],
+                    'density13': ['maj13', 'dom13', 'min13'],
+                    'altered': ['7#9', '7b9']
+                };
+
+                const chords = categoryToChords[this.currentExtensionCategory] || [];
+                const showAll = document.getElementById('showAllExtendedChords')?.checked ?? true;
 
                 matrixContent.innerHTML = '';
 
-                // Row header
-                const rowHeader = document.createElement('div');
-                rowHeader.className = 'ext-matrix-row-header';
-                rowHeader.textContent = this.currentExtensionLevel.toUpperCase();
-                matrixContent.appendChild(rowHeader);
+                let visibleCount = 0;
+                chords.forEach(chordKey => {
+                    const chordData = MusicTheory.extendedChords[chordKey];
+                    if (!chordData) return;
 
-                // Buttons
-                const extendedChordMap = {
-                    '7th-maj': 'maj7',   '7th-dom': '7',    '7th-min': 'm7',   '7th-alt': 'ø7',
-                    '9th-maj': 'maj9',   '9th-dom': '9',    '9th-min': 'm9',   '9th-alt': '7#9',
-                    '11th-maj': 'maj11', '11th-dom': '11',  '11th-min': 'm11', '11th-alt': 'alt11',
-                    '13th-maj': 'maj13', '13th-dom': '13',  '13th-min': 'm13', '13th-alt': 'alt13'
-                };
+                    // Filtrar si no es esencial y toggle está OFF
+                    if (!showAll && !chordData.essential) return;
 
-                qualities.forEach(quality => {
+                    visibleCount++;
+
                     const btn = document.createElement('button');
-                    btn.className = `ext-matrix-btn ${quality === this.currentExtensionQuality ? 'active' : ''}`;
-                    btn.dataset.quality = quality;
+                    btn.className = `ext-matrix-btn ${this.currentExtendedChordType === chordKey ? 'active' : ''}`;
+                    if (!chordData.essential) {
+                        btn.classList.add('non-essential');
+                    }
+                    btn.dataset.chordType = chordKey;
+                    btn.innerHTML = chordData.symbol;
 
-                    // Get chord symbol
-                    const chordKey = `${this.currentExtensionLevel}-${quality}`;
-                    btn.textContent = extendedChordMap[chordKey] || chordKey;
+                    // Añadir badge esencial si aplica
+                    if (chordData.essential) {
+                        const badge = document.createElement('span');
+                        badge.className = 'essential-badge';
+                        badge.textContent = '⭐';
+                        btn.appendChild(badge);
+                    }
+
                     matrixContent.appendChild(btn);
                 });
+
+                // Actualizar contador
+                const counter = document.getElementById('extendedChordCount');
+                if (counter) {
+                    const total = chords.length;
+                    counter.textContent = `${visibleCount} de ${total} acordes`;
+                }
+            },
+
+            updateTensionComparatorVisibility() {
+                const tensionComparator = document.getElementById('tensionComparator');
+                if (!tensionComparator) return;
+                const showFor = ['color9', 'density13'];
+                tensionComparator.style.display = showFor.includes(this.currentExtensionCategory) ? 'block' : 'none';
             },
 
             showExtendedChord() {
@@ -17285,30 +18269,10 @@
                 this.hideUIElements();
 
                 const rootName = MusicTheory.getNoteName(this.currentRoot);
-
-                const chordKey = `${this.currentExtensionLevel}-${this.currentExtensionQuality}`;
-                const extendedChordMap = {
-                    '7th-maj': 'maj7',   '7th-dom': '7',    '7th-min': 'm7',   '7th-alt': 'ø7',
-                    '9th-maj': 'maj9',   '9th-dom': '9',    '9th-min': 'm9',   '9th-alt': '7#9',
-                    '11th-maj': 'maj11', '11th-dom': '11',  '11th-min': 'm11', '11th-alt': 'alt11',
-                    '13th-maj': 'maj13', '13th-dom': '13',  '13th-min': 'm13', '13th-alt': 'alt13'
-                };
-
-                const chordSymbol = extendedChordMap[chordKey];
-
-                // Map to actual chord data keys
-                const chordDataMap = {
-                    'maj7': 'maj7', '7': 'dom7', 'm7': 'min7', 'ø7': 'halfDim7',
-                    'maj9': 'maj9', '9': 'dom9', 'm9': 'min9', '7#9': '7#9',
-                    'maj11': 'maj11', '11': 'dom11', 'm11': 'min11', 'alt11': 'min11',
-                    'maj13': 'maj13', '13': 'dom13', 'm13': 'min13', 'alt13': 'dom13'
-                };
-
-                const dataKey = chordDataMap[chordSymbol] || 'maj9';
-                const chordData = MusicTheory.extendedChords[dataKey];
+                const chordData = MusicTheory.extendedChords[this.currentExtendedChordType];
 
                 if (!chordData) {
-                    console.error('Chord not found:', dataKey, 'from', chordSymbol);
+                    console.error('Chord not found:', this.currentExtendedChordType);
                     return;
                 }
 
@@ -17323,26 +18287,70 @@
                 Fretboard.specificPositions = null;
                 Fretboard.updateDisplay();
 
-                // Show voicing diagram if available
-                const voicingMap = {
-                    'maj7': 'maj7_E', 'dom7': 'dom7_E', 'min7': 'min7_E', 'halfDim7': 'halfDim7_E',
-                    'maj9': 'maj9_A', 'min9': 'min9_A', 'dom9': 'dom9_E',
-                    '7#9': '7#9_E', '7b9': '7b9_E', 'min11': 'min11_A',
-                    'dom11': 'dom11_A', 'maj11': 'maj11_A', 'maj13': 'maj13_A', 'dom13': 'dom13_E', 'min13': 'min13_A'
-                };
-                const voicingKey = voicingMap[dataKey];
-                const voicing = voicingKey ? MusicTheory.extendedVoicings[voicingKey] : null;
+                // Show múltiples voicings
+                const voicingsKey = `${this.currentExtendedChordType}_voicings`;
+                const voicings = MusicTheory.extendedVoicings[voicingsKey];
 
-                const diagramContainer = document.getElementById('diagramsContainer');
-                if (voicing && diagramContainer) {
-                    diagramContainer.innerHTML = '';
-                    diagramContainer.classList.remove('hidden');
-                    const isAShape = voicingKey.includes('_A');
-                    const baseNote = isAShape ? 9 : 4;
-                    const position = (this.currentRoot - baseNote + 12) % 12;
-                    const chordName = `${rootName}${chordData.symbol}`;
-                    const diagram = ChordDiagram.create({ frets: voicing.frets, fingers: null, barreInfo: null }, chordName, position);
-                    diagramContainer.appendChild(diagram);
+                const voicingsContainer = document.getElementById('voicingsContainer');
+                if (voicings && voicingsContainer) {
+                    voicingsContainer.innerHTML = '';
+                    voicingsContainer.style.display = 'block';
+
+                    // Header
+                    const header = document.createElement('div');
+                    header.className = 'voicings-header';
+                    header.textContent = `${rootName}${chordData.symbol} - Voicings`;
+                    voicingsContainer.appendChild(header);
+
+                    // Scroll container
+                    const scrollContainer = document.createElement('div');
+                    scrollContainer.className = 'voicings-scroll';
+
+                    voicings.forEach((voicing, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'voicing-item';
+                        item.style.cursor = 'pointer';
+
+                        // Name
+                        const name = document.createElement('div');
+                        name.className = 'voicing-name';
+                        name.textContent = voicing.name;
+                        item.appendChild(name);
+
+                        // Diagram
+                        const isAShape = voicing.shape === 'A';
+                        const isDShape = voicing.shape === 'D';
+                        const baseNote = isAShape ? 9 : (isDShape ? 2 : 4);
+                        const position = (this.currentRoot - baseNote + 12) % 12;
+                        const rootOffset = (this.currentRoot - baseNote + 12) % 12;
+                        const chordName = `${rootName}${chordData.symbol}`;
+                        const diagram = ChordDiagram.create({ frets: voicing.frets, fingers: null, barreInfo: null }, chordName, position);
+                        item.appendChild(diagram);
+
+                        // Difficulty
+                        const difficulty = document.createElement('div');
+                        difficulty.className = `voicing-difficulty ${voicing.difficulty}`;
+                        difficulty.textContent = voicing.difficulty;
+                        item.appendChild(difficulty);
+
+                        // Click para reproducir este voicing con octavas reales
+                        item.addEventListener('click', () => {
+                            if (AudioEngine.enabled && AudioEngine.audioContext) {
+                                if (AudioEngine.audioContext.state === 'suspended') {
+                                    AudioEngine.audioContext.resume();
+                                }
+                                this.playVoicingFrets(voicing.frets, rootOffset, 1.5);
+                            }
+                        });
+
+                        scrollContainer.appendChild(item);
+                    });
+
+                    voicingsContainer.appendChild(scrollContainer);
+                } else {
+                    if (voicingsContainer) {
+                        voicingsContainer.style.display = 'none';
+                    }
                 }
 
                 this.updateDisplay(
@@ -17353,18 +18361,6 @@
                 // Info panel
                 const panel = document.getElementById('infoPanel');
                 if (panel) {
-                    const tensionInfo = {
-                        '7th': 'La 7ª define el color del acorde. Mayor = brillante, Menor = bluesy, Dominante = tensión.',
-                        '9th': 'La 9ª añade color y amplitud. Disponible en acordes mayores, menores y dominantes.',
-                        '11th': 'La 11ª añade suspensión. En acordes mayores suele ser "evitada" (tensión #11 es preferida = Lidio).',
-                        '13th': 'La 13ª añade riqueza. En dominantes, aporta un color dulce pre-resolución.',
-                    };
-                    const qualInfo = {
-                        'maj': 'Sonido sofisticado, brillante. Común en jazz, bossa nova, neo-soul.',
-                        'dom': 'Sonido con tensión dominante. Perfecto para resoluciones V→I con color.',
-                        'min': 'Sonido melancólico pero rico. Esencial en jazz modal y R&B.',
-                        'alt': 'Sonido extremadamente tenso. Dominantes alterados con #9/b9 para máxima resolución.',
-                    };
                     const degreeNames = ['1', '3', '5', '7', '9', '11', '13'];
                     const extensionDegrees = ['7', '9', '11', '13'];
                     panel.innerHTML = `
@@ -17391,18 +18387,93 @@
                                     }).join('')}
                                 </div>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" style="margin-top: 16px;">
-                                <div class="info-section accent">
-                                    <div class="info-label" style="font-size: 14px;">Sobre la extensión ${this.currentExtensionLevel}</div>
-                                    <div class="info-description" style="color: #ccc; font-size: 14px; line-height: 1.5;">${tensionInfo[this.currentExtensionLevel] || ''}</div>
-                                </div>
-                                <div class="info-section">
-                                    <div class="info-label" style="font-size: 14px;">Calidad: ${this.currentExtensionQuality}</div>
-                                    <div class="info-description" style="color: #ccc; font-size: 14px; line-height: 1.5;">${qualInfo[this.currentExtensionQuality] || ''}</div>
+                            <div class="info-section accent" style="margin-top: 16px;">
+                                <div class="info-label" style="font-size: 14px;">Uso musical</div>
+                                <div class="info-description" style="color: #ccc; font-size: 14px; line-height: 1.5;">${chordData.usage}</div>
+                            </div>
+                            <div class="info-section" style="margin-top: 12px;">
+                                <div class="info-label" style="font-size: 14px;">Dificultad</div>
+                                <div class="info-description" style="color: #ccc; font-size: 14px; line-height: 1.5;">
+                                    <span class="voicing-difficulty ${chordData.difficulty}" style="display: inline-block; margin-top: 4px;">${chordData.difficulty}</span>
                                 </div>
                             </div>
                         </div>
                     `;
+                }
+            },
+
+            // Convierte un voicing de frets reales a notas MIDI con octavas correctas
+            // Afinación estándar: E2(40) A2(45) D3(50) G3(55) B3(59) E4(64)
+            voicingFretsToMidi(frets, rootOffset = 0) {
+                const openStringMidi = [40, 45, 50, 55, 59, 64]; // cuerda 6 a 1
+                const midiNotes = [];
+                for (let s = 0; s < 6; s++) {
+                    if (frets[s] >= 0) {
+                        // Trasposición: sumar rootOffset semitonos a cada nota
+                        midiNotes.push(openStringMidi[s] + frets[s] + rootOffset);
+                    }
+                }
+                return midiNotes;
+            },
+
+            // Reproduce voicings usando octavas reales del instrumento
+            playVoicingFrets(frets, rootOffset = 0, duration = 1.5) {
+                if (!AudioEngine.enabled || !AudioEngine.audioContext) return;
+                const midiNotes = this.voicingFretsToMidi(frets, rootOffset);
+                midiNotes.forEach((midi, i) => {
+                    setTimeout(() => {
+                        AudioEngine.playMidiNote(midi, duration * 0.85);
+                    }, i * 35);
+                });
+            },
+
+            async playTensionComparison(tension) {
+                if (!AudioEngine.audioContext || !AudioEngine.enabled) {
+                    console.warn('AudioContext not initialized');
+                    return;
+                }
+
+                if (AudioEngine.audioContext.state === 'suspended') {
+                    await AudioEngine.audioContext.resume();
+                }
+
+                // Mapeo de tensiones a tipos de acordes
+                const tensionMap = {
+                    'basic': 'dom7',
+                    'with9': 'dom9',
+                    'with13': 'dom13'
+                };
+
+                // Calcular offset de trasposición desde E (base del voicing)
+                // Los voicings están en forma E (root en 6ª cuerda al aire = E2)
+                // rootOffset = semitonos desde E hasta currentRoot
+                const rootOffset = (this.currentRoot - 4 + 12) % 12;
+
+                if (tension === 'sequence') {
+                    const sequence = ['basic', 'with9', 'with13'];
+                    for (let i = 0; i < sequence.length; i++) {
+                        const chordType = tensionMap[sequence[i]];
+                        const voicings = MusicTheory.extendedVoicings[`${chordType}_voicings`];
+                        if (voicings && voicings.length > 0) {
+                            const v = voicings.find(v => v.shape === 'E') || voicings[0];
+                            this.playVoicingFrets(v.frets, rootOffset, 1.2);
+                        }
+                        await new Promise(resolve => setTimeout(resolve, 1700));
+                    }
+                } else {
+                    const chordType = tensionMap[tension];
+                    const voicings = MusicTheory.extendedVoicings[`${chordType}_voicings`];
+                    if (voicings && voicings.length > 0) {
+                        const v = voicings.find(v => v.shape === 'E') || voicings[0];
+                        this.playVoicingFrets(v.frets, rootOffset, 1.5);
+                    }
+
+                    // Feedback visual
+                    const btn = document.querySelector(`[data-tension="${tension}"]`);
+                    if (btn) {
+                        btn.classList.add('active');
+                        setTimeout(() => btn.classList.remove('active'), 1500);
+                    }
                 }
             },
 
