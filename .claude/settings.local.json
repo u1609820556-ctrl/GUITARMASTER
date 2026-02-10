@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start index.html)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(node -c:*)",
+      "Skill(frontend-design)",
+      "Bash(git restore:*)",
+      "Bash(grep:*)",
+      "Bash(node -e:*)"
+    ]
+  }
+}
