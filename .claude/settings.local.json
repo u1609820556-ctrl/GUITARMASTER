@@ -8,7 +8,22 @@
       "Skill(frontend-design)",
       "Bash(git restore:*)",
       "Bash(grep:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(dir \"C:\\\\Users\\\\00arn\\\\Desktop\\\\GUITARMASTER\")",
+      "Bash(dir:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(__NEW_LINE_65ad7bf138d8f350__ python3 - <<'PYEOF'\nwith open\\('index.html', 'r', encoding='utf-8'\\) as f:\n    lines = f.readlines\\(\\)\n\n# Lines are 1-indexed; Python list is 0-indexed\n# Replace lines 52-5694 \\(<style>...</style>\\) with a single <link> tag\n# Replace lines 7458-23792 \\(<script>...</script>\\) with <script type=\"module\">\n\n# We'll build the new file:\n# - lines 1-51 \\(indices 0-50\\): keep\n# - line 52 \\(<style>\\): replace with <link ...>\n# - lines 53-5694: drop\n# - lines 5695-7457: keep\n# - line 7458 \\(<script>\\): replace with <script type=\"module\" ...>\n# - lines 7459-23792: drop\n# - lines 23793-23794: keep\n\nnew_lines = []\nnew_lines += lines[0:51]  # lines 1-51\nnew_lines.append\\('    <link rel=\"stylesheet\" href=\"css/main.css\">\\\\n'\\)  # replaces line 52-5694\nnew_lines += lines[5694:7457]  # lines 5695-7457\nnew_lines.append\\('    <script type=\"module\" src=\"js/main.js\"></script>\\\\n'\\)  # replaces line 7458-23792\nnew_lines += lines[23792:]  # lines 23793-23794\n\nwith open\\('index.html', 'w', encoding='utf-8'\\) as f:\n    f.writelines\\(new_lines\\)\n\nprint\\(f\"Done: {len\\(new_lines\\)} lines\"\\)\nPYEOF)",
+      "Bash(__NEW_LINE_50896fad3445f8ce__ /c/Users/00arn/AppData/Local/Programs/Python/Python313/python - <<'PYEOF'\nwith open\\('index.html', 'r', encoding='utf-8'\\) as f:\n    lines = f.readlines\\(\\)\n\nprint\\(f\"Total lines: {len\\(lines\\)}\"\\)\nprint\\(f\"Line 52: {repr\\(lines[51]\\)}\"\\)\nprint\\(f\"Line 5694: {repr\\(lines[5693]\\)}\"\\)\nprint\\(f\"Line 7458: {repr\\(lines[7457]\\)}\"\\)\nprint\\(f\"Line 23792: {repr\\(lines[23791]\\)}\"\\)\nprint\\(f\"Line 23793: {repr\\(lines[23792]\\)}\"\\)\nprint\\(f\"Line 23794: {repr\\(lines[23793]\\)}\"\\)\nPYEOF)",
+      "Bash(__NEW_LINE_3367daed560c576b__ /c/Users/00arn/AppData/Local/Programs/Python/Python313/python - <<'PYEOF'\nwith open\\('index.html', 'r', encoding='utf-8'\\) as f:\n    lines = f.readlines\\(\\)\n\n# Build new file:\n# lines 1-51 \\(indices 0-50\\): keep\n# line 52 \\(<style>\\) through line 5694 \\(</style>\\): replace with single <link> line\n# lines 5695-7457 \\(indices 5694-7456\\): keep\n# line 7458 \\(<script>\\) through line 23792 \\(</script>\\): replace with single <script type=\"module\"> line\n# lines 23793-23794 \\(indices 23792-23793\\): keep\n\nnew_lines = []\nnew_lines += lines[0:51]                                                  # lines 1-51\nnew_lines.append\\('    <link rel=\"stylesheet\" href=\"css/main.css\">\\\\n'\\)     # replaces lines 52-5694\nnew_lines += lines[5694:7457]                                             # lines 5695-7457\nnew_lines.append\\('    <script type=\"module\" src=\"js/main.js\"></script>\\\\n'\\)# replaces lines 7458-23792\nnew_lines += lines[23792:]                                                # lines 23793-23794\n\nwith open\\('index.html', 'w', encoding='utf-8'\\) as f:\n    f.writelines\\(new_lines\\)\n\nprint\\(f\"Done: {len\\(new_lines\\)} lines total\"\\)\nPYEOF)",
+      "Bash(git -C:*)",
+      "Bash(/c/Users/00arn/AppData/Local/Programs/Python/Python313/python:*)",
+      "Bash(node:*)",
+      "Bash(npx http-server -p 8080 --cors -o)",
+      "Bash(npx http-server -p 8080 --cors -c-1 -o)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(curl:*)",
+      "Bash(npx http-server:*)",
+      "Bash(npx browser-sync:*)"
     ]
   }
 }
