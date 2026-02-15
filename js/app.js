@@ -765,12 +765,15 @@ export const App = {
 
                 // Mostrar/ocultar sección específica de Nivel 4
                 const level4TopSection = document.getElementById('level4TopSection');
+                const fretboardStickyWrapper = document.getElementById('fretboardStickyWrapper');
                 if (level === 4) {
                     level4TopSection?.classList.remove('hidden');
+                    if (fretboardStickyWrapper) fretboardStickyWrapper.style.display = 'none';
                 } else {
                     level4TopSection?.classList.add('hidden');
                     document.getElementById('diagramsContainer4')?.replaceChildren();
                     document.getElementById('infoPanel4')?.replaceChildren();
+                    if (fretboardStickyWrapper) fretboardStickyWrapper.style.display = '';
                 }
 
                 // Hide diagrams by default
@@ -1014,14 +1017,6 @@ export const App = {
                                 this.showExtendedIntro();
                             });
                         });
-
-                        // Toggle "Ver todos" los acordes
-                        const showAllToggle = document.getElementById('showAllExtendedChords');
-                        if (showAllToggle) {
-                            showAllToggle.addEventListener('change', () => {
-                                this.renderExtendedMatrix();
-                            });
-                        }
 
                         // Matrix buttons (delegated)
                         const matrixContent = document.getElementById('extMatrixContent');
@@ -4424,28 +4419,17 @@ export const App = {
                 };
 
                 const chords = categoryToChords[this.currentExtensionCategory] || [];
-                const showAll = document.getElementById('showAllExtendedChords')?.checked ?? true;
 
                 matrixContent.innerHTML = '';
 
-                let visibleCount = 0;
                 chords.forEach(chordKey => {
                     const chordData = MusicTheory.extendedChords[chordKey];
                     if (!chordData) return;
 
-                    // Filtrar si no es esencial y toggle está OFF
-                    if (!showAll && !chordData.essential) return;
-
-                    visibleCount++;
-
                     const btn = document.createElement('button');
                     btn.className = `ext-matrix-btn ${this.currentExtendedChordType === chordKey ? 'active' : ''}`;
-                    if (!chordData.essential) {
-                        btn.classList.add('non-essential');
-                    }
                     btn.dataset.chordType = chordKey;
                     btn.innerHTML = chordData.symbol;
-
 
                     matrixContent.appendChild(btn);
                 });
@@ -4453,16 +4437,62 @@ export const App = {
                 // Actualizar contador
                 const counter = document.getElementById('extendedChordCount');
                 if (counter) {
-                    const total = chords.length;
-                    counter.textContent = `${visibleCount} de ${total} acordes`;
+                    counter.textContent = `${chords.length} acordes`;
                 }
             },
 
             updateTensionComparatorVisibility() {
                 const tensionComparator = document.getElementById('tensionComparator');
-                if (!tensionComparator) return;
-                const showFor = ['color9', 'density13'];
-                tensionComparator.style.display = showFor.includes(this.currentExtensionCategory) ? 'block' : 'none';
+                const inner = document.getElementById('tensionComparatorInner');
+                if (!tensionComparator || !inner) return;
+
+                const configs = {
+                    'color9': {
+                        label: 'Escucha la tensión crecer:',
+                        buttons: [
+                            { tension: 'basic',    label: 'dom7',  desc: 'base' },
+                            { tension: 'with9',    label: 'dom9',  desc: '+ 9ª' },
+                            { tension: 'with13',   label: 'dom13', desc: '+ 13ª' },
+                            { tension: 'sequence', label: '▶ Secuencia', desc: null },
+                        ]
+                    },
+                    'density13': {
+                        label: 'Escucha la densidad crecer:',
+                        buttons: [
+                            { tension: 'basic',    label: 'dom7',  desc: 'base' },
+                            { tension: 'with9',    label: 'dom9',  desc: '+ 9ª' },
+                            { tension: 'with13',   label: 'dom13', desc: '+ 13ª' },
+                            { tension: 'sequence', label: '▶ Secuencia', desc: null },
+                        ]
+                    },
+                    'altered': {
+                        label: 'Escucha la alteración:',
+                        buttons: [
+                            { tension: 'basic',       label: 'dom7',  desc: 'base' },
+                            { tension: 'altered_b9',  label: '7b9',   desc: '+ b9' },
+                            { tension: 'altered_s9',  label: '7#9',   desc: '+ #9' },
+                            { tension: 'sequence',    label: '▶ Secuencia', desc: null },
+                        ]
+                    }
+                };
+
+                const config = configs[this.currentExtensionCategory];
+                if (!config) {
+                    tensionComparator.style.display = 'none';
+                    return;
+                }
+
+                inner.innerHTML = `
+                    <div class="tension-comparator-row">
+                        <span class="tension-comparator-label">${config.label}</span>
+                        ${config.buttons.map(b => `
+                            <button class="tension-btn tension-btn-compact" data-tension="${b.tension}">
+                                ${b.label}${b.desc ? `<span class="tension-btn-sub">${b.desc}</span>` : ''}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                tensionComparator.style.display = 'block';
             },
 
             showExtendedIntro() {
@@ -4480,7 +4510,7 @@ export const App = {
                             { key: 'maj7',     color: '#10b981', desc: 'Mayor con 7ª mayor — soñador, luminoso. Muy usado en jazz y bossa nova.' },
                             { key: 'dom7',     color: '#dc2626', desc: 'Mayor con 7ª menor — tensión que pide resolver. El acorde más usado en blues.' },
                             { key: 'min7',     color: '#3b82f6', desc: 'Menor con 7ª menor — melancólico pero suave. Protagonista del jazz y el soul.' },
-                            { key: 'halfDim7', color: '#a78bfa', desc: 'Menor con 5ª disminuida y 7ª menor — tenso, inestable. Típico del ii° en menor.' },
+                            { key: 'halfDim7', color: '#fb923c', desc: 'Menor con 5ª disminuida y 7ª menor — tenso, inestable. Típico del ii° en menor.' },
                             { key: 'maj9',     color: '#10b981', desc: 'Mayor 7 más la 9ª — abre el acorde, lo hace más espacioso y aireado.' },
                             { key: 'dom9',     color: '#dc2626', desc: 'Dominante 7 más la 9ª — más suavidad que el dom7 puro, muy común en funk y soul.' },
                             { key: 'min9',     color: '#3b82f6', desc: 'Menor 7 más la 9ª — color emocional profundo, muy usado en R&B y neo-soul.' },
@@ -4497,12 +4527,12 @@ export const App = {
                             { key: 'dom9', color: '#dc2626', desc: '9ª natural sobre Dom 7 — suaviza la tensión del dominante, muy usado en funk.' },
                             { key: 'min9', color: '#3b82f6', desc: '9ª natural sobre Menor 7 — cálido y profundo, esencial en R&B y neo-soul.' },
                             { key: '7#9',  color: '#f59e0b', desc: '9ª aumentada sobre Dom 7 — el "acorde Hendrix". Agresivo, ambiguo entre mayor y menor.' },
-                            { key: '7b9',  color: '#a78bfa', desc: '9ª bemol sobre Dom 7 — tensión máxima, muy usado en jazz y flamenco para resoluciones dramáticas.' },
+                            { key: '7b9',  color: '#fb923c', desc: '9ª bemol sobre Dom 7 — tensión máxima, muy usado en jazz y flamenco para resoluciones dramáticas.' },
                         ]
                     },
                     suspension11: {
                         title: 'Las 11ª — suspensión y modalidad',
-                        color: '#a78bfa',
+                        color: '#d4a574',
                         text: `La 11ª es la 4ª una octava arriba. Añade un carácter suspendido, como si el acorde
                                "flotase" sin querer resolver del todo. Es muy usada en música modal, jazz contemporáneo
                                y ambient. La versión sostenida (#11) tiene un carácter más brillante y lidio.`,
@@ -4532,7 +4562,7 @@ export const App = {
                                dramáticas e inesperadas. Cuando un dominante alterado resuelve, el alivio es enorme.`,
                         chords: [
                             { key: '7#9', color: '#f59e0b', desc: 'Dom 7 con 9ª aumentada — el "acorde Hendrix". Mezcla mayor y menor en uno, muy agresivo.' },
-                            { key: '7b9', color: '#a78bfa', desc: 'Dom 7 con 9ª bemol — disonancia intensa, muy dramático. Usado en jazz y flamenco.' },
+                            { key: '7b9', color: '#fb923c', desc: 'Dom 7 con 9ª bemol — disonancia intensa, muy dramático. Usado en jazz y flamenco.' },
                         ]
                     }
                 };
@@ -4542,23 +4572,23 @@ export const App = {
                 if (!desc) return;
 
                 panel.innerHTML = `
-                    <div id="ext4-intro-header" style="display:flex;flex-direction:column;gap:6px;padding:4px 0;">
-                        <div style="display:flex;align-items:baseline;gap:10px;">
-                            <div style="font-family:'Bebas Neue';font-size:22px;color:${desc.color};letter-spacing:1px;">${desc.title}</div>
+                    <div id="ext4-intro-header" style="display:flex;flex-direction:column;gap:10px;padding:6px 0;">
+                        <div>
+                            <div style="font-family:'Bebas Neue';font-size:24px;color:${desc.color};letter-spacing:1px;line-height:1;">${desc.title}</div>
+                            <div style="font-size:13px;color:#777;font-family:'Barlow Condensed';line-height:1.5;margin-top:6px;max-width:580px;">${desc.text.replace(/\s+/g, ' ').trim()}</div>
                         </div>
-                        <div style="font-size:12px;color:#666;font-family:'Barlow Condensed';line-height:1.3;max-width:480px;overflow:hidden;max-height:36px;">${desc.text.replace(/\s+/g, ' ').trim()}</div>
-                        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
                             ${desc.chords.map(c => {
                                 const cd = MusicTheory.extendedChords[c.key];
                                 if (!cd) return '';
-                                return `<button class="ext4-intro-pill" data-chord-key="${c.key}" title="${c.desc}" style="display:flex;align-items:center;gap:6px;padding:4px 9px;background:#151515;border:1px solid ${c.color}44;border-radius:5px;cursor:pointer;transition:all 0.15s;">
-                                    <span style="font-family:'IBM Plex Mono';font-size:13px;font-weight:700;color:${c.color};">${cd.symbol}</span>
-                                    <span style="font-size:11px;color:#555;font-family:'Barlow Condensed';">${cd.formula}</span>
+                                return `<button class="ext4-intro-pill" data-chord-key="${c.key}" title="${c.desc}" style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:#151515;border:1px solid ${c.color}44;border-radius:6px;cursor:pointer;transition:all 0.15s;">
+                                    <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:700;color:${c.color};">${cd.symbol}</span>
+                                    <span style="font-size:12px;color:#555;font-family:'Barlow Condensed';">${cd.formula}</span>
                                 </button>`;
                             }).join('')}
                         </div>
                     </div>
-                    <div id="ext4-chord-detail" style="display:none;border-top:1px solid #2a2a2a;padding-top:8px;margin-top:6px;"></div>
+                    <div id="ext4-chord-detail" style="display:none;border-top:1px solid #2a2a2a;padding-top:12px;margin-top:4px;"></div>
                 `;
 
                 // Pill click — select the chord
@@ -4633,28 +4663,26 @@ export const App = {
                     voicingsContainer.innerHTML = '';
                     voicingsContainer.style.display = 'block';
 
-                    // Header — toggle button
-                    const header = document.createElement('div');
-                    header.className = 'voicings-header voicings-header-toggle';
-                    header.style.cursor = 'pointer';
-                    header.style.userSelect = 'none';
-                    header.innerHTML = `<span class="voicings-toggle-arrow" style="font-size:11px;margin-right:8px;display:inline-block;transition:transform 0.2s;">▶</span>${rootName}${chordData.symbol} — Voicings <span style="font-size:13px;color:#555;font-family:'Barlow Condensed';">(${voicings.length})</span>`;
-                    voicingsContainer.appendChild(header);
+                    // Label
+                    const label = document.createElement('div');
+                    label.style.cssText = "font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:8px;";
+                    label.textContent = `Voicings (${voicings.length})`;
+                    voicingsContainer.appendChild(label);
 
-                    // Scroll container — hidden by default
-                    const scrollContainer = document.createElement('div');
-                    scrollContainer.className = 'voicings-scroll';
-                    scrollContainer.style.display = 'none';
+                    // Grid horizontal expandido
+                    const grid = document.createElement('div');
+                    grid.className = 'voicings-scroll';
+                    grid.style.display = 'flex';
 
-                    voicings.forEach((voicing, idx) => {
+                    voicings.forEach((voicing) => {
                         const item = document.createElement('div');
                         item.className = 'voicing-item';
                         item.style.cursor = 'pointer';
 
-                        // Name
+                        // Name + play hint
                         const name = document.createElement('div');
                         name.className = 'voicing-name';
-                        name.textContent = voicing.name;
+                        name.innerHTML = `${voicing.name}<span class="voicing-play-hint">▶ tocar</span>`;
                         item.appendChild(name);
 
                         // Diagram
@@ -4667,28 +4695,25 @@ export const App = {
                         const diagram = ChordDiagram.create({ frets: voicing.frets, fingers: null, barreInfo: null }, chordName, position);
                         item.appendChild(diagram);
 
-                        // Click para reproducir este voicing con octavas reales
                         item.addEventListener('click', () => {
                             if (AudioEngine.enabled && AudioEngine.audioContext) {
                                 if (AudioEngine.audioContext.state === 'suspended') {
                                     AudioEngine.audioContext.resume();
                                 }
                                 this.playVoicingFrets(voicing.frets, rootOffset, 1.5);
+                                item.style.borderColor = '#dc2626';
+                                item.style.boxShadow = '0 0 10px rgba(220,38,38,0.3)';
+                                setTimeout(() => {
+                                    item.style.borderColor = '';
+                                    item.style.boxShadow = '';
+                                }, 1200);
                             }
                         });
 
-                        scrollContainer.appendChild(item);
+                        grid.appendChild(item);
                     });
 
-                    voicingsContainer.appendChild(scrollContainer);
-
-                    // Toggle on header click
-                    header.addEventListener('click', () => {
-                        const isOpen = scrollContainer.style.display !== 'none';
-                        scrollContainer.style.display = isOpen ? 'none' : 'flex';
-                        const arrow = header.querySelector('.voicings-toggle-arrow');
-                        if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
-                    });
+                    voicingsContainer.appendChild(grid);
                 } else {
                     if (voicingsContainer) {
                         voicingsContainer.style.display = 'none';
@@ -4717,7 +4742,7 @@ export const App = {
                     const extensionExplanations = {
                         '7':  { label: '7ª', color: '#d97706', text: 'Tensión — pide resolver' },
                         '9':  { label: '9ª', color: '#d4a574', text: 'Apertura — 2ª una octava arriba' },
-                        '11': { label: '11ª', color: '#a78bfa', text: 'Suspenso — 4ª una octava arriba' },
+                        '11': { label: '11ª', color: '#d4a574', text: 'Suspenso — 4ª una octava arriba' },
                         '13': { label: '13ª', color: '#34d399', text: 'Densidad — 6ª una octava arriba' },
                     };
 
@@ -4727,58 +4752,50 @@ export const App = {
                         const isRoot = i === 0;
                         const isExt = extensionDegrees.includes(degree);
                         const color = isRoot ? '#dc2626' : isExt ? '#d4a574' : '#888';
-                        return `<span style="font-family:'IBM Plex Mono';font-size:13px;color:${color};background:#1a1a1a;border:1px solid ${color}33;padding:3px 8px;border-radius:4px;">${noteName}<sub style="font-size:9px;color:#555;margin-left:1px;">${degree}</sub></span>`;
+                        return `<span style="font-family:'IBM Plex Mono';font-size:15px;color:${color};background:#1a1a1a;border:1px solid ${color}44;padding:5px 12px;border-radius:6px;">${noteName}<sub style="font-size:10px;color:#555;margin-left:2px;">${degree}</sub></span>`;
                     }).join('');
 
                     const extTokens = ['7','9','11','13'].map(d => {
                         const ex = extensionExplanations[d];
                         const isPresent = degreeNames.some((dn, i) => dn === d && chordData.intervals[i] !== undefined);
-                        return `<span style="font-size:12px;padding:3px 8px;border-radius:4px;background:#1a1a1a;border:1px solid ${isPresent ? ex.color : '#2a2a2a'};color:${isPresent ? ex.color : '#444'};">${ex.label}</span>`;
+                        return `<span style="display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;border-radius:6px;background:#1a1a1a;border:1px solid ${isPresent ? ex.color : '#252525'};color:${isPresent ? ex.color : '#333'};">
+                            <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:700;">${ex.label}</span>
+                            ${isPresent ? `<span style="font-family:'Barlow Condensed';font-size:10px;color:${ex.color}88;">${ex.text}</span>` : ''}
+                        </span>`;
                     }).join('');
 
                     const chordDetail = document.getElementById('ext4-chord-detail');
                     if (chordDetail) {
                         chordDetail.innerHTML = `
-                            <div style="display:flex;flex-direction:column;gap:7px;">
-                                <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
-                                    <div style="font-family:'Bebas Neue';font-size:28px;color:#fafafa;line-height:1;letter-spacing:1px;">${rootName}<span style="color:#dc2626;">${chordData.symbol}</span></div>
-                                    <div style="font-family:'IBM Plex Mono';font-size:13px;color:#555;">${chordData.formula}</div>
+                            <div style="display:flex;flex-direction:column;gap:14px;">
+                                <!-- Nombre + fórmula + uso -->
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
+                                        <div style="font-family:'Bebas Neue';font-size:32px;color:#fafafa;line-height:1;letter-spacing:1px;">${rootName}<span style="color:#dc2626;">${chordData.symbol}</span></div>
+                                        <div style="font-family:'IBM Plex Mono';font-size:14px;color:#555;">${chordData.formula}</div>
+                                    </div>
+                                    <div style="font-size:14px;color:#888;font-family:'Barlow Condensed';line-height:1.4;">${chordData.usage}</div>
                                 </div>
-                                <div style="font-size:13px;color:#888;font-family:'Barlow Condensed';line-height:1.3;">${chordData.usage}</div>
-                                <div style="display:flex;gap:6px;">
-                                    <button class="ext4-acc-btn" data-target="ext4-notes" style="display:flex;align-items:center;gap:5px;background:#151515;border:1px solid #2a2a2a;color:#aaa;font-family:'Barlow Condensed';font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;cursor:pointer;">
-                                        <span class="ext4-arrow" style="font-size:9px;transition:transform 0.2s;">▶</span> Notas
-                                    </button>
-                                    <button class="ext4-acc-btn" data-target="ext4-ext" style="display:flex;align-items:center;gap:5px;background:#151515;border:1px solid #2a2a2a;color:#aaa;font-family:'Barlow Condensed';font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;cursor:pointer;">
-                                        <span class="ext4-arrow" style="font-size:9px;transition:transform 0.2s;">▶</span> Extensiones
-                                    </button>
+
+                                <!-- Notas siempre visibles -->
+                                <div>
+                                    <div style="font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:6px;">Notas</div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                                        ${noteTokens}
+                                    </div>
                                 </div>
-                                <div id="ext4-notes" style="display:none;flex-wrap:wrap;gap:6px;padding:8px;background:#0d0d0d;border-radius:6px;border:1px solid #1e1e1e;">
-                                    ${noteTokens}
-                                </div>
-                                <div id="ext4-ext" style="display:none;flex-wrap:wrap;gap:6px;padding:8px;background:#0d0d0d;border-radius:6px;border:1px solid #1e1e1e;">
-                                    ${extTokens}
-                                    <div style="width:100%;margin-top:4px;font-size:12px;color:#555;font-family:'Barlow Condensed';">
-                                        Triada base + extensiones: <strong style="color:#fafafa;">1 → 3 → 5 → 7 → 9 → 11 → 13</strong>
+
+                                <!-- Extensiones siempre visibles -->
+                                <div>
+                                    <div style="font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:6px;">Extensiones presentes</div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
+                                        ${extTokens}
+                                        <span style="font-size:12px;color:#333;font-family:'Barlow Condensed';margin-left:4px;">1 → 3 → 5 → 7 → 9 → 11 → 13</span>
                                     </div>
                                 </div>
                             </div>
                         `;
                         chordDetail.style.display = 'block';
-
-                        // Accordion toggle logic
-                        chordDetail.querySelectorAll('.ext4-acc-btn').forEach(btn => {
-                            btn.addEventListener('click', () => {
-                                const targetId = btn.dataset.target;
-                                const content = document.getElementById(targetId);
-                                const arrow = btn.querySelector('.ext4-arrow');
-                                const isOpen = content.style.display !== 'none';
-                                content.style.display = isOpen ? 'none' : 'flex';
-                                arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
-                                btn.style.borderColor = isOpen ? '#2a2a2a' : '#dc2626';
-                                btn.style.color = isOpen ? '#aaa' : '#fafafa';
-                            });
-                        });
                     }
                 }
             },
@@ -4820,41 +4837,49 @@ export const App = {
 
                 // Mapeo de tensiones a tipos de acordes
                 const tensionMap = {
-                    'basic': 'dom7',
-                    'with9': 'dom9',
-                    'with13': 'dom13'
+                    'basic':       'dom7',
+                    'with9':       'dom9',
+                    'with13':      'dom13',
+                    'altered_b9':  '7b9',
+                    'altered_s9':  '7#9',
                 };
 
-                // Calcular offset de trasposición desde E (base del voicing)
-                // Los voicings están en forma E (root en 6ª cuerda al aire = E2)
-                // rootOffset = semitonos desde E hasta currentRoot
                 const rootOffset = (this.currentRoot - 4 + 12) % 12;
 
-                if (tension === 'sequence') {
-                    const sequence = ['basic', 'with9', 'with13'];
-                    for (let i = 0; i < sequence.length; i++) {
-                        const chordType = tensionMap[sequence[i]];
-                        const voicings = MusicTheory.extendedVoicings[`${chordType}_voicings`];
-                        if (voicings && voicings.length > 0) {
-                            const v = voicings.find(v => v.shape === 'E') || voicings[0];
-                            this.playVoicingFrets(v.frets, rootOffset, 1.2);
-                        }
-                        await new Promise(resolve => setTimeout(resolve, 1700));
-                    }
-                } else {
-                    const chordType = tensionMap[tension];
+                const playOne = (chordType, duration = 1.5) => {
                     const voicings = MusicTheory.extendedVoicings[`${chordType}_voicings`];
                     if (voicings && voicings.length > 0) {
                         const v = voicings.find(v => v.shape === 'E') || voicings[0];
-                        this.playVoicingFrets(v.frets, rootOffset, 1.5);
+                        this.playVoicingFrets(v.frets, rootOffset, duration);
                     }
+                };
 
-                    // Feedback visual
-                    const btn = document.querySelector(`[data-tension="${tension}"]`);
+                const highlightBtn = (t) => {
+                    const btn = document.querySelector(`[data-tension="${t}"]`);
                     if (btn) {
-                        btn.classList.add('active');
-                        setTimeout(() => btn.classList.remove('active'), 1500);
+                        btn.style.borderColor = '#dc2626';
+                        btn.style.color = '#fafafa';
+                        setTimeout(() => {
+                            btn.style.borderColor = '';
+                            btn.style.color = '';
+                        }, 1500);
                     }
+                };
+
+                if (tension === 'sequence') {
+                    const isAltered = this.currentExtensionCategory === 'altered';
+                    const sequence = isAltered
+                        ? ['basic', 'altered_b9', 'altered_s9']
+                        : ['basic', 'with9', 'with13'];
+                    for (let i = 0; i < sequence.length; i++) {
+                        const t = sequence[i];
+                        playOne(tensionMap[t], 1.2);
+                        highlightBtn(t);
+                        await new Promise(resolve => setTimeout(resolve, 1700));
+                    }
+                } else {
+                    playOne(tensionMap[tension], 1.5);
+                    highlightBtn(tension);
                 }
             },
 

@@ -271,7 +271,7 @@
                 </div>
 
                 <!-- Sticky Fretboard Wrapper -->
-                <div class="fretboard-sticky-wrapper">
+                <div class="fretboard-sticky-wrapper" id="fretboardStickyWrapper">
                     <div class="w-full max-w-5xl mx-auto px-8">
                         <!-- Fret Numbers - Industrial -->
                         <div class="flex pl-8" style="margin-bottom: 8px;">
@@ -943,14 +943,9 @@
                 <button id="playExtendedChordBtn" class="ctrl-btn ctrl-play ml-auto">▶ Play</button>
             </div>
 
-            <!-- Toggle para mostrar/ocultar acordes no esenciales -->
             <div id="extendedMainContent">
                 <div class="flex items-center gap-2 mb-2">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="showAllExtendedChords" checked>
-                        <span class="text-sm text-void-300">Mostrar todos los acordes</span>
-                    </label>
-                    <span id="extendedChordCount" class="text-xs text-void-500 ml-auto"></span>
+                    <span id="extendedChordCount" class="text-xs text-void-500"></span>
                 </div>
 
 <!-- Matriz simplificada -->
@@ -960,6 +955,11 @@
 
                 <!-- Container para voicings múltiples -->
                 <div id="voicingsContainer" class="voicings-container" style="display: none;"></div>
+            </div>
+
+            <!-- Tension Comparator -->
+            <div id="tensionComparator" style="display:none;">
+                <div id="tensionComparatorInner"></div>
             </div>
 
             <!-- Panel: Voicings Libres -->

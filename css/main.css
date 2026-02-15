@@ -1351,11 +1351,11 @@
         .level4-intro-slot {
             flex: 1;
             min-width: 0;
-            max-width: 600px;
+            max-width: 700px;
             display: flex;
             align-items: flex-start;
             overflow-y: auto;
-            max-height: 220px;
+            max-height: none;
         }
 
         .level4-intro-slot > div {
@@ -4637,8 +4637,8 @@
                 linear-gradient(135deg, #0f0f0f 0%, #0a0a0a 100%);
             border: 1px solid #2a2a2a;
             border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
+            padding: 20px 24px;
+            margin-top: 8px;
             box-shadow:
                 0 8px 24px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -4744,6 +4744,22 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
             font-family: 'Barlow Condensed', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voicing-play-hint {
+            font-size: 10px;
+            color: #444;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.15s;
+        }
+
+        .voicing-item:hover .voicing-play-hint {
+            color: #dc2626;
         }
 
         .voicing-difficulty {
@@ -4821,77 +4837,76 @@
         }
 
         .tension-btn {
-            background:
-                linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
-            border: 2px solid #7c3aed;
-            border-radius: 10px;
-            color: #c4b5fd;
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #aaa;
             font-size: 13px;
             font-weight: 700;
             padding: 10px 16px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .tension-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            transition: width 0.5s ease, height 0.5s ease;
         }
 
         .tension-btn:hover {
-            background:
-                linear-gradient(135deg, #6b21a8 0%, #5b21a8 100%);
-            color: #fff;
-            border-color: #8b5cf6;
-            transform: translateY(-2px);
-            box-shadow:
-                0 4px 16px rgba(107, 33, 168, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .tension-btn:hover::before {
-            width: 300px;
-            height: 300px;
+            background: #1e1e1e;
+            color: #fafafa;
+            border-color: #dc2626;
         }
 
         .tension-btn.active {
-            background:
-                linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            color: #fff;
-            border-color: #a78bfa;
-            box-shadow:
-                0 6px 20px rgba(124, 58, 237, 0.6),
-                inset 0 2px 4px rgba(255, 255, 255, 0.2),
-                0 0 20px rgba(139, 92, 246, 0.4);
+            background: #1a0505;
+            color: #fafafa;
+            border-color: #dc2626;
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);
             animation: pulse-glow 1.5s ease-in-out;
         }
 
         @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow:
-                    0 6px 20px rgba(124, 58, 237, 0.6),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2),
-                    0 0 20px rgba(139, 92, 246, 0.4);
-            }
-            50% {
-                box-shadow:
-                    0 6px 20px rgba(124, 58, 237, 0.8),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3),
-                    0 0 30px rgba(139, 92, 246, 0.6);
-            }
+            0%, 100% { box-shadow: 0 0 12px rgba(220, 38, 38, 0.3); }
+            50%       { box-shadow: 0 0 20px rgba(220, 38, 38, 0.6); }
+        }
+
+        /* Tension Comparator */
+        #tensionComparator {
+            margin-top: 12px;
+        }
+
+        .tension-comparator-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tension-comparator-label {
+            font-size: 11px;
+            color: #555;
+            font-family: 'Barlow Condensed', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-right: 4px;
+        }
+
+        .tension-btn-compact {
+            padding: 6px 14px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .tension-btn-sub {
+            font-size: 9px;
+            font-weight: 400;
+            color: #666;
+            text-transform: lowercase;
+            letter-spacing: 0;
         }
 
         /* Extended chord info */
@@ -5692,26 +5707,29 @@
 
         /* Extension tabs for level 4 */
         .extension-tab {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.9rem;
             background: #1a1a1a;
-            color: #888;
-            border: 1px solid #333;
+            color: #666;
+            border: 1px solid #2a2a2a;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
+            position: relative;
         }
 
         .extension-tab:hover {
-            background: #252525;
-            color: #aaa;
+            background: #222;
+            color: #ccc;
+            border-color: #444;
         }
 
         .extension-tab.active {
-            background: #dc2626;
-            color: #fff;
+            background: #1a0505;
+            color: #f87171;
             border-color: #dc2626;
+            box-shadow: inset 0 -2px 0 #dc2626;
         }
 
         /* Pentatonic sub-selector buttons */
