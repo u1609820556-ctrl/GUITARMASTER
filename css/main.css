@@ -128,11 +128,6 @@
             display: none;
         }
 
-        /* Hide display title/subtitle in Chord Lab */
-        body[data-level="11"] #mainFretboardArea > .mb-6.text-center {
-            display: none;
-        }
-
         /* Hide the entire main fretboard area in Chord Lab */
         body[data-level="11"] #mainFretboardArea {
             display: none;
@@ -211,19 +206,6 @@
             background: linear-gradient(90deg, #f0ead6 0%, #d8cdb8 50%, #c4b89a 100%);
             border-right: 6px solid #1a1a1a;
             box-shadow: inset -4px 0 10px rgba(0,0,0,0.5), 4px 0 12px rgba(0,0,0,0.4);
-        }
-
-        .fret-marker {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 12px;
-            background: radial-gradient(circle, #e8e0d0 0%, #b8a888 100%);
-            border-radius: 50%;
-            opacity: 0.8;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         .note-bubble {
@@ -392,74 +374,6 @@
         .position-marker.caged-d {
             background: #3b82f6;
             color: #fff;
-        }
-
-        /* Picking direction animations */
-        @keyframes pickDown {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(5px); }
-        }
-
-        @keyframes pickUp {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .note-bubble.pick-down {
-            animation: pickDown 0.3s ease-in-out;
-        }
-
-        .note-bubble.pick-up {
-            animation: pickUp 0.3s ease-in-out;
-        }
-
-        /* Level cards - industrial with rounded */
-        .level-card {
-            background: #121212;
-            border: 2px solid #252525;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.2s ease;
-        }
-
-        .level-card:hover {
-            border-color: #444;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-
-        .level-card.active {
-            border-color: #dc2626;
-            box-shadow: 0 0 30px rgba(220, 38, 38, 0.2);
-        }
-
-        .level-header {
-            padding: 16px 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: background 0.2s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .level-header:hover {
-            background: rgba(255,255,255,0.03);
-            border-left-color: #dc2626;
-        }
-
-        .level-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.35s ease;
-            overflow: hidden;
-        }
-
-        .level-content > * {
-            min-height: 0;
-        }
-
-        .level-card.expanded .level-content {
-            grid-template-rows: 1fr;
         }
 
         .collapsible-panel {

@@ -5,6 +5,8 @@ export const AudioEngine = {
             masterGain: null,
             enabled: true,
             sampleBuffers: {}, // Cache de buffers de samples
+            activeSources: [],
+            activeTimeouts: [],
 
             init() {
                 if (!this.audioContext) {
@@ -184,6 +186,11 @@ export const AudioEngine = {
                     toneFilter.connect(outputGain);
                     outputGain.connect(this.masterGain);
 
+                    this.activeSources.push(source);
+                    source.onended = () => {
+                        const idx = this.activeSources.indexOf(source);
+                        if (idx !== -1) this.activeSources.splice(idx, 1);
+                    };
                     source.start(now);
 
                 } catch (error) {
@@ -207,6 +214,11 @@ export const AudioEngine = {
                 osc.connect(gain);
                 gain.connect(this.masterGain);
 
+                this.activeSources.push(osc);
+                osc.onended = () => {
+                    const idx = this.activeSources.indexOf(osc);
+                    if (idx !== -1) this.activeSources.splice(idx, 1);
+                };
                 osc.start(startTime);
                 osc.stop(startTime + duration);
             },
@@ -277,9 +289,10 @@ export const AudioEngine = {
 
                 // Strum natural (35ms entre cuerdas) - duración mayor para fade-out completo
                 notesToPlay.forEach((noteIndex, i) => {
-                    setTimeout(() => {
+                    const tid = setTimeout(() => {
                         this.playNote(noteIndex % 12, duration * 0.85, 3 + Math.floor(i / 2));
                     }, i * 35);
+                    this.activeTimeouts.push(tid);
                 });
             },
 
@@ -382,12 +395,11 @@ export const AudioEngine = {
                     'bII': 1, 'biii': 3, 'bVI': 8, 'bVII': 10, 'bIII': 3
                 };
 
-                // Detectar si es mayor o menor
-                const isMinor = symbol.match(/^[ivx]+/) !== null && symbol !== symbol.toUpperCase().replace('b', '');
-                const isSeventhChord = symbol.includes('7');
-
                 // Extraer grado romano
                 let romanPart = symbol.replace('7', '');
+                const withoutFlat = romanPart.startsWith('b') ? romanPart.slice(1) : romanPart;
+                const isMinor = withoutFlat.length > 0 && withoutFlat[0] === withoutFlat[0].toLowerCase();
+                const isSeventhChord = symbol.includes('7');
                 const degree = degreeMap[romanPart];
 
                 if (degree === undefined) return [];
@@ -404,7 +416,7 @@ export const AudioEngine = {
 
                 // Añadir 7ª si es acorde de séptima
                 if (isSeventhChord) {
-                    const seventh = isMinor ? 10 : 10; // 7ª menor para ambos
+                    const seventh = isMinor ? 10 : 11; // 7ª menor para menores, 7ª mayor para mayores
                     notes.push((root + seventh) % 12);
                 }
 
@@ -723,28 +735,23 @@ export const AudioEngine = {
 
                 // Strum con delay entre cuerdas (35ms)
                 sortedNotes.forEach((midiNote, i) => {
-                    setTimeout(() => {
+                    const tid = setTimeout(() => {
                         this.playMidiNote(midiNote, duration);
                     }, i * 35);
+                    this.activeTimeouts.push(tid);
                 });
             },
 
             // Stop all currently playing notes
             stopAllNotes() {
                 if (!this.audioContext) return;
-                // Create a new audio context to kill all nodes
                 try {
-                    const currentTime = this.audioContext.currentTime;
-                    // Simply advance time to stop all scheduled notes
-                    this.activeOscillators = this.activeOscillators || [];
-                    this.activeOscillators.forEach(osc => {
-                        try {
-                            osc.stop();
-                        } catch(e) {
-                            // Already stopped
-                        }
+                    this.activeTimeouts.forEach(tid => clearTimeout(tid));
+                    this.activeTimeouts = [];
+                    this.activeSources.forEach(src => {
+                        try { src.stop(); } catch(e) { /* already stopped */ }
                     });
-                    this.activeOscillators = [];
+                    this.activeSources = [];
                 } catch(e) {
                     console.warn('Error stopping notes:', e);
                 }

@@ -162,8 +162,7 @@ export const App = {
                     'infoPanel4',             // Usado por nivel 4 (intro/explicación)
                     'infoPanelOtherLevels',   // Usado por nivel 2 (escalas) fuera del nivel 3
                     'infoPanelAboveFretboard', // Usado por nivel 8 (funciones armónicas)
-                    'jamSessionInfo',      // Nivel 15 (Jam Session) - panel de info
-                    'jamTrackGrid',        // Nivel 15 (Jam Session) - grid de tracks
+                    'jamTrackGrid',        // Jam Session - grid de tracks
                     'earTrainingAnswers',  // Nivel 14 (Ear Training) - respuestas
                     'diagramsContainer'    // Diagramas de acordes (para limpieza completa)
                 ];
@@ -735,6 +734,12 @@ export const App = {
                     this.stopBackingTrack();
                 }
 
+                // Cleanup circle of fifths tour si está corriendo
+                if (this._tourInterval !== null) {
+                    clearTimeout(this._tourInterval);
+                    this._tourInterval = null;
+                }
+
                 // Cleanup event listeners anteriores
                 if (this.eventController) {
                     this.eventController.abort();
@@ -1101,15 +1106,48 @@ export const App = {
                         });
                         break;
 
-                    case 5: // Circle of Fifths
+                    case 5: { // Circle of Fifths
                         this.renderCircleOfFifths();
+
+                        // Tour speed state
+                        this._tourSpeed = 'medium';
+                        this._tourInterval = null;
+
+                        // Speed buttons
+                        controlPanel.querySelectorAll('[data-tour-speed]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                controlPanel.querySelectorAll('[data-tour-speed]').forEach(b => b.classList.remove('active'));
+                                e.currentTarget.classList.add('active');
+                                this._tourSpeed = e.currentTarget.dataset.tourSpeed;
+                                // Restart tour if already playing
+                                if (this._tourInterval !== null) {
+                                    this._stopCircleTour(controlPanel);
+                                    this._startCircleTour(controlPanel);
+                                }
+                            });
+                        });
+
+                        // Play tour button
+                        const tourPlayBtn = document.getElementById('tourPlayBtn');
+                        const tourStopBtn = document.getElementById('tourStopBtn');
+
+                        tourPlayBtn?.addEventListener('click', async () => {
+                            if (!AudioEngine.audioContext) AudioEngine.init();
+                            if (!AudioEngine.audioContext || !AudioEngine.enabled) return;
+                            if (AudioEngine.audioContext.state === 'suspended') {
+                                await AudioEngine.audioContext.resume();
+                            }
+                            this._startCircleTour(controlPanel);
+                        });
+
+                        tourStopBtn?.addEventListener('click', () => {
+                            this._stopCircleTour(controlPanel);
+                        });
+
                         break;
+                    }
 
                     case 6: // Progressions
-                        console.log('🔧 bindLevelEvents case 6 - Progressions');
-                        console.log('controlPanel exists:', !!controlPanel);
-                        console.log('progression buttons found:', controlPanel.querySelectorAll('.progression-btn-simple').length);
-
                         controlPanel.querySelectorAll('.progression-btn-simple').forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 controlPanel.querySelectorAll('.progression-btn-simple').forEach(b => b.classList.remove('active'));
@@ -1123,21 +1161,14 @@ export const App = {
 
                         // Event listeners para controles de reproducción
                         const playBtn = document.getElementById('playProgressionBtn');
-                        console.log('🔍 Binding playProgressionBtn listener, button exists:', !!playBtn);
 
                         if (playBtn) {
                             playBtn.addEventListener('click', async () => {
-                                console.log('🎯 PLAY BUTTON CLICKED!');
                                 try {
-                                    console.log('Step 1: Check AudioEngine.audioContext:', !!AudioEngine.audioContext);
-
                                     // Initialize AudioEngine if not already done
                                     if (!AudioEngine.audioContext) {
-                                        console.log('Initializing AudioEngine...');
                                         AudioEngine.init();
                                     }
-
-                                    console.log('Step 2: AudioContext exists:', !!AudioEngine.audioContext, 'enabled:', AudioEngine.enabled);
 
                                     // Validate after init
                                     if (!AudioEngine.audioContext || !AudioEngine.enabled) {
@@ -1145,19 +1176,12 @@ export const App = {
                                         return;
                                     }
 
-                                    console.log('Step 3: AudioContext state:', AudioEngine.audioContext.state);
-
                                     // Asegurar que el AudioContext esté activo
                                     if (AudioEngine.audioContext.state === 'suspended') {
-                                        console.log('Resuming AudioContext...');
                                         await AudioEngine.audioContext.resume();
                                     }
 
-                                    console.log('Step 4: About to call this.playProgression()');
-                                    console.log('this is:', this);
-                                    console.log('this.playProgression exists:', typeof this.playProgression);
                                     this.playProgression();
-                                    console.log('Step 5: this.playProgression() returned');
                                 } catch (error) {
                                     console.error('❌ Error starting progression playback:', error);
                                 }
@@ -1859,17 +1883,8 @@ export const App = {
             },
 
             showScale() {
-                console.log('🎵 showScale() called');
-                console.log('- this.currentScale:', this.currentScale);
-                console.log('- MusicTheory.scaleInfo exists:', !!MusicTheory.scaleInfo);
-
                 const rootName = MusicTheory.getNoteName(this.currentRoot);
                 const info = MusicTheory.scaleInfo[this.currentScale];
-
-                console.log('- info retrieved:', info ? 'found' : 'NOT FOUND');
-                if (!info) {
-                    console.error('❌ Available scale keys:', Object.keys(MusicTheory.scaleInfo).slice(0, 10));
-                }
 
                 // Hide diagrams and box selector for regular scale view
                 document.getElementById('diagramsContainer').classList.add('hidden');
@@ -2025,8 +2040,6 @@ export const App = {
                         return;
                     }
 
-                    console.log('✅ Using panel:', panel.id, 'for level', this.currentLevel);
-
                     // Validate info object before proceeding
                     if (!info || typeof info !== 'object') {
                         console.warn('Invalid or missing scale info for:', scaleKey);
@@ -2069,13 +2082,8 @@ export const App = {
 
                 // Generate advanced scale info (genres, artists, songs)
                 let advancedInfoHTML = '';
-                console.log('🔍 Checking scale info for:', scaleKey);
-                console.log('  - musicalGenres:', info.musicalGenres);
-                console.log('  - famousArtists:', info.famousArtists);
-                console.log('  - famousSongs:', info.famousSongs);
 
                 if (info.musicalGenres && info.musicalGenres.length > 0) {
-                    console.log('✅ Generating advanced info HTML for:', scaleKey);
                     advancedInfoHTML = `
                         <div style="
                             border-top: 2px solid rgba(220, 38, 38, 0.3);
@@ -2142,9 +2150,6 @@ export const App = {
                             ` : ''}
                         </div>
                     `;
-                    console.log('📝 Generated HTML length:', advancedInfoHTML.length);
-                } else {
-                    console.log('❌ No musical genres found for:', scaleKey);
                 }
 
                 // Build the panel HTML with new styling
@@ -2964,10 +2969,21 @@ export const App = {
                     btn.style.top = `${y}px`;
                     btn.textContent = MusicTheory.circleOfFifthsLabels[i];
                     btn.dataset.note = noteIndex;
-                    btn.addEventListener('click', () => {
+                    btn.addEventListener('click', async () => {
                         this.currentRoot = noteIndex;
                         document.getElementById('rootSelect').value = noteIndex;
                         this.showCircleOfFifths();
+                        // Play major chord for this key
+                        if (AudioEngine.audioContext) {
+                            if (AudioEngine.audioContext.state === 'suspended') await AudioEngine.audioContext.resume();
+                            const triad = MusicTheory.getTriad(noteIndex, 'major', 1);
+                            const chordNotes = [
+                                MusicTheory.getNoteIndex(triad.root.note),
+                                MusicTheory.getNoteIndex(triad.third.note),
+                                MusicTheory.getNoteIndex(triad.fifth.note)
+                            ];
+                            AudioEngine.playChord(chordNotes, 1.2);
+                        }
                     });
                     container.appendChild(btn);
                 });
@@ -2987,13 +3003,77 @@ export const App = {
                     btn.style.top = `${y}px`;
                     btn.textContent = minorLabels[i];
                     btn.dataset.note = minorNote;
-                    btn.addEventListener('click', () => {
+                    btn.addEventListener('click', async () => {
                         this.currentRoot = MusicTheory.getRelativeMajor(minorNote);
                         document.getElementById('rootSelect').value = this.currentRoot;
                         this.showCircleOfFifths();
+                        // Play minor chord for this key
+                        if (AudioEngine.audioContext) {
+                            if (AudioEngine.audioContext.state === 'suspended') await AudioEngine.audioContext.resume();
+                            const triad = MusicTheory.getTriad(minorNote, 'minor', 1);
+                            const chordNotes = [
+                                MusicTheory.getNoteIndex(triad.root.note),
+                                MusicTheory.getNoteIndex(triad.third.note),
+                                MusicTheory.getNoteIndex(triad.fifth.note)
+                            ];
+                            AudioEngine.playChord(chordNotes, 1.2);
+                        }
                     });
                     container.appendChild(btn);
                 });
+            },
+
+            _startCircleTour(controlPanel) {
+                const speeds = { slow: 2200, medium: 1400, fast: 750 };
+                const delay = speeds[this._tourSpeed] || 1400;
+                const order = [...MusicTheory.circleOfFifths];
+                let step = 0;
+
+                const tourPlayBtn = document.getElementById('tourPlayBtn');
+                const tourStopBtn = document.getElementById('tourStopBtn');
+                const circleInfo = document.getElementById('circleInfo');
+                if (tourPlayBtn) tourPlayBtn.style.display = 'none';
+                if (tourStopBtn) tourStopBtn.style.display = '';
+
+                const playStep = async () => {
+                    if (this._tourInterval === null) return;
+                    const noteIndex = order[step % order.length];
+                    this.currentRoot = noteIndex;
+                    document.getElementById('rootSelect').value = noteIndex;
+                    this.showCircleOfFifths();
+                    if (circleInfo) circleInfo.textContent = MusicTheory.getNoteName(noteIndex) + ' Mayor';
+                    if (AudioEngine.audioContext) {
+                        if (AudioEngine.audioContext.state === 'suspended') await AudioEngine.audioContext.resume();
+                        const triad = MusicTheory.getTriad(noteIndex, 'major', 1);
+                        const chordNotes = [
+                            MusicTheory.getNoteIndex(triad.root.note),
+                            MusicTheory.getNoteIndex(triad.third.note),
+                            MusicTheory.getNoteIndex(triad.fifth.note)
+                        ];
+                        AudioEngine.playChord(chordNotes, delay / 1000 * 0.8);
+                    }
+                    step++;
+                    if (step >= order.length) {
+                        this._stopCircleTour(controlPanel);
+                        return;
+                    }
+                    this._tourInterval = setTimeout(playStep, delay);
+                };
+
+                this._tourInterval = setTimeout(playStep, 0);
+            },
+
+            _stopCircleTour(controlPanel) {
+                if (this._tourInterval !== null) {
+                    clearTimeout(this._tourInterval);
+                    this._tourInterval = null;
+                }
+                const tourPlayBtn = document.getElementById('tourPlayBtn');
+                const tourStopBtn = document.getElementById('tourStopBtn');
+                const circleInfo = document.getElementById('circleInfo');
+                if (tourPlayBtn) tourPlayBtn.style.display = '';
+                if (tourStopBtn) tourStopBtn.style.display = 'none';
+                if (circleInfo) circleInfo.textContent = '—';
             },
 
             // ========== ACORDES DE SÉPTIMA ==========
@@ -3196,13 +3276,17 @@ export const App = {
                     }
                 }, 100);
 
-                // Hide fretboard for progressions (mini diagrams above are enough)
+                // Show current chord on fretboard
                 const currentChord = chords[this.currentProgressionChordIndex];
-
-                // Clear fretboard display
-                Fretboard.tonicNote = null;
-                Fretboard.currentScale = [];
+                const triad = currentChord.triad;
+                Fretboard.tonicNote = MusicTheory.getNoteIndex(triad.root.note);
+                Fretboard.currentScale = [
+                    { note: triad.root.note, degree: 1 },
+                    { note: triad.third.note, degree: 3 },
+                    { note: triad.fifth.note, degree: 5 }
+                ];
                 Fretboard.highlightedNotes.clear();
+                Fretboard.chordHighlight = null;
                 Fretboard.clearZone();
                 Fretboard.specificPositions = null;
                 Fretboard.updateDisplay();
@@ -3371,10 +3455,7 @@ export const App = {
             // ========== REPRODUCCIÓN AUTOMÁTICA DE PROGRESIONES ==========
 
             playProgression() {
-                console.log('playProgression() called, currentProgression:', this.currentProgression);
-
                 if (this.progressionPlaying && !this.progressionPaused) {
-                    console.log('Already playing, ignoring');
                     return;
                 }
 
@@ -3384,7 +3465,6 @@ export const App = {
                 }
 
                 const prog = MusicTheory.progressions[this.currentProgression];
-                console.log('Progression data:', prog);
 
                 if (!prog) {
                     console.error('❌ Progression not found:', this.currentProgression);
@@ -3401,30 +3481,25 @@ export const App = {
                 }
 
                 // Iniciar desde el principio
-                console.log('✅ Starting progression playback');
                 this.progressionPlaying = true;
                 this.progressionPaused = false;
                 this.currentProgressionChordIndex = 0;
                 this.progressionCurrentRepeat = 0;
                 this.updateProgressionControls();
-                console.log('Starting playback for:', prog.name || prog.degrees);
                 this.startProgressionPlayback(prog);
             },
 
             startProgressionPlayback(prog) {
                 const beatDuration = (60 / this.progressionBPM) * 4000; // 4 beats por acorde
                 const chords = prog.degrees;
-                console.log('startProgressionPlayback - BPM:', this.progressionBPM, 'beatDuration:', beatDuration, 'chords:', chords);
 
                 const playNextChord = () => {
                     if (!this.progressionPlaying || this.progressionPaused) {
-                        console.log('Playback stopped or paused');
                         return;
                     }
 
                     // Tocar acorde actual
                     const degree = chords[this.currentProgressionChordIndex];
-                    console.log('Playing chord', this.currentProgressionChordIndex + 1, 'degree:', degree);
                     this.playProgressionChord(degree);
 
                     // Actualizar UI
@@ -3460,11 +3535,10 @@ export const App = {
             },
 
             playProgressionChord(degree) {
-                console.log('🎵 playProgressionChord called - degree:', degree);
                 try {
                     // Validate AudioEngine
                     if (!AudioEngine || !AudioEngine.audioContext || !AudioEngine.enabled) {
-                        console.error('❌ AudioEngine not available - audioContext:', AudioEngine?.audioContext, 'enabled:', AudioEngine?.enabled);
+                        console.error('❌ AudioEngine not available');
                         return;
                     }
 
@@ -3473,8 +3547,6 @@ export const App = {
                         console.error('❌ Invalid currentRoot in playProgressionChord:', this.currentRoot);
                         return;
                     }
-
-                    console.log('✅ AudioEngine valid, currentRoot:', this.currentRoot);
 
                     // Calcular la raíz del acorde basado en el grado
                     const flatDegreeOffsets = {
@@ -3534,10 +3606,8 @@ export const App = {
                         return;
                     }
 
-                    console.log('✅ Playing chord - root:', chordRoot, 'quality:', quality, 'notes:', notes);
                     // Tocar el acorde directamente
                     AudioEngine.playChord(notes, 1.5);
-                    console.log('🎶 AudioEngine.playChord called successfully');
                 } catch (error) {
                     console.error('❌ Error playing progression chord:', error, 'degree:', degree);
                 }
@@ -3579,7 +3649,7 @@ export const App = {
 
                 const total = prog.degrees.length;
                 const current = this.currentProgressionChordIndex + 1;
-                const percentage = (this.currentProgressionChordIndex / total) * 100;
+                const percentage = this.progressionPlaying ? (current / total) * 100 : 0;
 
                 const progressText = document.getElementById('progressionProgressText');
                 const progressBar = document.getElementById('progressionProgressBar');

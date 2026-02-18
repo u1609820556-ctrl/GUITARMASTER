@@ -3053,7 +3053,6 @@ export const MusicTheory = {
 
             // Chord qualities for major scale harmonization
             chordQualities: ['maj', 'min', 'min', 'maj', 'maj', 'min', 'dim'],
-            romanNumerals: ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'],
 
             // Get note name from index
             getNoteName(index) {
@@ -3087,10 +3086,11 @@ export const MusicTheory = {
                 return this._memoize(() => {
                     const rootIndex = typeof root === 'number' ? root : this.getNoteIndex(root);
                     const formula = this.scales[scaleType];
-                    return formula.map(interval => ({
+                    if (!formula) return [];
+                    return formula.map((interval, index) => ({
                         note: this.getNoteName(rootIndex + interval),
                         interval: interval,
-                        degree: formula.indexOf(interval) + 1
+                        degree: index + 1
                     }));
                 }, cacheKey);
             },

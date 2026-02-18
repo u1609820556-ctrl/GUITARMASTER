@@ -145,7 +145,7 @@ export const TabNotation = {
                     'vibrato': '~',
                     'tap': 'T',
                     'palm': 'P.M.',
-                    'thumb': 'T'
+                    'thumb': 'Th'
                 };
                 return symbols[technique] || '';
             }
