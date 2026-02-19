@@ -241,7 +241,7 @@
             <div id="mainFretboardArea" class="flex-1 flex flex-col overflow-y-auto" style="height: calc(100vh - 64px);">
                 <!-- Current Display Info -->
                 <div class="mb-2 text-center px-8" style="padding-top: 12px; padding-bottom: 0;">
-                    <h2 class="font-display text-chalk-100 tracking-widest" id="displayTitle" style="font-size: 22px; line-height: 1.2; margin: 0;">SELECCIONA UN NIVEL</h2>
+                    <h2 class="font-display text-chalk-100 tracking-widest" id="displayTitle" style="font-size: 32px; line-height: 1.2; margin: 0;">SELECCIONA UN NIVEL</h2>
                     <p class="text-void-400 font-body uppercase tracking-wider" id="displaySubtitle" style="font-size: 11px; margin-top: 4px; opacity: 0.7;">Usa la barra lateral para empezar</p>
                 </div>
 
@@ -941,91 +941,7 @@
     </template>
 
     <template id="tpl-extended">
-        <div class="space-y-4">
-            <!-- Tabs de categoría con iconos -->
-            <div class="flex gap-2 border-b border-void-700 pb-2 mb-4 items-center flex-wrap">
-                <button class="extension-tab active" data-ext-category="essential">Esenciales</button>
-                <button class="extension-tab" data-ext-category="color9">Color 9ª</button>
-                <button class="extension-tab" data-ext-category="suspension11">Suspensión 11ª</button>
-                <button class="extension-tab" data-ext-category="density13">Densidad 13ª</button>
-                <button class="extension-tab" data-ext-category="altered">Alterados</button>
-                <button class="extension-tab" data-ext-category="free-voicings">Voicings Libres</button>
-                <button id="playExtendedChordBtn" class="ctrl-btn ctrl-play ml-auto">▶ Play</button>
-            </div>
-
-            <div id="extendedMainContent">
-                <div class="flex items-center gap-2 mb-2">
-                    <span id="extendedChordCount" class="text-xs text-void-500"></span>
-                </div>
-
-<!-- Matriz simplificada -->
-                <div class="ext-matrix">
-                    <div id="extMatrixContent" class="flex flex-wrap gap-2"></div>
-                </div>
-
-                <!-- Container para voicings múltiples -->
-                <div id="voicingsContainer" class="voicings-container" style="display: none;"></div>
-            </div>
-
-            <!-- Tension Comparator -->
-            <div id="tensionComparator" style="display:none;">
-                <div id="tensionComparatorInner"></div>
-            </div>
-
-            <!-- Panel: Voicings Libres -->
-            <div id="free-voicings-panel" style="display: none;">
-                <!-- Filters -->
-                <div class="space-y-3">
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span class="text-sm text-void-400">Root:</span>
-                        <select id="free-voicings-root" class="px-3 py-1.5 bg-void-800 text-chalk-100 rounded border border-void-600">
-                            <option value="C">C</option>
-                            <option value="C#">C#</option>
-                            <option value="D">D</option>
-                            <option value="Eb">Eb</option>
-                            <option value="E">E</option>
-                            <option value="F">F</option>
-                            <option value="F#">F#</option>
-                            <option value="G">G</option>
-                            <option value="Ab">Ab</option>
-                            <option value="A">A</option>
-                            <option value="Bb">Bb</option>
-                            <option value="B">B</option>
-                        </select>
-                        <span class="text-sm text-void-400 ml-4">Quality:</span>
-                        <button class="free-voicings-quality-btn active" data-quality="maj">Major</button>
-                        <button class="free-voicings-quality-btn" data-quality="min">Minor</button>
-                        <button class="free-voicings-quality-btn" data-quality="7">7th</button>
-                        <button class="free-voicings-quality-btn" data-quality="maj7">maj7</button>
-                        <button class="free-voicings-quality-btn" data-quality="m7">m7</button>
-                        <button class="free-voicings-quality-btn" data-quality="9">9th</button>
-                        <button class="free-voicings-quality-btn" data-quality="11">11th</button>
-                        <button class="free-voicings-quality-btn" data-quality="13">13th</button>
-                    </div>
-                </div>
-
-                <!-- Voicings Grid -->
-                <div id="free-voicings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    <!-- Populated by JS -->
-                </div>
-
-                <!-- Comparison Panel -->
-                <div id="free-voicings-comparison" class="hidden mt-6 p-4 bg-void-800 rounded-lg border border-sage-500">
-                    <h3 class="text-lg font-medium text-sage-400 mb-3">A/B Comparison</h3>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div id="free-voicings-compare-a"></div>
-                        <div id="free-voicings-compare-b"></div>
-                    </div>
-                    <div class="mt-4 flex gap-3">
-                        <button id="free-voicings-play-both" class="px-4 py-2 bg-sage-600 hover:bg-sage-500 text-chalk-100 rounded">
-                            ▶▶ Play Both
-                        </button>
-                        <button id="free-voicings-clear-comparison" class="px-4 py-2 bg-void-700 hover:bg-void-600 text-chalk-100 rounded">
-                            Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div id="extendedMainContent">
         </div>
     </template>
 
