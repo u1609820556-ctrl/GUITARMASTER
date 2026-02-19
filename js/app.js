@@ -5,6 +5,13 @@ import { ChordDiagram } from './chord-diagram.js';
 import { TabNotation } from './tab-notation.js';
 import { ChordLabState, ProgressionBuilderState, ChordBuilderState } from './state.js';
 
+const TENSION_GROUPS = {
+    mayor:      { label: 'MAYOR',      subtitle: 'Estables, no resuelven',   chords: ['maj7','maj9','maj11','maj13'] },
+    menor:      { label: 'MENOR',      subtitle: 'Oscuros pero fluidos',     chords: ['min7','min9','min11','min13'] },
+    dominante:  { label: 'DOMINANTE',  subtitle: 'Quieren resolver al I',    chords: ['dom7','dom9','dom13','7#9','7b9'] },
+    especial:   { label: 'ESPECIAL',   subtitle: 'El ii° del modo menor',    chords: ['halfDim7'] }
+};
+
 export const App = {
             // ====== CONSTANTES CONSOLIDADAS ======
             CATEGORY_SCALES: {
@@ -103,7 +110,7 @@ export const App = {
             // Extended chords state
             currentExtensionLevel: '7th',
             currentExtensionQuality: 'maj',
-            currentExtensionCategory: 'essential',
+            currentExtensionCategory: 'mayor',
             currentExtendedChordType: 'maj7',
             // Secondary dominants state
             currentSecondary: 'ii',
@@ -189,7 +196,7 @@ export const App = {
                 this.registerTemplates();      // Register all templates including Chord Lab
                 // Load the saved level (or default to 1 if no save exists)
                 this.loadLevel(this.currentLevel);  // Uses the level from loadProgress()
-                this.showToast('GuitarMaster cargado correctamente', 'success');
+                this.showToast('GuitarMaster cargado correctamente', 'success', 2000);
             },
 
             registerTemplates() {
@@ -850,6 +857,11 @@ export const App = {
                         controlPanel.innerHTML = '';
                         controlPanel.appendChild(tpl.content.cloneNode(true));
                     }
+
+                    // Nivel 4 usa su propio layout, el controlPanel queda vacío y oculto
+                    if (level === 4) {
+                        controlPanel.style.display = 'none';
+                    }
                 }
 
                 // Bind events DESPUÉS de cargar el template (solo para niveles != 15)
@@ -1009,50 +1021,9 @@ export const App = {
                         });
                         break;
 
-                    case 4: // Extended Chords (por categoría funcional)
-                        // Extension category tabs
-                        controlPanel.querySelectorAll('.extension-tab').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                controlPanel.querySelectorAll('.extension-tab').forEach(b => b.classList.remove('active'));
-                                e.currentTarget.classList.add('active');
-                                this.currentExtensionCategory = e.currentTarget.dataset.extCategory;
-                                this.currentExtendedChordType = null;
-                                this.updateTensionComparatorVisibility();
-                                this.renderExtendedMatrix();
-                                this.showExtendedIntro();
-                            });
-                        });
-
-                        // Matrix buttons (delegated)
-                        const matrixContent = document.getElementById('extMatrixContent');
-                        if (matrixContent) {
-                            matrixContent.addEventListener('click', (e) => {
-                                const btn = e.target.closest('.ext-matrix-btn');
-                                if (btn) {
-                                    controlPanel.querySelectorAll('.ext-matrix-btn').forEach(b => b.classList.remove('active'));
-                                    btn.classList.add('active');
-                                    this.currentExtendedChordType = btn.dataset.chordType;
-                                    this.showExtendedChord();
-                                }
-                            });
-                        }
-
-                        // Tension comparator buttons
-                        const tensionComparator = document.getElementById('tensionComparator');
-                        if (tensionComparator) {
-                            tensionComparator.addEventListener('click', (e) => {
-                                const btn = e.target.closest('.tension-btn');
-                                if (btn) {
-                                    const tension = btn.dataset.tension;
-                                    this.playTensionComparison(tension);
-                                }
-                            });
-                        }
-
+                    case 4: // Extended Chords
                         // Set defaults and render
-                        this.currentExtensionCategory = this.currentExtensionCategory || 'essential';
-                        this.updateTensionComparatorVisibility();
-                        this.renderExtendedMatrix();
+                        this.currentExtensionCategory = this.currentExtensionCategory || 'mayor';
                         this.showExtendedIntro();
 
                         // Play button for extended chords
@@ -3519,11 +3490,9 @@ export const App = {
                             (this.progressionCurrentRepeat < this.progressionRepeatCount);
 
                         if (!shouldContinue) {
-                            this.stopProgression();
+                            this.stopProgression(true);
                             return;
                         }
-
-                        this.updateProgressionProgress();
                     }
 
                     // Programar siguiente acorde
@@ -3627,7 +3596,7 @@ export const App = {
                 this.updateProgressionControls();
             },
 
-            stopProgression() {
+            stopProgression(naturalEnd = false) {
                 this.progressionPlaying = false;
                 this.progressionPaused = false;
                 this.currentProgressionChordIndex = 0;
@@ -3639,16 +3608,19 @@ export const App = {
                 }
 
                 this.updateProgressionControls();
-                this.updateProgressionProgress();
+                if (!naturalEnd) {
+                    this.updateProgressionProgress();
+                }
                 this.showProgression();
             },
 
-            updateProgressionProgress() {
+            updateProgressionProgress(beatDuration) {
                 const prog = MusicTheory.progressions[this.currentProgression];
                 if (!prog) return;
 
                 const total = prog.degrees.length;
-                const current = this.currentProgressionChordIndex + 1;
+                const index = this.currentProgressionChordIndex;
+                const current = index + 1;
                 const percentage = this.progressionPlaying ? (current / total) * 100 : 0;
 
                 const progressText = document.getElementById('progressionProgressText');
@@ -3663,7 +3635,7 @@ export const App = {
                     progressBar.style.width = `${percentage}%`;
 
                     // Color según función
-                    const func = prog.function ? prog.function[this.currentProgressionChordIndex] : null;
+                    const func = prog.function ? prog.function[index] : null;
                     const colors = {
                         'T': '#10b981', 'Tm': '#10b981',
                         'SD': '#f59e0b', 'SDm': '#f59e0b',
@@ -4475,211 +4447,110 @@ export const App = {
 
             // ========== NIVEL 11 - ACORDES EXTENDIDOS ==========
 
-            renderExtendedMatrix() {
-                const matrixContent = document.getElementById('extMatrixContent');
-                if (!matrixContent) return;
-
-                // Mapeo de categorías a acordes
-                const categoryToChords = {
-                    'essential': ['maj7', 'dom7', 'min7', 'halfDim7', 'maj9', 'dom9', 'min9'],
-                    'color9': ['maj9', 'dom9', 'min9', '7#9', '7b9'],
-                    'suspension11': ['min11', 'dom11', 'maj11'],
-                    'density13': ['maj13', 'dom13', 'min13'],
-                    'altered': ['7#9', '7b9']
-                };
-
-                const chords = categoryToChords[this.currentExtensionCategory] || [];
-
-                matrixContent.innerHTML = '';
-
-                chords.forEach(chordKey => {
-                    const chordData = MusicTheory.extendedChords[chordKey];
-                    if (!chordData) return;
-
-                    const btn = document.createElement('button');
-                    btn.className = `ext-matrix-btn ${this.currentExtendedChordType === chordKey ? 'active' : ''}`;
-                    btn.dataset.chordType = chordKey;
-                    btn.innerHTML = chordData.symbol;
-
-                    matrixContent.appendChild(btn);
-                });
-
-                // Actualizar contador
-                const counter = document.getElementById('extendedChordCount');
-                if (counter) {
-                    counter.textContent = `${chords.length} acordes`;
-                }
+            _buildChordPickerHTML(activeKey) {
+                const groupEntries = Object.entries(TENSION_GROUPS);
+                return groupEntries.map(([groupKey, group], gi) => {
+                    const nodesHTML = group.chords.map((key, i) => {
+                        const cd = MusicTheory.extendedChords[key];
+                        if (!cd) return '';
+                        const connector = i > 0 ? '<div class="ext4-picker-connector"></div>' : '';
+                        return `${connector}<button class="ext4-picker-btn${key === activeKey ? ' active' : ''}" data-picker-key="${key}">
+                            <div class="ext4-picker-btn-circle">${cd.symbol}</div>
+                            <div class="ext4-picker-btn-label">${cd.name}</div>
+                        </button>`;
+                    }).join('');
+                    const groupConnector = gi > 0 ? '<div class="ext4-picker-group-connector"></div>' : '';
+                    return `${groupConnector}<div class="ext4-picker-group">
+                        <span class="ext4-picker-group-label">${group.label}</span>
+                        <div class="ext4-picker-group-btns">${nodesHTML}</div>
+                    </div>`;
+                }).join('');
             },
 
-            updateTensionComparatorVisibility() {
-                const tensionComparator = document.getElementById('tensionComparator');
-                const inner = document.getElementById('tensionComparatorInner');
-                if (!tensionComparator || !inner) return;
+            _getCategoryChords() {
+                const group = TENSION_GROUPS[this.currentExtensionCategory];
+                return group ? group.chords : [];
+            },
 
-                const configs = {
-                    'color9': {
-                        label: 'Escucha la tensión crecer:',
-                        buttons: [
-                            { tension: 'basic',    label: 'dom7',  desc: 'base' },
-                            { tension: 'with9',    label: 'dom9',  desc: '+ 9ª' },
-                            { tension: 'with13',   label: 'dom13', desc: '+ 13ª' },
-                            { tension: 'sequence', label: '▶ Secuencia', desc: null },
-                        ]
-                    },
-                    'density13': {
-                        label: 'Escucha la densidad crecer:',
-                        buttons: [
-                            { tension: 'basic',    label: 'dom7',  desc: 'base' },
-                            { tension: 'with9',    label: 'dom9',  desc: '+ 9ª' },
-                            { tension: 'with13',   label: 'dom13', desc: '+ 13ª' },
-                            { tension: 'sequence', label: '▶ Secuencia', desc: null },
-                        ]
-                    },
-                    'altered': {
-                        label: 'Escucha la alteración:',
-                        buttons: [
-                            { tension: 'basic',       label: 'dom7',  desc: 'base' },
-                            { tension: 'altered_b9',  label: '7b9',   desc: '+ b9' },
-                            { tension: 'altered_s9',  label: '7#9',   desc: '+ #9' },
-                            { tension: 'sequence',    label: '▶ Secuencia', desc: null },
-                        ]
-                    }
-                };
-
-                const config = configs[this.currentExtensionCategory];
-                if (!config) {
-                    tensionComparator.style.display = 'none';
-                    return;
+            _getGroupForChord(key) {
+                for (const [groupKey, group] of Object.entries(TENSION_GROUPS)) {
+                    if (group.chords.includes(key)) return groupKey;
                 }
+                return null;
+            },
 
-                inner.innerHTML = `
-                    <div class="tension-comparator-row">
-                        <span class="tension-comparator-label">${config.label}</span>
-                        ${config.buttons.map(b => `
-                            <button class="tension-btn tension-btn-compact" data-tension="${b.tension}">
-                                ${b.label}${b.desc ? `<span class="tension-btn-sub">${b.desc}</span>` : ''}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-                tensionComparator.style.display = 'block';
+            _buildNodeMapHTML(activeKey) {
+                const groupKeys = Object.keys(TENSION_GROUPS);
+                const groups = groupKeys.map((groupKey, gi) => {
+                    const group = TENSION_GROUPS[groupKey];
+                    const isActiveGroup = groupKey === this.currentExtensionCategory;
+                    const nodesHTML = group.chords.map((key, i) => {
+                        const cd = MusicTheory.extendedChords[key];
+                        if (!cd) return '';
+                        const isActive = key === activeKey;
+                        const connector = i > 0 ? '<div class="ext4-node-connector"></div>' : '';
+                        return `${connector}<div class="ext4-node${isActive ? ' active' : ''}" data-node-key="${key}">
+                            <div class="ext4-node-circle">${cd.symbol}</div>
+                            <div class="ext4-node-label">${cd.name}</div>
+                        </div>`;
+                    }).join('');
+                    const groupConnector = gi > 0 ? '<div class="ext4-axis-connector"></div>' : '';
+                    return `${groupConnector}<div class="ext4-axis-group${isActiveGroup ? ' active' : ''}" data-group-key="${groupKey}">
+                        <div class="ext4-axis-group-label">${group.label}</div>
+                        <div class="ext4-axis-nodes">${nodesHTML}</div>
+                    </div>`;
+                }).join('');
+                return `<div class="ext4-axis">${groups}</div>`;
+            },
+
+            _attachNodeMapListeners(container) {
+                container.querySelectorAll('.ext4-node[data-node-key]').forEach(node => {
+                    node.addEventListener('click', () => {
+                        const key = node.dataset.nodeKey;
+                        if (!key) return;
+                        this.selectExtendedChord(key);
+                    });
+                });
             },
 
             showExtendedIntro() {
-                const panel = document.getElementById('infoPanel4');
-                if (!panel) return;
+                const topSection = document.getElementById('level4TopSection');
+                if (!topSection) return;
 
-                const categoryDescriptions = {
-                    essential: {
-                        title: 'Los acordes de 7ª — la base de todo',
-                        color: '#d97706',
-                        text: `Los acordes de 7ª son la evolución natural de las triadas. Añades una nota más — la 7ª —
-                               y el acorde cobra una dimensión completamente nueva. Son el vocabulario básico del jazz,
-                               el soul y el blues, pero también aparecen constantemente en el pop y el rock moderno.`,
-                        chords: [
-                            { key: 'maj7',     color: '#10b981', desc: 'Mayor con 7ª mayor — soñador, luminoso. Muy usado en jazz y bossa nova.' },
-                            { key: 'dom7',     color: '#dc2626', desc: 'Mayor con 7ª menor — tensión que pide resolver. El acorde más usado en blues.' },
-                            { key: 'min7',     color: '#3b82f6', desc: 'Menor con 7ª menor — melancólico pero suave. Protagonista del jazz y el soul.' },
-                            { key: 'halfDim7', color: '#fb923c', desc: 'Menor con 5ª disminuida y 7ª menor — tenso, inestable. Típico del ii° en menor.' },
-                            { key: 'maj9',     color: '#10b981', desc: 'Mayor 7 más la 9ª — abre el acorde, lo hace más espacioso y aireado.' },
-                            { key: 'dom9',     color: '#dc2626', desc: 'Dominante 7 más la 9ª — más suavidad que el dom7 puro, muy común en funk y soul.' },
-                            { key: 'min9',     color: '#3b82f6', desc: 'Menor 7 más la 9ª — color emocional profundo, muy usado en R&B y neo-soul.' },
-                        ]
-                    },
-                    color9: {
-                        title: 'Las 9ª — apertura y color',
-                        color: '#d4a574',
-                        text: `La 9ª es simplemente la 2ª una octava más arriba. Añadirla al acorde lo "abre",
-                               lo hace más amplio y colorido. Dependiendo de si es natural, bemol o sostenida,
-                               el resultado emocional cambia radicalmente.`,
-                        chords: [
-                            { key: 'maj9', color: '#10b981', desc: '9ª natural sobre Mayor 7 — luminoso, aireado, muy característico del jazz moderno.' },
-                            { key: 'dom9', color: '#dc2626', desc: '9ª natural sobre Dom 7 — suaviza la tensión del dominante, muy usado en funk.' },
-                            { key: 'min9', color: '#3b82f6', desc: '9ª natural sobre Menor 7 — cálido y profundo, esencial en R&B y neo-soul.' },
-                            { key: '7#9',  color: '#f59e0b', desc: '9ª aumentada sobre Dom 7 — el "acorde Hendrix". Agresivo, ambiguo entre mayor y menor.' },
-                            { key: '7b9',  color: '#fb923c', desc: '9ª bemol sobre Dom 7 — tensión máxima, muy usado en jazz y flamenco para resoluciones dramáticas.' },
-                        ]
-                    },
-                    suspension11: {
-                        title: 'Las 11ª — suspensión y modalidad',
-                        color: '#d4a574',
-                        text: `La 11ª es la 4ª una octava arriba. Añade un carácter suspendido, como si el acorde
-                               "flotase" sin querer resolver del todo. Es muy usada en música modal, jazz contemporáneo
-                               y ambient. La versión sostenida (#11) tiene un carácter más brillante y lidio.`,
-                        chords: [
-                            { key: 'min11', color: '#3b82f6', desc: 'Menor 7 con 11ª — flotante, introspectivo. Muy usado en jazz modal y música de película.' },
-                            { key: 'dom11', color: '#dc2626', desc: 'Dom 7 con 11ª — suspenso y tensión combinados. Frecuente en jazz fusion y funk.' },
-                            { key: 'maj11', color: '#10b981', desc: 'Mayor 7 con 11ª — abierto y etéreo, con un toque de modalidad. Raro pero muy expresivo.' },
-                        ]
-                    },
-                    density13: {
-                        title: 'Las 13ª — densidad y jazz',
-                        color: '#34d399',
-                        text: `La 13ª es la 6ª una octava arriba y es la extensión más alta posible. Un acorde de 13ª
-                               teóricamente contiene casi todas las notas de la escala. Son los acordes más ricos y
-                               densos — el sonido por excelencia del jazz tradicional y del big band.`,
-                        chords: [
-                            { key: 'maj13', color: '#10b981', desc: 'Mayor 7 con 13ª — el acorde más luminoso y complejo. Sonido de jazz clásico sofisticado.' },
-                            { key: 'dom13', color: '#dc2626', desc: 'Dom 7 con 13ª — poderoso y denso. El dominante más rico, muy usado en jazz y blues.' },
-                            { key: 'min13', color: '#3b82f6', desc: 'Menor 7 con 13ª — oscuro y profundo a la vez. Muy característico del jazz modal.' },
-                        ]
-                    },
-                    altered: {
-                        title: 'Acordes alterados — tensión extrema',
-                        color: '#f87171',
-                        text: `Los acordes alterados son dominantes con extensiones cromáticas — notas "fuera" de la escala
-                               que crean la máxima tensión posible. Son la herramienta favorita del jazz para resoluciones
-                               dramáticas e inesperadas. Cuando un dominante alterado resuelve, el alivio es enorme.`,
-                        chords: [
-                            { key: '7#9', color: '#f59e0b', desc: 'Dom 7 con 9ª aumentada — el "acorde Hendrix". Mezcla mayor y menor en uno, muy agresivo.' },
-                            { key: '7b9', color: '#fb923c', desc: 'Dom 7 con 9ª bemol — disonancia intensa, muy dramático. Usado en jazz y flamenco.' },
-                        ]
-                    }
-                };
+                const nodeMapHTML = this._buildNodeMapHTML(null);
 
-                const cat = this.currentExtensionCategory || 'essential';
-                const desc = categoryDescriptions[cat];
-                if (!desc) return;
-
-                panel.innerHTML = `
-                    <div id="ext4-intro-header" style="display:flex;flex-direction:column;gap:10px;padding:6px 0;">
-                        <div>
-                            <div style="font-family:'Bebas Neue';font-size:24px;color:${desc.color};letter-spacing:1px;line-height:1;">${desc.title}</div>
-                            <div style="font-size:13px;color:#777;font-family:'Barlow Condensed';line-height:1.5;margin-top:6px;max-width:580px;">${desc.text.replace(/\s+/g, ' ').trim()}</div>
+                const groupsHTML = Object.entries(TENSION_GROUPS).map(([groupKey, group]) => {
+                    const cardsHTML = group.chords.map(key => {
+                        const cd = MusicTheory.extendedChords[key];
+                        if (!cd) return '';
+                        return `<button class="ext4-intro-chord-card" data-chord-key="${key}">
+                            <span class="ext4-intro-chord-symbol">${cd.symbol}</span>
+                            <span class="ext4-intro-chord-formula">${cd.formula}</span>
+                        </button>`;
+                    }).join('');
+                    return `<div class="ext4-axis-intro-group">
+                        <div class="ext4-axis-intro-group-header">
+                            <span class="ext4-axis-intro-group-label">${group.label}</span>
+                            <span class="ext4-axis-intro-group-sub">${group.subtitle}</span>
                         </div>
-                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                            ${desc.chords.map(c => {
-                                const cd = MusicTheory.extendedChords[c.key];
-                                if (!cd) return '';
-                                return `<button class="ext4-intro-pill" data-chord-key="${c.key}" title="${c.desc}" style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:#151515;border:1px solid ${c.color}44;border-radius:6px;cursor:pointer;transition:all 0.15s;">
-                                    <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:700;color:${c.color};">${cd.symbol}</span>
-                                    <span style="font-size:12px;color:#555;font-family:'Barlow Condensed';">${cd.formula}</span>
-                                </button>`;
-                            }).join('')}
-                        </div>
+                        <div class="ext4-intro-chord-grid">${cardsHTML}</div>
+                    </div>`;
+                }).join('');
+
+                topSection.innerHTML = `
+                    <div class="ext4-page">
+                        <div class="ext4-node-map" id="ext4-node-map">${nodeMapHTML}</div>
+                        <div class="ext4-axis-intro">${groupsHTML}</div>
+                        <p class="ext4-intro-hint">Selecciona un acorde para ver su anatomía, contexto y mutaciones.</p>
                     </div>
-                    <div id="ext4-chord-detail" style="display:none;border-top:1px solid #2a2a2a;padding-top:12px;margin-top:4px;"></div>
                 `;
 
-                // Pill click — select the chord
-                panel.querySelectorAll('.ext4-intro-pill').forEach(pill => {
-                    pill.addEventListener('mouseenter', () => {
-                        pill.style.borderColor = pill.style.borderColor.replace('44', 'ff');
-                        pill.style.background = '#1e1e1e';
-                    });
-                    pill.addEventListener('mouseleave', () => {
-                        pill.style.borderColor = pill.style.borderColor.replace('ff', '44');
-                        pill.style.background = '#151515';
-                    });
-                    pill.addEventListener('click', () => {
-                        const key = pill.dataset.chordKey;
-                        if (key) {
-                            this.currentExtendedChordType = key;
-                            document.querySelectorAll('.ext-matrix-btn').forEach(b => {
-                                b.classList.toggle('active', b.dataset.chordType === key);
-                            });
-                            this.showExtendedChord();
-                        }
+                this._attachNodeMapListeners(topSection);
+
+                topSection.querySelectorAll('.ext4-intro-chord-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const key = card.dataset.chordKey;
+                        if (key) this.selectExtendedChord(key);
                     });
                 });
             },
@@ -4696,24 +4567,7 @@ export const App = {
                     return;
                 }
 
-                // Show first voicing diagram in the top-left slot
-                const diagSlot = document.getElementById('diagramsContainer4');
-                if (diagSlot) {
-                    diagSlot.innerHTML = '';
-                    const voicingsKey = `${this.currentExtendedChordType}_voicings`;
-                    const firstVoicing = MusicTheory.extendedVoicings[voicingsKey]?.[0];
-                    if (firstVoicing) {
-                        const isAShape = firstVoicing.shape === 'A';
-                        const isDShape = firstVoicing.shape === 'D';
-                        const baseNote = isAShape ? 9 : (isDShape ? 2 : 4);
-                        const position = (this.currentRoot - baseNote + 12) % 12;
-                        const chordName = `${rootName}${chordData.symbol}`;
-                        const diag = ChordDiagram.create({ frets: firstVoicing.frets, fingers: null, barreInfo: null }, chordName, position);
-                        diagSlot.appendChild(diag);
-                    }
-                }
-
-                // Show notes on fretboard
+                // Show notes on fretboard (fretboard is hidden in level 4 but keep state consistent)
                 Fretboard.tonicNote = this.currentRoot;
                 Fretboard.currentScale = chordData.intervals.map((interval, i) => ({
                     note: MusicTheory.getNoteName(this.currentRoot + interval),
@@ -4724,150 +4578,296 @@ export const App = {
                 Fretboard.specificPositions = null;
                 Fretboard.updateDisplay();
 
-                // Show múltiples voicings
-                const voicingsKey = `${this.currentExtendedChordType}_voicings`;
-                const voicings = MusicTheory.extendedVoicings[voicingsKey];
-
-                const voicingsContainer = document.getElementById('voicingsContainer');
-                if (voicings && voicingsContainer) {
-                    voicingsContainer.innerHTML = '';
-                    voicingsContainer.style.display = 'block';
-
-                    // Label
-                    const label = document.createElement('div');
-                    label.style.cssText = "font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:8px;";
-                    label.textContent = `Voicings (${voicings.length})`;
-                    voicingsContainer.appendChild(label);
-
-                    // Grid horizontal expandido
-                    const grid = document.createElement('div');
-                    grid.className = 'voicings-scroll';
-                    grid.style.display = 'flex';
-
-                    voicings.forEach((voicing) => {
-                        const item = document.createElement('div');
-                        item.className = 'voicing-item';
-                        item.style.cursor = 'pointer';
-
-                        // Name + play hint
-                        const name = document.createElement('div');
-                        name.className = 'voicing-name';
-                        name.innerHTML = `${voicing.name}<span class="voicing-play-hint">▶ tocar</span>`;
-                        item.appendChild(name);
-
-                        // Diagram
-                        const isAShape = voicing.shape === 'A';
-                        const isDShape = voicing.shape === 'D';
-                        const baseNote = isAShape ? 9 : (isDShape ? 2 : 4);
-                        const position = (this.currentRoot - baseNote + 12) % 12;
-                        const rootOffset = (this.currentRoot - baseNote + 12) % 12;
-                        const chordName = `${rootName}${chordData.symbol}`;
-                        const diagram = ChordDiagram.create({ frets: voicing.frets, fingers: null, barreInfo: null }, chordName, position);
-                        item.appendChild(diagram);
-
-                        item.addEventListener('click', () => {
-                            if (AudioEngine.enabled && AudioEngine.audioContext) {
-                                if (AudioEngine.audioContext.state === 'suspended') {
-                                    AudioEngine.audioContext.resume();
-                                }
-                                this.playVoicingFrets(voicing.frets, rootOffset, 1.5);
-                                item.style.borderColor = '#dc2626';
-                                item.style.boxShadow = '0 0 10px rgba(220,38,38,0.3)';
-                                setTimeout(() => {
-                                    item.style.borderColor = '';
-                                    item.style.boxShadow = '';
-                                }, 1200);
-                            }
-                        });
-
-                        grid.appendChild(item);
-                    });
-
-                    voicingsContainer.appendChild(grid);
-                } else {
-                    if (voicingsContainer) {
-                        voicingsContainer.style.display = 'none';
-                    }
-                }
-
                 this.updateDisplay(
                     `${rootName} ${chordData.name}`,
                     `${chordData.formula} — ${chordData.intervals.map(i => MusicTheory.getNoteName(this.currentRoot + i)).join(' · ')}`
                 );
 
-                // Clear below-fretboard panel
                 const belowPanel = document.getElementById('infoPanelOtherLevels');
                 if (belowPanel) belowPanel.innerHTML = '';
 
-                // Chord info panel — keep intro header, update only chord detail
-                const panel = document.getElementById('infoPanel4');
-                if (panel) {
-                    // If the intro header is gone (edge case), rebuild it first
-                    if (!document.getElementById('ext4-intro-header')) {
-                        this.showExtendedIntro();
-                    }
+                // Build voicings data
+                const voicingsKey = `${this.currentExtendedChordType}_voicings`;
+                const voicings = MusicTheory.extendedVoicings[voicingsKey] || [];
 
+                // Build anatomy HTML
+                const degreeColors = { '1': '#dc2626', '3': '#888', '5': '#888', 'b3': '#888', 'b5': '#888', '7': '#d97706', 'b7': '#d97706', '9': '#d4a574', 'b9': '#d4a574', '#9': '#d4a574', '11': '#d4a574', '13': '#34d399' };
+                const extensionDegrees = ['7', '9', '11', '13'];
+                const signatureDegrees = chordData.signature || [];
+                let anatomyHTML = '';
+                if (chordData.anatomy && chordData.anatomy.length) {
+                    anatomyHTML = chordData.anatomy.map((entry, i) => {
+                        const noteName = MusicTheory.getNoteName(this.currentRoot + chordData.intervals[i]);
+                        const degree = entry.degree;
+                        const isSignature = signatureDegrees.includes(degree);
+                        const color = isSignature ? '#e5e5e5' : (degreeColors[degree] || '#888');
+                        const cardMod = i === 0 ? 'ext4-note-card--root' : isSignature ? 'ext4-note-card--signature' : extensionDegrees.includes(degree) ? 'ext4-note-card--ext' : '';
+                        return `<div class="ext4-note-card ${cardMod}">
+                            <div class="ext4-note-card-degree">${degree}</div>
+                            <div class="ext4-note-card-name" style="color:${color};">${noteName}</div>
+                            <div class="ext4-note-card-role">${entry.role}${isSignature ? ' <span class="ext4-note-card-signature-badge">★</span>' : ''}</div>
+                            <p class="ext4-note-card-contribution">${entry.contribution}</p>
+                        </div>`;
+                    }).join('');
+                } else {
                     const degreeNames = ['1', '3', '5', '7', '9', '11', '13'];
-                    const extensionDegrees = ['7', '9', '11', '13'];
-                    const extensionExplanations = {
-                        '7':  { label: '7ª', color: '#d97706', text: 'Tensión — pide resolver' },
-                        '9':  { label: '9ª', color: '#d4a574', text: 'Apertura — 2ª una octava arriba' },
-                        '11': { label: '11ª', color: '#d4a574', text: 'Suspenso — 4ª una octava arriba' },
-                        '13': { label: '13ª', color: '#34d399', text: 'Densidad — 6ª una octava arriba' },
-                    };
-
-                    const noteTokens = chordData.intervals.map((interval, i) => {
+                    anatomyHTML = chordData.intervals.map((interval, i) => {
                         const noteName = MusicTheory.getNoteName(this.currentRoot + interval);
                         const degree = degreeNames[i] || '';
-                        const isRoot = i === 0;
-                        const isExt = extensionDegrees.includes(degree);
-                        const color = isRoot ? '#dc2626' : isExt ? '#d4a574' : '#888';
-                        return `<span style="font-family:'IBM Plex Mono';font-size:15px;color:${color};background:#1a1a1a;border:1px solid ${color}44;padding:5px 12px;border-radius:6px;">${noteName}<sub style="font-size:10px;color:#555;margin-left:2px;">${degree}</sub></span>`;
+                        const color = i === 0 ? '#dc2626' : extensionDegrees.includes(degree) ? '#d4a574' : '#888';
+                        const cardMod = i === 0 ? 'ext4-note-card--root' : '';
+                        return `<div class="ext4-note-card ${cardMod}">
+                            <div class="ext4-note-card-degree">${degree}</div>
+                            <div class="ext4-note-card-name" style="color:${color};">${noteName}</div>
+                        </div>`;
                     }).join('');
-
-                    const extTokens = ['7','9','11','13'].map(d => {
-                        const ex = extensionExplanations[d];
-                        const isPresent = degreeNames.some((dn, i) => dn === d && chordData.intervals[i] !== undefined);
-                        return `<span style="display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;border-radius:6px;background:#1a1a1a;border:1px solid ${isPresent ? ex.color : '#252525'};color:${isPresent ? ex.color : '#333'};">
-                            <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:700;">${ex.label}</span>
-                            ${isPresent ? `<span style="font-family:'Barlow Condensed';font-size:10px;color:${ex.color}88;">${ex.text}</span>` : ''}
-                        </span>`;
-                    }).join('');
-
-                    const chordDetail = document.getElementById('ext4-chord-detail');
-                    if (chordDetail) {
-                        chordDetail.innerHTML = `
-                            <div style="display:flex;flex-direction:column;gap:14px;">
-                                <!-- Nombre + fórmula + uso -->
-                                <div style="display:flex;flex-direction:column;gap:4px;">
-                                    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
-                                        <div style="font-family:'Bebas Neue';font-size:32px;color:#fafafa;line-height:1;letter-spacing:1px;">${rootName}<span style="color:#dc2626;">${chordData.symbol}</span></div>
-                                        <div style="font-family:'IBM Plex Mono';font-size:14px;color:#555;">${chordData.formula}</div>
-                                    </div>
-                                    <div style="font-size:14px;color:#888;font-family:'Barlow Condensed';line-height:1.4;">${chordData.usage}</div>
-                                </div>
-
-                                <!-- Notas siempre visibles -->
-                                <div>
-                                    <div style="font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:6px;">Notas</div>
-                                    <div style="display:flex;flex-wrap:wrap;gap:7px;">
-                                        ${noteTokens}
-                                    </div>
-                                </div>
-
-                                <!-- Extensiones siempre visibles -->
-                                <div>
-                                    <div style="font-family:'Barlow Condensed';font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:6px;">Extensiones presentes</div>
-                                    <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-                                        ${extTokens}
-                                        <span style="font-size:12px;color:#333;font-family:'Barlow Condensed';margin-left:4px;">1 → 3 → 5 → 7 → 9 → 11 → 13</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        chordDetail.style.display = 'block';
-                    }
                 }
+
+                // Context section
+                let contextHTML = '';
+                if (chordData.context) {
+                    const genreTags = (chordData.context.genre || []).map(g => `<span class="ext4-genre-tag">${g}</span>`).join('');
+                    const replacesBlock = chordData.context.replaces
+                        ? `<div class="ext4-replaces-block">
+                               <span class="ext4-replaces-kicker">EN LUGAR DE</span>
+                               <span class="ext4-replaces-body">${chordData.context.replaces}</span>
+                           </div>`
+                        : '';
+                    contextHTML = `
+                        <div class="ext4-edu-section">
+                            <div class="ext4-edu-heading ext4-edu-heading--primary">
+                                CUÁNDO Y DÓNDE USARLO
+                            </div>
+                            <div class="ext4-genre-strip">${genreTags}</div>
+                            <div class="ext4-context-block">
+                                <p class="ext4-context-body">${chordData.context.moment || ''}</p>
+                            </div>
+                            ${replacesBlock}
+                        </div>`;
+                }
+
+                // Mutations section
+                let mutationsHTML = '';
+                if (chordData.mutations && chordData.mutations.length) {
+                    const cards = chordData.mutations.map(m => {
+                        const degBadge = m.highlightDegree
+                            ? `<span class="ext4-mutation-degree-badge">${m.highlightDegree}</span>`
+                            : '';
+                        return `
+                        <div class="ext4-mutation-card">
+                            <div class="ext4-mutation-card-action">${degBadge}${m.change}</div>
+                            <div class="ext4-mutation-card-arrow">→</div>
+                            <div class="ext4-mutation-card-result">${m.result}</div>
+                            <p class="ext4-mutation-card-effect">${m.character}</p>
+                        </div>`;
+                    }).join('');
+                    mutationsHTML = `
+                        <div class="ext4-edu-section">
+                            <div class="ext4-edu-heading">
+                                <span class="ext4-edu-heading-number">02</span>
+                                QUÉ PASA SI CAMBIAS UNA NOTA
+                            </div>
+                            <div class="ext4-mutations-list">${cards}</div>
+                        </div>`;
+                }
+
+                // Related chords section
+                let relatedHTML = '';
+                if (chordData.related && chordData.related.length) {
+                    const chips = chordData.related.map(r => {
+                        const relData = MusicTheory.extendedChords[r.key];
+                        const symbol = relData ? relData.symbol : r.key;
+                        return `<button class="ext4-related-chip" data-related-key="${r.key}">
+                            <span class="ext4-related-chip-symbol">${symbol}</span>
+                            <span class="ext4-related-chip-relation">${r.relation}</span>
+                        </button>`;
+                    }).join('');
+                    relatedHTML = `
+                        <div class="ext4-edu-section">
+                            <div class="ext4-edu-heading">
+                                <span class="ext4-edu-heading-number">03</span>
+                                ACORDES RELACIONADOS
+                            </div>
+                            <div class="ext4-related-strip">${chips}</div>
+                        </div>`;
+                }
+
+                // Build voicings dropdown rows HTML
+                const voicingsRowsHTML = voicings.map((v, i) => `
+                    <div class="ext4-voicing-row${i === 0 ? ' active' : ''}" data-voicing-idx="${i}">
+                        <span class="ext4-voicing-row-name">${v.name}</span>
+                        <span class="ext4-voicing-row-play">▶</span>
+                    </div>`).join('');
+
+                const voicingsDetailsHTML = voicings.length > 1 ? `
+                    <details class="ext4-voicings-details" id="ext4-voicings-details">
+                        <summary class="ext4-voicings-summary">
+                            <span>Otras formas de tocar este acorde</span>
+                            <span class="ext4-voicings-summary-arrow">▼</span>
+                        </summary>
+                        <div class="ext4-voicings-list" id="ext4-voicings-list">${voicingsRowsHTML}</div>
+                    </details>` : '';
+
+                // Write the full single-column page into #level4TopSection
+                const topSection = document.getElementById('level4TopSection');
+                if (!topSection) return;
+
+                // Prev / Next navigation
+                const categoryChords = this._getCategoryChords();
+                const currentIdx = categoryChords.indexOf(this.currentExtendedChordType);
+                const prevKey = currentIdx > 0 ? categoryChords[currentIdx - 1] : null;
+                const nextKey = currentIdx < categoryChords.length - 1 ? categoryChords[currentIdx + 1] : null;
+                const prevData = prevKey ? MusicTheory.extendedChords[prevKey] : null;
+                const nextData = nextKey ? MusicTheory.extendedChords[nextKey] : null;
+
+                const navBarHTML = `
+                    <div class="ext4-nav-bar">
+                        <button class="ext4-nav-btn prev" id="ext4-prev-btn" ${!prevKey ? 'disabled' : ''} data-nav-key="${prevKey || ''}">
+                            <span class="ext4-nav-btn-arrow">←</span>
+                            <div class="ext4-nav-btn-text">
+                                <span class="ext4-nav-btn-sub">anterior</span>
+                                <span class="ext4-nav-btn-chord">${prevData ? prevData.symbol : ''}</span>
+                            </div>
+                        </button>
+                        <span class="ext4-nav-center">${currentIdx + 1} / ${categoryChords.length}</span>
+                        <button class="ext4-nav-btn next" id="ext4-next-btn" ${!nextKey ? 'disabled' : ''} data-nav-key="${nextKey || ''}">
+                            <div class="ext4-nav-btn-text next">
+                                <span class="ext4-nav-btn-sub">siguiente</span>
+                                <span class="ext4-nav-btn-chord">${nextData ? nextData.symbol : ''}</span>
+                            </div>
+                            <span class="ext4-nav-btn-arrow">→</span>
+                        </button>
+                    </div>`;
+
+                const chordPickerHTML = this._buildChordPickerHTML(this.currentExtendedChordType);
+
+                topSection.innerHTML = `
+                    <div class="ext4-page">
+                        <div class="ext4-chord-picker" id="ext4-chord-picker">${chordPickerHTML}</div>
+                        <div class="ext4-header">
+                            <div>
+                                <span class="ext4-chord-root">${rootName}</span><span class="ext4-chord-symbol">${chordData.symbol}</span>
+                            </div>
+                            <div class="ext4-chord-formula">${chordData.formula}</div>
+                            ${chordData.soundCharacter ? `<p class="ext4-sound-char-hero">${chordData.soundCharacter}</p>` : ''}
+                        </div>
+
+                        <div class="ext4-diagram-block">
+                            <div class="ext4-diagram-main">
+                                <div class="ext4-diagram-wrap" id="ext4-diag-slot"></div>
+                                <button class="ext4-play-btn" id="ext4-play-btn">▶ TOCAR</button>
+                            </div>
+                            ${voicingsDetailsHTML}
+                        </div>
+
+                        <div class="ext4-body">
+                            ${contextHTML}
+                            <div class="ext4-edu-section">
+                                <div class="ext4-edu-heading">
+                                    <span class="ext4-edu-heading-number">01</span>
+                                    ANATOMÍA NOTA A NOTA
+                                </div>
+                                <div class="ext4-anatomy-grid-hero">${anatomyHTML}</div>
+                            </div>
+                            ${mutationsHTML}
+                            ${relatedHTML}
+                        </div>
+
+                        ${navBarHTML}
+                    </div>
+                `;
+
+                // Helpers
+                const diagSlot = document.getElementById('ext4-diag-slot');
+                let activeVoicingIndex = 0;
+
+                const getBaseNote = (v) => v.shape === 'A' ? 9 : v.shape === 'D' ? 2 : 4;
+
+                const renderDiagram = (voicing) => {
+                    if (!diagSlot || !voicing) return;
+                    const position = (this.currentRoot - getBaseNote(voicing) + 12) % 12;
+                    diagSlot.innerHTML = '';
+                    diagSlot.appendChild(ChordDiagram.create(
+                        { frets: voicing.frets, fingers: null, barreInfo: null },
+                        `${rootName}${chordData.symbol}`,
+                        position
+                    ));
+                };
+
+                const playVoicing = (voicing) => {
+                    if (!AudioEngine.enabled || !AudioEngine.audioContext) return;
+                    if (AudioEngine.audioContext.state === 'suspended') AudioEngine.audioContext.resume();
+                    this.playVoicingFrets(voicing.frets, (this.currentRoot - getBaseNote(voicing) + 12) % 12, 1.5);
+                };
+
+                if (voicings.length > 0) renderDiagram(voicings[0]);
+
+                // Voicings list
+                const voicingsList = document.getElementById('ext4-voicings-list');
+                if (voicingsList) {
+                    voicingsList.querySelectorAll('.ext4-voicing-row').forEach(row => {
+                        row.addEventListener('click', () => {
+                            const idx = parseInt(row.dataset.voicingIdx, 10);
+                            const voicing = voicings[idx];
+                            if (!voicing) return;
+                            activeVoicingIndex = idx;
+                            renderDiagram(voicing);
+                            voicingsList.querySelectorAll('.ext4-voicing-row').forEach((r, i) => {
+                                r.classList.toggle('active', i === idx);
+                            });
+                            playVoicing(voicing);
+                        });
+                    });
+                }
+
+                // Play button
+                document.getElementById('ext4-play-btn')?.addEventListener('click', () => {
+                    const voicing = voicings[activeVoicingIndex];
+                    if (voicing) playVoicing(voicing);
+                });
+
+                // Node map clicks
+                this._attachNodeMapListeners(topSection);
+
+                // Prev / Next buttons
+                topSection.querySelector('#ext4-prev-btn')?.addEventListener('click', (e) => {
+                    const key = e.currentTarget.dataset.navKey;
+                    if (key) this.selectExtendedChord(key);
+                });
+                topSection.querySelector('#ext4-next-btn')?.addEventListener('click', (e) => {
+                    const key = e.currentTarget.dataset.navKey;
+                    if (key) this.selectExtendedChord(key);
+                });
+
+                // Chord picker clicks
+                topSection.querySelectorAll('.ext4-picker-btn[data-picker-key]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const key = btn.dataset.pickerKey;
+                        if (key) this.selectExtendedChord(key);
+                    });
+                });
+
+                // Related chord clicks
+                topSection.querySelectorAll('.ext4-related-chip[data-related-key]').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        const key = chip.dataset.relatedKey;
+                        if (key) this.selectExtendedChord(key);
+                    });
+                });
+            },
+
+            selectExtendedChord(key) {
+                const chordData = MusicTheory.extendedChords[key];
+                if (!chordData) return;
+                this.currentExtendedChordType = key;
+                const group = this._getGroupForChord(key);
+                if (group) {
+                    this.currentExtensionCategory = group;
+                    document.querySelectorAll('.extension-tab').forEach(b => {
+                        b.classList.toggle('active', b.dataset.extCategory === this.currentExtensionCategory);
+                    });
+                }
+                this.showExtendedChord();
             },
 
             // Convierte un voicing de frets reales a notas MIDI con octavas correctas
@@ -4893,64 +4893,6 @@ export const App = {
                         AudioEngine.playMidiNote(midi, duration * 0.85);
                     }, i * 35);
                 });
-            },
-
-            async playTensionComparison(tension) {
-                if (!AudioEngine.audioContext || !AudioEngine.enabled) {
-                    console.warn('AudioContext not initialized');
-                    return;
-                }
-
-                if (AudioEngine.audioContext.state === 'suspended') {
-                    await AudioEngine.audioContext.resume();
-                }
-
-                // Mapeo de tensiones a tipos de acordes
-                const tensionMap = {
-                    'basic':       'dom7',
-                    'with9':       'dom9',
-                    'with13':      'dom13',
-                    'altered_b9':  '7b9',
-                    'altered_s9':  '7#9',
-                };
-
-                const rootOffset = (this.currentRoot - 4 + 12) % 12;
-
-                const playOne = (chordType, duration = 1.5) => {
-                    const voicings = MusicTheory.extendedVoicings[`${chordType}_voicings`];
-                    if (voicings && voicings.length > 0) {
-                        const v = voicings.find(v => v.shape === 'E') || voicings[0];
-                        this.playVoicingFrets(v.frets, rootOffset, duration);
-                    }
-                };
-
-                const highlightBtn = (t) => {
-                    const btn = document.querySelector(`[data-tension="${t}"]`);
-                    if (btn) {
-                        btn.style.borderColor = '#dc2626';
-                        btn.style.color = '#fafafa';
-                        setTimeout(() => {
-                            btn.style.borderColor = '';
-                            btn.style.color = '';
-                        }, 1500);
-                    }
-                };
-
-                if (tension === 'sequence') {
-                    const isAltered = this.currentExtensionCategory === 'altered';
-                    const sequence = isAltered
-                        ? ['basic', 'altered_b9', 'altered_s9']
-                        : ['basic', 'with9', 'with13'];
-                    for (let i = 0; i < sequence.length; i++) {
-                        const t = sequence[i];
-                        playOne(tensionMap[t], 1.2);
-                        highlightBtn(t);
-                        await new Promise(resolve => setTimeout(resolve, 1700));
-                    }
-                } else {
-                    playOne(tensionMap[tension], 1.5);
-                    highlightBtn(tension);
-                }
             },
 
             // ========== NIVEL 12 - DOMINANTES SECUNDARIOS ==========
