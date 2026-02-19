@@ -4741,38 +4741,107 @@ export const App = {
 
                 const chordPickerHTML = this._buildChordPickerHTML(this.currentExtendedChordType);
 
+                // ========== NUEVO LAYOUT: Flujo pedagógico ==========
+                // 1. SELECTOR (tabs) → 2. HERO (diagrama + nombre) → 3. QUÉ ES → 4. CÓMO SUENA → 5. CUÁNDO USAR
+
                 topSection.innerHTML = `
                     <div class="ext4-page">
-                        <div class="ext4-chord-picker" id="ext4-chord-picker">${chordPickerHTML}</div>
-                        <div class="ext4-header">
-                            <div>
-                                <span class="ext4-chord-root">${rootName}</span><span class="ext4-chord-symbol">${chordData.symbol}</span>
-                            </div>
-                            <div class="ext4-chord-formula">${chordData.formula}</div>
-                            ${chordData.soundCharacter ? `<p class="ext4-sound-char-hero">${chordData.soundCharacter}</p>` : ''}
-                        </div>
+                        <!-- 1. SELECTOR: Categorías + Acordes -->
+                        <nav class="ext4-selector" id="ext4-chord-picker">
+                            ${chordPickerHTML}
+                        </nav>
 
-                        <div class="ext4-diagram-block">
-                            <div class="ext4-diagram-main">
+                        <!-- 2. HERO: Lo primero que ves - Diagrama + Nombre -->
+                        <section class="ext4-hero">
+                            <div class="ext4-hero-diagram">
                                 <div class="ext4-diagram-wrap" id="ext4-diag-slot"></div>
-                                <button class="ext4-play-btn" id="ext4-play-btn">▶ TOCAR</button>
                             </div>
-                            ${voicingsDetailsHTML}
-                        </div>
-
-                        <div class="ext4-body">
-                            ${contextHTML}
-                            <div class="ext4-edu-section">
-                                <div class="ext4-edu-heading">
-                                    <span class="ext4-edu-heading-number">01</span>
-                                    ANATOMÍA NOTA A NOTA
+                            <div class="ext4-hero-info">
+                                <div class="ext4-hero-name">
+                                    <span class="ext4-chord-root">${rootName}</span><span class="ext4-chord-symbol">${chordData.symbol}</span>
                                 </div>
-                                <div class="ext4-anatomy-grid-hero">${anatomyHTML}</div>
+                                <div class="ext4-hero-formula">${chordData.formula}</div>
+                                <button class="ext4-play-btn" id="ext4-play-btn">▶ ESCUCHAR</button>
+                                ${voicings.length > 1 ? `<button class="ext4-voicings-toggle" id="ext4-voicings-toggle">+ ${voicings.length - 1} voicings</button>` : ''}
                             </div>
-                            ${mutationsHTML}
-                            ${relatedHTML}
+                        </section>
+
+                        <!-- Voicings expandible -->
+                        ${voicings.length > 1 ? `
+                        <div class="ext4-voicings-panel hidden" id="ext4-voicings-panel">
+                            <div class="ext4-voicings-grid" id="ext4-voicings-list">
+                                ${voicings.map((v, i) => `
+                                    <button class="ext4-voicing-card${i === 0 ? ' active' : ''}" data-voicing-idx="${i}">
+                                        <span class="ext4-voicing-name">${v.name}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>` : ''}
+
+                        <!-- GRID: Anatomía + Sonido + Contexto en 2 columnas -->
+                        <div class="ext4-content-grid">
+                            <!-- Anatomía -->
+                            <section class="ext4-section">
+                                <h3 class="ext4-section-title">NOTAS</h3>
+                                <div class="ext4-anatomy">${anatomyHTML}</div>
+                            </section>
+
+                            <!-- Cómo suena -->
+                            ${chordData.soundCharacter ? `
+                            <section class="ext4-section ext4-sound">
+                                <h3 class="ext4-section-title">CARÁCTER</h3>
+                                <p class="ext4-sound-desc">${chordData.soundCharacter}</p>
+                            </section>` : '<div></div>'}
+
+                            <!-- Contexto -->
+                            ${chordData.context ? `
+                            <section class="ext4-section ext4-context">
+                                <h3 class="ext4-section-title">CUÁNDO USARLO</h3>
+                                ${chordData.context.genre && chordData.context.genre.length ? `
+                                <div class="ext4-genres">
+                                    ${chordData.context.genre.map(g => `<span class="ext4-genre">${g}</span>`).join('')}
+                                </div>` : ''}
+                                ${chordData.context.moment ? `<p class="ext4-context-text">${chordData.context.moment}</p>` : ''}
+                                ${chordData.context.replaces ? `
+                                <div class="ext4-tip">
+                                    <span class="ext4-tip-label">💡</span>
+                                    <span class="ext4-tip-text">Usa ${rootName}${chordData.symbol} en lugar de ${chordData.context.replaces}</span>
+                                </div>` : ''}
+                            </section>` : ''}
+
+                            <!-- Mutaciones -->
+                            ${chordData.mutations && chordData.mutations.length ? `
+                            <section class="ext4-section">
+                                <h3 class="ext4-section-title">MUTACIONES</h3>
+                                <div class="ext4-mutations">
+                                    ${chordData.mutations.map(m => `
+                                        <div class="ext4-mutation">
+                                            <span class="ext4-mutation-change">${m.change}</span>
+                                            <span class="ext4-mutation-arrow">→</span>
+                                            <span class="ext4-mutation-result">${m.result}</span>
+                                            <p class="ext4-mutation-effect">${m.character}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </section>` : ''}
+
+                            <!-- Relacionados -->
+                            ${chordData.related && chordData.related.length ? `
+                            <section class="ext4-section">
+                                <h3 class="ext4-section-title">RELACIONADOS</h3>
+                                <div class="ext4-related">
+                                    ${chordData.related.map(r => {
+                                        const relData = MusicTheory.extendedChords[r.key];
+                                        return `<button class="ext4-related-btn" data-related-key="${r.key}">
+                                            <span class="ext4-related-symbol">${relData ? relData.symbol : r.key}</span>
+                                            <span class="ext4-related-why">${r.relation}</span>
+                                        </button>`;
+                                    }).join('')}
+                                </div>
+                            </section>` : ''}
                         </div>
 
+                        <!-- NAV: Anterior / Siguiente -->
                         ${navBarHTML}
                     </div>
                 `;
@@ -4802,18 +4871,30 @@ export const App = {
 
                 if (voicings.length > 0) renderDiagram(voicings[0]);
 
+                // Toggle voicings panel
+                const voicingsToggle = document.getElementById('ext4-voicings-toggle');
+                const voicingsPanel = document.getElementById('ext4-voicings-panel');
+                if (voicingsToggle && voicingsPanel) {
+                    voicingsToggle.addEventListener('click', () => {
+                        voicingsPanel.classList.toggle('hidden');
+                        voicingsToggle.textContent = voicingsPanel.classList.contains('hidden')
+                            ? `+ ${voicings.length - 1} voicings`
+                            : '− Ocultar voicings';
+                    });
+                }
+
                 // Voicings list
                 const voicingsList = document.getElementById('ext4-voicings-list');
                 if (voicingsList) {
-                    voicingsList.querySelectorAll('.ext4-voicing-row').forEach(row => {
-                        row.addEventListener('click', () => {
-                            const idx = parseInt(row.dataset.voicingIdx, 10);
+                    voicingsList.querySelectorAll('.ext4-voicing-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            const idx = parseInt(card.dataset.voicingIdx, 10);
                             const voicing = voicings[idx];
                             if (!voicing) return;
                             activeVoicingIndex = idx;
                             renderDiagram(voicing);
-                            voicingsList.querySelectorAll('.ext4-voicing-row').forEach((r, i) => {
-                                r.classList.toggle('active', i === idx);
+                            voicingsList.querySelectorAll('.ext4-voicing-card').forEach((c, i) => {
+                                c.classList.toggle('active', i === idx);
                             });
                             playVoicing(voicing);
                         });

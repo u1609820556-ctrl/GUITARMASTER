@@ -26,6 +26,24 @@
             letter-spacing: 0.02em;
         }
 
+        /* ========== GLOBAL: Texto explicativo legible ========== */
+        /* Labels y texto descriptivo - más claro para legibilidad */
+        .text-void-400, .text-slate-400 {
+            color: #cccccc !important;
+        }
+
+        /* Info panels y descripciones */
+        .scale-info-box p,
+        .info-description,
+        .info-value,
+        .chord-info p,
+        .progression-info p,
+        [class*="info"] p,
+        [class*="desc"],
+        [class*="explanation"] {
+            color: #e5e5e5;
+        }
+
         /* Noise texture overlay */
         body::before {
             content: '';
@@ -1222,474 +1240,351 @@
             }
         }
 
-        /* ========== NIVEL 4: ACORDES EXTENDIDOS — REDISEÑO INDUSTRIAL ========== */
+        /* ========== NIVEL 4: ACORDES EXTENDIDOS — REDISEÑO ESTRUCTURAL ========== */
+        /* Flujo: 1.Selector → 2.Hero(diagrama) → 3.Qué es → 4.Cómo suena → 5.Cuándo usar */
 
         .level4-top-section {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0;
             background: #0a0a0a;
         }
 
-        .level4-top-section.hidden {
-            display: none;
-        }
-
-        .level4-content-row {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 32px;
-            max-width: 1200px;
-            width: 100%;
-        }
-
+        .level4-top-section.hidden { display: none; }
+        .level4-content-row { display: none; }
         .level4-diagram-slot { display: none; }
         .level4-intro-slot { display: none; }
 
         body[data-level="4"] .level4-top-section {
             display: block;
-            padding: 0;
-            background: #0a0a0a;
         }
 
         body[data-level="4"] #level4TopSection {
-            padding: 0;
             height: calc(100vh - 120px);
             overflow-y: auto;
-            width: 100%;
             background: #0a0a0a;
         }
 
-        /* ---- Contenedor principal ---- */
+        /* ========== CONTENEDOR PRINCIPAL ========== */
         .ext4-page {
-            padding: 24px 32px 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 1100px;
+            max-width: 1600px;
             margin: 0 auto;
-            background: #0a0a0a;
-        }
-
-        /* ---- PICKER: Tabs de categorías + Pills de acordes ---- */
-        .ext4-chord-picker {
+            padding: 16px 40px 40px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding: 20px 24px;
-            background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
+        }
+
+        /* ========== 1. SELECTOR: Categorías separadas horizontalmente ========== */
+        .ext4-selector {
+            background: #0a0a0a;
             border: 1px solid #1a1a1a;
-            border-radius: 12px;
+            border-radius: 8px;
+            padding: 14px 20px;
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .ext4-picker-group {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            border-right: 1px solid #252525;
+        }
+
+        .ext4-picker-group:last-child {
+            border-right: none;
         }
 
         .ext4-picker-group-label {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 14px;
-            color: #555;
-            letter-spacing: 3px;
+            font-size: 13px;
+            color: #ffffff;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            margin-right: 8px;
         }
 
         .ext4-picker-group-btns {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 24px;
         }
 
-        .ext4-picker-connector {
-            display: none;
-        }
-
-        .ext4-picker-group-connector {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #252525, transparent);
-            margin: 8px 0;
-        }
+        .ext4-picker-connector { display: none; }
+        .ext4-picker-group-connector { display: none; }
 
         .ext4-picker-btn {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
+            padding: 6px 12px;
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
             cursor: pointer;
-            background: #111;
-            border: 1px solid #252525;
-            border-radius: 8px;
-            padding: 8px 14px;
-            transition: all 0.15s ease;
+            transition: all 0.1s;
         }
 
         .ext4-picker-btn:hover {
-            background: #161616;
-            border-color: #333;
+            background: #1a1a1a;
+            border-color: #444;
         }
 
         .ext4-picker-btn.active {
-            background: rgba(220, 38, 38, 0.08);
+            background: #dc2626;
             border-color: #dc2626;
         }
 
         .ext4-picker-btn-circle {
-            width: auto;
-            height: auto;
-            border-radius: 0;
-            border: none;
-            background: transparent;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            font-weight: 700;
-            color: #888;
-            transition: color 0.15s;
-        }
-
-        .ext4-picker-btn:hover .ext4-picker-btn-circle {
+            font-size: 13px;
+            font-weight: 600;
             color: #ccc;
         }
 
-        .ext4-picker-btn.active .ext4-picker-btn-circle {
-            color: #dc2626;
-        }
+        .ext4-picker-btn:hover .ext4-picker-btn-circle { color: #fff; }
+        .ext4-picker-btn.active .ext4-picker-btn-circle { color: #fff; }
 
-        .ext4-picker-btn-label {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #555;
-            letter-spacing: 0.5px;
-            transition: color 0.15s;
-        }
+        .ext4-picker-btn-label { display: none; }
 
-        .ext4-picker-btn:hover .ext4-picker-btn-label { color: #888; }
-        .ext4-picker-btn.active .ext4-picker-btn-label { color: #999; }
-
-        /* ---- HEADER: Acorde seleccionado ---- */
-        .ext4-header {
+        /* ========== 2. HERO: Centrado, ancho completo ========== */
+        .ext4-hero {
             display: flex;
             align-items: center;
-            gap: 24px;
-            padding: 20px 0;
-            border-bottom: 1px solid #1a1a1a;
-        }
-
-        .ext4-chord-root {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 72px;
-            color: #fafafa;
-            line-height: 0.85;
-            letter-spacing: -2px;
-        }
-
-        .ext4-chord-symbol {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 32px;
-            color: #dc2626;
-            vertical-align: super;
-            margin-left: -4px;
-        }
-
-        .ext4-chord-formula {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            color: #666;
-            letter-spacing: 2px;
-            background: #111;
-            padding: 6px 14px;
-            border-radius: 6px;
-            border: 1px solid #1a1a1a;
-        }
-
-        .ext4-sound-char-hero {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 15px;
-            font-style: italic;
-            color: #888;
-            border-left: 3px solid #d97706;
-            padding-left: 12px;
-            margin: 0;
-            max-width: 400px;
-            line-height: 1.4;
-        }
-
-        /* ---- DIAGRAMA + PLAY ---- */
-        .ext4-diagram-block {
-            display: flex;
-            align-items: flex-start;
-            gap: 32px;
-            padding: 24px;
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-        }
-
-        .ext4-diagram-main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ext4-diagram-wrap {
-            flex-shrink: 0;
-        }
-
-        .ext4-play-btn {
-            padding: 10px 32px;
-            background: linear-gradient(180deg, #1a0808 0%, #0f0505 100%);
-            border: 1px solid #dc2626;
-            border-radius: 8px;
-            color: #dc2626;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .ext4-play-btn:hover {
-            background: #dc2626;
-            color: #fafafa;
-            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
-        }
-
-        /* Voicings collapsible - más compacto */
-        .ext4-voicings-details {
-            flex: 1;
-            max-width: 280px;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #0a0a0a;
-        }
-
-        .ext4-voicings-summary {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: #111;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
-            color: #555;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            cursor: pointer;
-            list-style: none;
-            user-select: none;
-            transition: all 0.15s;
-        }
-
-        .ext4-voicings-summary::-webkit-details-marker { display: none; }
-        .ext4-voicings-summary:hover { color: #888; background: #151515; }
-
-        .ext4-voicings-summary-arrow {
-            font-size: 8px;
-            transition: transform 0.2s;
-        }
-
-        .ext4-voicings-details[open] .ext4-voicings-summary-arrow {
-            transform: rotate(180deg);
-        }
-
-        .ext4-voicings-list {
-            display: flex;
-            flex-direction: column;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .ext4-voicing-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-top: 1px solid #151515;
-            cursor: pointer;
-            transition: background 0.12s;
-        }
-
-        .ext4-voicing-row:hover { background: #111; }
-        .ext4-voicing-row.active { background: rgba(220,38,38,0.06); border-left: 2px solid #dc2626; }
-
-        .ext4-voicing-row-name {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 14px;
-            color: #666;
-            flex: 1;
-        }
-
-        .ext4-voicing-row.active .ext4-voicing-row-name { color: #dc2626; }
-
-        .ext4-voicing-row-play {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
-            color: #333;
-        }
-
-        .ext4-voicing-row.active .ext4-voicing-row-play { color: #dc2626; }
-
-        /* ---- CUERPO EDUCATIVO ---- */
-        .ext4-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .ext4-edu-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 20px;
+            justify-content: center;
+            gap: 40px;
+            padding: 24px 40px;
             background: #0d0d0d;
             border: 1px solid #1a1a1a;
             border-radius: 10px;
         }
 
-        .ext4-edu-section:first-child {
-            grid-column: 1 / -1;
+        .ext4-hero-diagram {
+            flex-shrink: 0;
         }
 
-        .ext4-edu-heading {
+        .ext4-hero-info {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 10px;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 16px;
-            color: #888;
-            letter-spacing: 2px;
+            align-items: flex-start;
         }
 
-        .ext4-edu-heading-number {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
-            color: #dc2626;
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            border-radius: 4px;
-            padding: 2px 6px;
-        }
-
-        /* ---- ANATOMÍA: Badges compactos con tooltip ---- */
-        .ext4-anatomy-grid-hero {
+        .ext4-hero-name {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            align-items: baseline;
         }
 
-        .ext4-note-card {
-            position: relative;
-            background: #111;
+        .ext4-chord-root {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 56px;
+            color: #fafafa;
+            line-height: 0.9;
+        }
+
+        .ext4-chord-symbol {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .ext4-hero-formula {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            color: #e5e5e5;
+            letter-spacing: 1.5px;
+        }
+
+        .ext4-play-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid #dc2626;
+            border-radius: 6px;
+            color: #dc2626;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.12s;
+            width: fit-content;
+        }
+
+        .ext4-play-btn:hover {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .ext4-voicings-toggle {
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #ccc;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.12s;
+            width: fit-content;
+        }
+
+        .ext4-voicings-toggle:hover {
+            border-color: #666;
+            color: #fff;
+        }
+
+        /* Panel de voicings expandible */
+        .ext4-voicings-panel {
+            background: #0d0d0d;
             border: 1px solid #1a1a1a;
             border-radius: 8px;
             padding: 10px 14px;
+        }
+
+        .ext4-voicings-panel.hidden { display: none; }
+
+        .ext4-voicings-grid {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .ext4-voicing-card {
+            padding: 6px 12px;
+            background: #111;
+            border: 1px solid #252525;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .ext4-voicing-card:hover {
+            background: #1a1a1a;
+            border-color: #444;
+        }
+
+        .ext4-voicing-card.active {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .ext4-voicing-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .ext4-voicing-card.active .ext4-voicing-name { color: #fff; }
+
+        /* ========== 3. GRID DE CONTENIDO: 3-4 columnas ========== */
+        .ext4-content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .ext4-section {
+            background: #0d0d0d;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .ext4-section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            color: #e5e5e5;
+            letter-spacing: 2px;
+            margin: 0 0 12px 0;
+        }
+
+        /* ========== ANATOMÍA: Notas inline ========== */
+        .ext4-anatomy {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .ext4-note-card {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            padding: 6px 10px;
+            background: #111;
+            border: 1px solid #252525;
+            border-radius: 6px;
+            position: relative;
             cursor: default;
-            transition: all 0.15s;
-            min-width: 100px;
+            transition: all 0.1s;
         }
 
         .ext4-note-card:hover {
-            border-color: #333;
-            background: #151515;
-            z-index: 10;
+            border-color: #444;
+            background: #161616;
         }
 
         .ext4-note-card--root {
-            border-color: rgba(220, 38, 38, 0.4);
-            background: rgba(220, 38, 38, 0.05);
-        }
-
-        .ext4-note-card--root:hover {
             border-color: #dc2626;
-            background: rgba(220, 38, 38, 0.1);
+            background: rgba(220, 38, 38, 0.08);
         }
 
         .ext4-note-card--ext {
-            border-color: rgba(212, 165, 116, 0.3);
-            background: rgba(212, 165, 116, 0.03);
-        }
-
-        .ext4-note-card--ext:hover {
-            border-color: #d4a574;
+            border-color: rgba(212, 165, 116, 0.4);
         }
 
         .ext4-note-card--signature {
-            border-color: rgba(229, 229, 229, 0.35);
-            background: rgba(229, 229, 229, 0.04);
-        }
-
-        .ext4-note-card--signature:hover {
-            border-color: #e5e5e5;
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         .ext4-note-card-degree {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 1px;
-            min-width: 24px;
+            font-size: 10px;
+            color: #999;
         }
 
         .ext4-note-card-name {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
-            line-height: 1;
         }
 
         .ext4-note-card-role {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 11px;
+            font-size: 10px;
+            color: #bbb;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #555;
-            font-weight: 600;
         }
 
         .ext4-note-card-signature-badge {
-            font-size: 10px;
             color: #d4a574;
-            margin-left: 4px;
+            font-size: 10px;
         }
 
-        /* Tooltip para contribución */
+        /* Tooltip en hover */
         .ext4-note-card-contribution {
             position: absolute;
             bottom: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 13px;
-            color: #ccc;
-            line-height: 1.4;
-            padding: 10px 14px;
             background: #1a1a1a;
             border: 1px solid #333;
-            border-radius: 8px;
-            white-space: nowrap;
-            max-width: 280px;
-            white-space: normal;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            color: #ccc;
+            line-height: 1.4;
+            max-width: 220px;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.15s;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.12s;
+            z-index: 50;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
             pointer-events: none;
+            white-space: normal;
         }
 
         .ext4-note-card-contribution::after {
@@ -1698,7 +1593,7 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            border: 6px solid transparent;
+            border: 5px solid transparent;
             border-top-color: #333;
         }
 
@@ -1707,159 +1602,221 @@
             visibility: visible;
         }
 
-        /* ---- CONTEXTO ---- */
-        .ext4-genre-strip {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
+        /* ========== 4. CÓMO SUENA ========== */
+        .ext4-sound {
+            border-left: 3px solid #d97706;
+            padding-left: 14px !important;
         }
 
-        .ext4-genre-tag {
+        .ext4-sound-desc {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: #151515;
-            border: 1px solid #252525;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .ext4-context-block {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 14px 16px;
-        }
-
-        .ext4-context-body {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 15px;
-            color: #aaa;
+            font-size: 16px;
+            color: #e5e5e5;
+            font-style: italic;
             line-height: 1.5;
             margin: 0;
         }
 
-        .ext4-replaces-block {
+        /* ========== 5. CUÁNDO USAR ========== */
+        .ext4-context {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ext4-genres {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .ext4-genre {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: #e5e5e5;
+            text-transform: uppercase;
+        }
+
+        .ext4-context-text {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            color: #e5e5e5;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .ext4-tip {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             padding: 10px 14px;
-            background: rgba(217, 119, 6, 0.05);
-            border: 1px solid rgba(217, 119, 6, 0.2);
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px solid rgba(217, 119, 6, 0.3);
             border-radius: 6px;
         }
 
-        .ext4-replaces-kicker {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 9px;
-            color: #d97706;
-            letter-spacing: 1.5px;
-            white-space: nowrap;
+        .ext4-tip-label {
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
-        .ext4-replaces-body {
+        .ext4-tip-text {
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 14px;
-            color: #999;
-            line-height: 1.35;
+            color: #e5e5e5;
+            line-height: 1.4;
         }
 
-        /* ---- MUTACIONES ---- */
-        .ext4-mutations-list {
+        /* ========== 6-7. SECCIONES COLAPSABLES (en grid) ========== */
+        .ext4-collapsible {
+            background: #0d0d0d;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ext4-collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            color: #555;
+            letter-spacing: 1.5px;
+            transition: all 0.12s;
+            list-style: none;
+        }
+
+        .ext4-collapsible-header::-webkit-details-marker { display: none; }
+
+        .ext4-collapsible-header:hover {
+            color: #888;
+            background: #111;
+        }
+
+        .ext4-collapsible-icon {
+            font-size: 8px;
+            transition: transform 0.15s;
+        }
+
+        .ext4-collapsible[open] .ext4-collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .ext4-collapsible-content {
+            padding: 0 14px 14px;
+        }
+
+        /* Mutaciones */
+        .ext4-mutations {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
-        .ext4-mutation-card {
+        .ext4-mutation {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: #0a0a0a;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #111;
             border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 12px 14px;
-            transition: border-color 0.15s;
-            cursor: pointer;
+            border-radius: 6px;
+            flex-wrap: wrap;
         }
 
-        .ext4-mutation-card:hover {
-            border-color: #333;
-            background: #0f0f0f;
-        }
-
-        .ext4-mutation-card-action {
+        .ext4-mutation-change {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 14px;
-            color: #777;
-            flex: 1;
+            font-size: 13px;
+            color: #ccc;
         }
 
-        .ext4-mutation-card-arrow {
+        .ext4-mutation-arrow {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            color: #333;
+            font-size: 12px;
+            color: #666;
         }
 
-        .ext4-mutation-card-result {
+        .ext4-mutation-result {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #d4a574;
+        }
+
+        .ext4-mutation-effect {
+            width: 100%;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            color: #ccc;
+            margin: 4px 0 0;
+            padding-top: 6px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        /* Relacionados */
+        .ext4-related {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ext4-related-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #111;
+            border: 1px solid #252525;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+
+        .ext4-related-btn:hover {
+            border-color: #d4a574;
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        .ext4-related-symbol {
             font-family: 'IBM Plex Mono', monospace;
             font-size: 14px;
             font-weight: 700;
             color: #d4a574;
         }
 
-        .ext4-mutation-card-effect {
-            display: none;
-        }
-
-        .ext4-mutation-card:hover .ext4-mutation-card-effect {
-            display: block;
+        .ext4-related-why {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #666;
-            line-height: 1.3;
-            margin: 0;
-            padding-top: 8px;
-            border-top: 1px solid #1a1a1a;
-            width: 100%;
-        }
-
-        .ext4-mutation-degree-badge {
-            display: inline-block;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
+            font-size: 11px;
             color: #ccc;
-            background: rgba(229, 229, 229, 0.06);
-            border: 1px solid rgba(229, 229, 229, 0.15);
-            border-radius: 4px;
-            padding: 2px 6px;
-            margin-right: 6px;
         }
 
-        /* ---- NAV: Prev / Next ---- */
+        /* ========== NAV: Compacto ========== */
         .ext4-nav-bar {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 20px 0 0;
+            align-items: center;
+            padding-top: 12px;
             border-top: 1px solid #1a1a1a;
-            margin-top: 16px;
         }
 
         .ext4-nav-btn {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
+            gap: 8px;
+            padding: 8px 12px;
             background: #0d0d0d;
             border: 1px solid #1a1a1a;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.12s;
         }
 
         .ext4-nav-btn:hover {
@@ -1868,21 +1825,19 @@
         }
 
         .ext4-nav-btn:disabled {
-            opacity: 0.25;
-            cursor: default;
+            opacity: 0.3;
             pointer-events: none;
         }
 
         .ext4-nav-btn-arrow {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            color: #555;
+            font-size: 12px;
+            color: #888;
         }
 
         .ext4-nav-btn-text {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             gap: 1px;
         }
 
@@ -1890,33 +1845,28 @@
 
         .ext4-nav-btn-sub {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 9px;
-            color: #444;
-            letter-spacing: 1px;
+            font-size: 8px;
+            color: #777;
             text-transform: uppercase;
         }
 
         .ext4-nav-btn-chord {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
-            color: #888;
+            color: #777;
         }
 
         .ext4-nav-center {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
-            color: #444;
-            letter-spacing: 1px;
+            font-size: 10px;
+            color: #777;
         }
 
-        /* ---- NODE MAP (estado intro) ---- */
-        .ext4-node-map {
-            display: none;
-        }
-
-        .ext4-node-connector { display: none; }
-        .ext4-node { display: none; }
+        /* Ocultar elementos del diseño anterior */
+        .ext4-node-map, .ext4-node-connector, .ext4-node { display: none; }
+        .ext4-header, .ext4-diagram-block, .ext4-body { display: none; }
+        .ext4-edu-section, .ext4-anatomy-grid-hero { display: none; }
             border-radius: 4px;
             padding: 1px 6px;
             margin-right: 8px;
@@ -1943,9 +1893,9 @@
             gap: 10px;
         }
         .ext4-picker-group-label {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 9px;
-            color: #333;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            color: #ffffff;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-align: center;
@@ -1953,7 +1903,7 @@
         .ext4-picker-group-btns {
             display: flex;
             align-items: center;
-            gap: 0;
+            gap: 24px;
         }
         .ext4-picker-connector {
             width: 32px;
@@ -2073,46 +2023,43 @@
             padding: 28px 0;
         }
 
-        /* ---- INTRO: Grid de acordes por categoría ---- */
+        /* ========== INTRO: Estado inicial sin acorde seleccionado ========== */
         .ext4-intro-canvas {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
         .ext4-intro-category-name {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 36px;
-            line-height: 1;
-            letter-spacing: 3px;
+            font-size: 32px;
             color: #e5e5e5;
+            letter-spacing: 3px;
         }
 
         .ext4-intro-category-text {
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 15px;
-            color: #666;
-            line-height: 1.5;
+            color: #ccc;
             margin: 0;
         }
 
         .ext4-intro-chord-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .ext4-intro-chord-card {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
-            padding: 14px 16px;
+            padding: 16px 20px;
             background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+            border: 1px solid #252525;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.15s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .ext4-intro-chord-card:hover {
@@ -2135,44 +2082,30 @@
         .ext4-intro-chord-formula {
             font-family: 'IBM Plex Mono', monospace;
             font-size: 11px;
-            color: #444;
+            color: #888;
         }
 
-        .ext4-intro-chord-desc {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #555;
-            line-height: 1.35;
-            margin: 0;
-        }
+        .ext4-intro-chord-desc { display: none; }
 
         .ext4-intro-hint {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #444;
-            letter-spacing: 0.5px;
+            font-size: 14px;
+            color: #888;
             text-align: center;
-            margin: 16px 0 0;
+            margin-top: 20px;
         }
 
-        /* Eje de tensión — oculto en nuevo diseño */
-        .ext4-axis { display: none; }
-        .ext4-axis-group { display: none; }
-        .ext4-axis-group-label { display: none; }
-        .ext4-axis-nodes { display: none; }
-        .ext4-axis-connector { display: none; }
-
-        /* Intro grupos — rediseño compacto */
+        /* Grupos de intro - horizontal para aprovechar espacio */
         .ext4-axis-intro {
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
         }
 
         .ext4-axis-intro-group-header {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             margin-bottom: 12px;
             padding-bottom: 8px;
             border-bottom: 1px solid #1a1a1a;
@@ -2180,84 +2113,47 @@
 
         .ext4-axis-intro-group-label {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 24px;
-            letter-spacing: 3px;
+            font-size: 22px;
             color: #e5e5e5;
+            letter-spacing: 2px;
         }
 
         .ext4-axis-intro-group-sub {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 10px;
-            color: #555;
-            letter-spacing: 1px;
-            padding: 3px 10px;
-            background: #111;
+            font-size: 11px;
+            color: #ccc;
+            padding: 4px 10px;
+            background: #151515;
             border-radius: 4px;
         }
 
-        /* Contexto — peso visual primario */
-        .ext4-edu-heading--primary {
-            font-size: 18px;
-            color: #aaa;
-            letter-spacing: 2px;
-        }
+        /* Ocultar elementos del eje de tensión anterior */
+        .ext4-axis, .ext4-axis-group, .ext4-axis-group-label,
+        .ext4-axis-nodes, .ext4-axis-connector { display: none; }
 
-        /* Related chords */
-        .ext4-related-strip {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .ext4-related-chip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .ext4-related-chip:hover {
-            border-color: #d4a574;
-            background: rgba(212, 165, 116, 0.05);
-        }
-
-        .ext4-related-chip-symbol {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            color: #d4a574;
-        }
-
-        .ext4-related-chip-relation {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #555;
-            line-height: 1.25;
-            max-width: 140px;
-        }
-
-        /* ---- Responsive ---- */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 900px) {
-            .ext4-body {
+            .ext4-content-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 700px) {
-            .ext4-page { padding: 16px 16px 48px; gap: 20px; }
-            .ext4-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .ext4-diagram-block { flex-direction: column; }
-            .ext4-chord-root { font-size: 48px; }
-            .ext4-chord-symbol { font-size: 24px; }
-            .ext4-note-card-name { font-size: 18px; }
-            .ext4-voicings-details { max-width: 100%; }
-            .ext4-picker-group-btns { gap: 6px; }
-            .ext4-picker-btn { padding: 6px 10px; }
+        @media (max-width: 600px) {
+            .ext4-page {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .ext4-hero {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .ext4-chord-root { font-size: 36px; }
+            .ext4-chord-symbol { font-size: 18px; }
+            .ext4-note-card-name { font-size: 14px; }
+            .ext4-nav-btn-text { display: none; }
         }
 
         /* ========== SCALE LEVEL 2 ENHANCEMENTS ========== */
