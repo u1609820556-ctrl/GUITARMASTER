@@ -4753,7 +4753,7 @@ export const App = {
                             ${chordPickerHTML}
                         </nav>
 
-                        <!-- 2. HERO: Lo primero que ves - Diagrama + Nombre -->
+                        <!-- 2. HERO: Diagrama + Info + Notas inline -->
                         <section class="ext4-hero">
                             <div class="ext4-hero-diagram">
                                 <div class="ext4-diagram-wrap" id="ext4-diag-slot"></div>
@@ -4767,29 +4767,20 @@ export const App = {
                                     <button class="ext4-play-btn" id="ext4-play-btn">▶ ESCUCHAR</button>
                                     <button class="ext4-compare-btn" id="ext4-compare-btn">⇆ COMPARAR</button>
                                 </div>
-                                ${voicings.length > 1 ? `<button class="ext4-voicings-toggle" id="ext4-voicings-toggle">+ ${voicings.length - 1} voicings</button>` : ''}
+                                ${voicings.length > 1 ? `
+                                <div class="ext4-voicings-inline" id="ext4-voicings-list">
+                                    ${voicings.map((v, i) => `
+                                        <button class="ext4-voicing-card${i === 0 ? ' active' : ''}" data-voicing-idx="${i}">
+                                            <span class="ext4-voicing-name">${v.name}</span>
+                                        </button>
+                                    `).join('')}
+                                </div>` : ''}
                             </div>
+                            <div class="ext4-hero-anatomy">${anatomyHTML}</div>
                         </section>
 
-                        <!-- Voicings expandible -->
-                        ${voicings.length > 1 ? `
-                        <div class="ext4-voicings-panel hidden" id="ext4-voicings-panel">
-                            <div class="ext4-voicings-grid" id="ext4-voicings-list">
-                                ${voicings.map((v, i) => `
-                                    <button class="ext4-voicing-card${i === 0 ? ' active' : ''}" data-voicing-idx="${i}">
-                                        <span class="ext4-voicing-name">${v.name}</span>
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>` : ''}
-
-                        <!-- GRID: Anatomía + Sonido + Contexto en 2 columnas -->
+                        <!-- GRID: Carácter + Contexto + Mutaciones + Relacionados -->
                         <div class="ext4-content-grid">
-                            <!-- Anatomía -->
-                            <section class="ext4-section">
-                                <h3 class="ext4-section-title">NOTAS</h3>
-                                <div class="ext4-anatomy">${anatomyHTML}</div>
-                            </section>
 
                             <!-- Cómo suena -->
                             ${chordData.soundCharacter ? `
@@ -4875,18 +4866,6 @@ export const App = {
                 };
 
                 if (voicings.length > 0) renderDiagram(voicings[0]);
-
-                // Toggle voicings panel
-                const voicingsToggle = document.getElementById('ext4-voicings-toggle');
-                const voicingsPanel = document.getElementById('ext4-voicings-panel');
-                if (voicingsToggle && voicingsPanel) {
-                    voicingsToggle.addEventListener('click', () => {
-                        voicingsPanel.classList.toggle('hidden');
-                        voicingsToggle.textContent = voicingsPanel.classList.contains('hidden')
-                            ? `+ ${voicings.length - 1} voicings`
-                            : '− Ocultar voicings';
-                    });
-                }
 
                 // Voicings list
                 const voicingsList = document.getElementById('ext4-voicings-list');

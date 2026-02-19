@@ -3107,7 +3107,7 @@ export const MusicTheory = {
                     third: scale[thirdIndex],
                     fifth: scale[fifthIndex],
                     quality: this.chordQualities[rootIndex],
-                    roman: this.romanNumerals[rootIndex]
+                    roman: (this.romanNumerals[scaleType] || this.romanNumerals.major)[rootIndex]
                 };
             },
 
@@ -3262,64 +3262,557 @@ export const MusicTheory = {
             // Extended chords for level 11
             extendedChords: {
                 // 7th chords
-                'maj7':      { intervals: [0, 4, 7, 11], name: 'Major 7', symbol: 'maj7', formula: '1-3-5-7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, bossa nova, soul' },
-                'dom7':      { intervals: [0, 4, 7, 10], name: 'Dominant 7', symbol: '7', formula: '1-3-5-b7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Blues, rock, funk' },
-                'min7':      { intervals: [0, 3, 7, 10], name: 'Minor 7', symbol: 'm7', formula: '1-b3-5-b7', essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, R&B, latin' },
-                'halfDim7':  { intervals: [0, 3, 6, 10], name: 'Half Diminished 7', symbol: 'ø7', formula: '1-b3-b5-b7', essential: true, category: 'essential', difficulty: 'medium', usage: 'Jazz, tensión armónica' },
+                'maj7': {
+                    intervals: [0, 4, 7, 11], name: 'Major 7', symbol: 'maj7', formula: '1-3-5-7',
+                    essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, bossa nova, soul',
+                    soundCharacter: 'Luminoso, soñador — como una mañana despejada. No pide resolver, simplemente brilla.',
+                    signature: ['7'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Define la nota fundamental del acorde, el centro de gravedad.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Da el carácter mayor — alegre, brillante. Sin ella sería ambiguo.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad y cuerpo. Frecuentemente omitida en jazz sin perder identidad.' },
+                        { degree: '7', role: '7ª Mayor', contribution: 'La nota que lo define todo. Esa tensión suave, luminosa que no pide resolver.' },
+                    ],
+                    omit: { '5': { result: 'maj7 sin 5ª', effect: 'Más abierto y ligero, muy usado en jazz. Prácticamente igual de reconocible.' } },
+                    context: {
+                        genre: ['Jazz', 'Bossa Nova', 'Soul', 'Neo-Soul', 'Pop Sofisticado'],
+                        moment: 'Como acorde I (tónica mayor) o IV en progressiones de jazz y bossa. Evita usarlo como dominante — no resuelve.',
+                        replaces: 'En lugar de un acorde mayor cuando quieres más color y sofisticación sin añadir tensión.'
+                    },
+                    mutations: [
+                        { change: 'Bajar la 7ª un semitono (7M → 7m)', result: 'Dominant 7', character: 'Aparece tensión — ahora sí quiere resolver.', highlightDegree: '7' },
+                        { change: 'Añadir la 9ª', result: 'maj9', character: 'Más abierto, espacioso, aún más característico del jazz moderno.', highlightDegree: '9' },
+                        { change: 'Sustituir 3ª por 2ª', result: 'add9 / sus2', character: 'Más ambiguo, moderno — pierde carácter definidamente mayor.', highlightDegree: '3' },
+                    ],
+                    related: [
+                        { key: 'maj9', relation: 'Versión extendida — añade la 9ª para más apertura.' },
+                        { key: 'dom7', relation: 'Misma estructura pero con 7ª menor — crea tensión.' },
+                        { key: 'min7', relation: 'Versión menor — cambia solo la 3ª.' },
+                    ],
+                    songExamples: [
+                        { song: 'Misty', artist: 'Erroll Garner', moment: 'Acorde I en la intro y en los cambios principales.' },
+                        { song: 'Girl from Ipanema', artist: 'João Gilberto', moment: 'Acordes Fmaj7 y Gbmaj7 en el puente.' },
+                        { song: 'Something', artist: 'The Beatles', moment: 'Cmaj7 en el primer compás del verso.' },
+                    ]
+                },
+                'dom7': {
+                    intervals: [0, 4, 7, 10], name: 'Dominant 7', symbol: '7', formula: '1-3-5-b7',
+                    essential: true, category: 'essential', difficulty: 'easy', usage: 'Blues, rock, funk',
+                    soundCharacter: 'Tensión que pide resolver — el acorde más funcional de toda la armonía occidental. Incompleto por sí solo.',
+                    signature: ['b7'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Centro tonal del acorde.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Define el carácter mayor. Forma el tritono con la 7ª — ahí está la tensión.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Cuerpo y estabilidad. Prescindible en jazz — el tritono (3ª-7ª) ya define el acorde.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'La nota clave. Forma tritono con la 3ª — esa tensión disonante es lo que define al dominante.' },
+                    ],
+                    omit: { '5': { result: 'Tritono shell (1-3-b7)', effect: 'El voicing más usado en jazz. Solo las tres notas esenciales — máxima economía.' } },
+                    context: {
+                        genre: ['Blues', 'Jazz', 'Rock', 'Funk', 'R&B', 'Gospel'],
+                        moment: 'Como acorde V (dominante) resolviendo al I. En blues funciona también como I y IV. El motor de cualquier progresión tonal.',
+                        replaces: 'Sustituye cualquier acorde mayor cuando quieres crear movimiento y tensión hacia el siguiente acorde.'
+                    },
+                    mutations: [
+                        { change: 'Subir la 7ª un semitono (b7 → 7M)', result: 'maj7', character: 'Desaparece la tensión — se vuelve estático y luminoso.', highlightDegree: 'b7' },
+                        { change: 'Añadir #9', result: '7#9 (Hendrix)', character: 'Ambigüedad mayor/menor, agresividad aumentada.', highlightDegree: '#9' },
+                        { change: 'Añadir b9', result: '7b9', character: 'Tensión máxima — muy dramático, cromático, muy jazzístico.', highlightDegree: 'b9' },
+                        { change: 'Añadir 9ª', result: 'dom9', character: 'Más suave y colorido, sin perder la tensión dominante.', highlightDegree: '9' },
+                    ],
+                    related: [
+                        { key: 'dom9', relation: 'Versión extendida con 9ª — más color manteniendo la función.' },
+                        { key: '7#9', relation: 'Alterado con #9 — el "acorde Hendrix".' },
+                        { key: '7b9', relation: 'Alterado con b9 — máxima tensión cromática.' },
+                        { key: 'maj7', relation: 'Misma estructura con 7ª mayor — pierde la tensión.' },
+                    ],
+                    songExamples: [
+                        { song: 'Still Got The Blues', artist: 'Gary Moore', moment: 'Acordes dominantes que crean la tensión blues característica.' },
+                        { song: 'Watermelon Man', artist: 'Herbie Hancock', moment: 'F7 como centro tonal en el blues en F.' },
+                        { song: 'Higher Ground', artist: 'Stevie Wonder', moment: 'Funk groove construido sobre dominantes.' },
+                    ]
+                },
+                'min7': {
+                    intervals: [0, 3, 7, 10], name: 'Minor 7', symbol: 'm7', formula: '1-b3-5-b7',
+                    essential: true, category: 'essential', difficulty: 'easy', usage: 'Jazz, R&B, latin',
+                    soundCharacter: 'Melancólico pero suave — no tan oscuro como el menor puro, más relajado. El sonido del jazz y el soul en su estado natural.',
+                    signature: ['b3', 'b7'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje tonal.' },
+                        { degree: 'b3', role: '3ª Menor', contribution: 'El corazón del carácter menor — la nota que hace que suene triste, oscuro.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad. La 5ª justa suaviza la oscuridad de la 3ª menor.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Redondea el sonido — sin ella sería solo un acorde menor. La b7 lo hace fluido, menos estático.' },
+                    ],
+                    omit: { '5': { result: 'm7 sin 5ª', effect: 'Más abierto, muy usado como voicing de jazz. No pierde su identidad.' } },
+                    context: {
+                        genre: ['Jazz', 'R&B', 'Soul', 'Neo-Soul', 'Latin', 'Funk'],
+                        moment: 'Como acorde ii (supertónica), iii o vi en progresiones de jazz. En R&B puede ser el centro tonal de una canción entera.',
+                        replaces: 'En lugar de un acorde menor cuando quieres más suavidad y color armónico, especialmente en jazz y soul.'
+                    },
+                    mutations: [
+                        { change: 'Bajar la 5ª (5ª → b5ª)', result: 'ø7 (Half Diminished)', character: 'Más oscuro e inestable — pide resolver.', highlightDegree: '5' },
+                        { change: 'Añadir la 9ª', result: 'min9', character: 'Más abierto y expresivo — el sonido más característico del R&B moderno.', highlightDegree: '9' },
+                        { change: 'Subir la 7ª (b7 → 7M)', result: 'minMaj7', character: 'Misterioso y tenso — común en música de película.', highlightDegree: 'b7' },
+                    ],
+                    related: [
+                        { key: 'min9', relation: 'Versión extendida con 9ª.' },
+                        { key: 'halfDim7', relation: 'Variante con b5 — más inestable.' },
+                        { key: 'maj7', relation: 'Versión mayor — cambia 3ª y 7ª.' },
+                    ],
+                    songExamples: [
+                        { song: 'So What', artist: 'Miles Davis', moment: 'Dm7 y Ebm7 son las dos únicas armonías de todo el tema.' },
+                        { song: 'Fly Me to the Moon', artist: 'Sinatra', moment: 'Am7 en el ii de la progresión ii-V-I.' },
+                        { song: 'Isn\'t She Lovely', artist: 'Stevie Wonder', moment: 'F#m7 como centro de la progresión.' },
+                    ]
+                },
+                'halfDim7': {
+                    intervals: [0, 3, 6, 10], name: 'Half Diminished 7', symbol: 'ø7', formula: '1-b3-b5-b7',
+                    essential: true, category: 'essential', difficulty: 'medium', usage: 'Jazz, tensión armónica',
+                    soundCharacter: 'Oscuro, inestable, tenso — como una pregunta sin respuesta. Pide resolver casi tanto como el dominante.',
+                    signature: ['b5'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Punto de partida del acorde.' },
+                        { degree: 'b3', role: '3ª Menor', contribution: 'Carácter menor oscuro.' },
+                        { degree: 'b5', role: '5ª Disminuida', contribution: 'La nota crítica — crea inestabilidad, ambigüedad. El tritono con la raíz.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'A diferencia del disminuido completo, la b7 (no bb7) suaviza ligeramente la tensión.' },
+                    ],
+                    omit: {},
+                    context: {
+                        genre: ['Jazz', 'Música Clásica', 'Flamenco', 'Bossa Nova'],
+                        moment: 'Típicamente como ii° en tonalidades menores (ii°-V-i). También como acorde de paso cromático. Muy raro como acorde de resolución.',
+                        replaces: 'En lugar del ii menor cuando estás en modo menor y quieres máxima tensión antes del V7.'
+                    },
+                    mutations: [
+                        { change: 'Bajar la 7ª (b7 → bb7)', result: 'Disminuido completo (dim7)', character: 'Más simétrico y oscuro — la tensión se vuelve absoluta.', highlightDegree: 'b7' },
+                        { change: 'Subir la 5ª (b5 → 5ª)', result: 'min7', character: 'Más estable, más suave — la inestabilidad desaparece.', highlightDegree: 'b5' },
+                    ],
+                    related: [
+                        { key: 'min7', relation: 'Con 5ª natural — más estable.' },
+                        { key: 'dom7', relation: 'Su resolución natural: ø7 → V7 → im.' },
+                    ],
+                    songExamples: [
+                        { song: 'Autumn Leaves', artist: 'Standard Jazz', moment: 'Bø7 como ii° antes del E7 en la tonalidad de Am.' },
+                        { song: 'All The Things You Are', artist: 'Jerome Kern', moment: 'Half diminished en el puente para crear máxima tensión.' },
+                        { song: 'Summertime', artist: 'Gershwin', moment: 'Bø7 - E7 - Am en la progresión ii°-V-i de la sección A.' },
+                    ]
+                },
                 // 9th chords
-                'maj9':   { intervals: [0, 4, 7, 11, 14], name: 'Major 9', symbol: 'maj9', formula: '1-3-5-7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, neo-soul, pop sofisticado' },
-                'min9':   { intervals: [0, 3, 7, 10, 14], name: 'Minor 9', symbol: 'm9', formula: '1-b3-5-b7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, R&B, ambient' },
-                'dom9':   { intervals: [0, 4, 7, 10, 14], name: 'Dominant 9', symbol: '9', formula: '1-3-5-b7-9', essential: true, category: 'color9', difficulty: 'medium', usage: 'Blues, funk, jazz' },
-                '7#9':    { intervals: [0, 4, 7, 10, 15], name: 'Hendrix Chord', symbol: '7#9', formula: '1-3-5-b7-#9', essential: false, category: 'altered', difficulty: 'advanced', usage: 'Blues-rock, tensión disonante' },
-                '7b9':    { intervals: [0, 4, 7, 10, 13], name: 'Dom 7 flat 9', symbol: '7b9', formula: '1-3-5-b7-b9', essential: false, category: 'altered', difficulty: 'advanced', usage: 'Jazz, resolución cromática' },
+                'maj9': {
+                    intervals: [0, 4, 7, 11, 14], name: 'Major 9', symbol: 'maj9', formula: '1-3-5-7-9',
+                    essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, neo-soul, pop sofisticado',
+                    soundCharacter: 'Luminoso y espacioso — como el maj7 pero más abierto, más aireado. El color más refinado del jazz moderno.',
+                    signature: ['9'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Centro tonal.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor brillante.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Cuerpo — muy frecuentemente omitida en voicings de jazz.' },
+                        { degree: '7', role: '7ª Mayor', contribution: 'La tensión suave, luminosa característica del maj7.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'La nota que "abre" el acorde — añade dimensión sin crear inestabilidad.' },
+                    ],
+                    omit: { '5': { result: 'maj9 sin 5ª (1-3-7-9)', effect: 'El voicing más usado en jazz — ligero, abierto, muy musical.' } },
+                    context: {
+                        genre: ['Jazz', 'Neo-Soul', 'Bossa Nova', 'Pop Sofisticado', 'Ambient'],
+                        moment: 'Como acorde I en jazz y bossa. Como IV en progressiones sofisticadas. El II en tonalidades mayores.',
+                        replaces: 'En lugar del maj7 cuando quieres más apertura y color sin añadir tensión. Más moderno que el maj7.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 9ª', result: 'maj7', character: 'Más cerrado pero igualmente luminoso.', highlightDegree: '9' },
+                        { change: 'Bajar 7ª y 9ª (7M→b7, 9→b9)', result: 'dom7b9', character: 'Tensión dramática — cambia completamente la función.', highlightDegree: '7' },
+                        { change: 'Añadir la 11ª', result: 'maj11', character: 'Aún más espacioso, toque de modalidad.', highlightDegree: '11' },
+                    ],
+                    related: [
+                        { key: 'maj7', relation: 'Versión base — sin la 9ª.' },
+                        { key: 'min9', relation: 'Versión menor del mismo concepto.' },
+                        { key: 'dom9', relation: 'Con b7 en lugar de 7M — añade función dominante.' },
+                    ],
+                    songExamples: [
+                        { song: 'What\'s Going On', artist: 'Marvin Gaye', moment: 'Emaj9 como el acorde central del groove.' },
+                        { song: 'Overjoyed', artist: 'Stevie Wonder', moment: 'Progressión de acordes maj9 en la intro y verso.' },
+                        { song: 'Corcovado', artist: 'João Gilberto', moment: 'Acordes maj9 en la bossa del verso.' },
+                    ]
+                },
+                'min9': {
+                    intervals: [0, 3, 7, 10, 14], name: 'Minor 9', symbol: 'm9', formula: '1-b3-5-b7-9',
+                    essential: true, category: 'color9', difficulty: 'medium', usage: 'Jazz, R&B, ambient',
+                    soundCharacter: 'Profundo y cálido — melancolía sofisticada. El menor suena más expansivo, menos oscuro que el m7 puro.',
+                    signature: ['9'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje tonal.' },
+                        { degree: 'b3', role: '3ª Menor', contribution: 'El corazón del carácter menor.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad. Omitible en jazz.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Suaviza el carácter menor, añade fluidez.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Abre el acorde hacia arriba — añade luz a la oscuridad del menor. La nota que lo hace especial.' },
+                    ],
+                    omit: { '5': { result: 'm9 sin 5ª (1-b3-b7-9)', effect: 'Voicing más ligero — muy usado en R&B y neo-soul moderno.' } },
+                    context: {
+                        genre: ['Jazz', 'R&B', 'Neo-Soul', 'Ambient', 'Funk'],
+                        moment: 'Como acorde ii o vi en jazz. Como acorde central en R&B y neo-soul. Muy usado como pedalización en funk.',
+                        replaces: 'En lugar del m7 cuando quieres más expresividad y calidez, especialmente en baladas de R&B.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 9ª', result: 'min7', character: 'Más oscuro y cerrado.', highlightDegree: '9' },
+                        { change: 'Añadir la 11ª', result: 'min11', character: 'Aún más flotante y espacioso.', highlightDegree: '11' },
+                        { change: 'Subir la 7ª (b7 → 7M)', result: 'minMaj9', character: 'Misterioso y tenso — sonido de película.', highlightDegree: 'b7' },
+                    ],
+                    related: [
+                        { key: 'min7', relation: 'Versión base — sin la 9ª.' },
+                        { key: 'min11', relation: 'Extensión con 11ª — más flotante.' },
+                        { key: 'maj9', relation: 'Versión mayor — solo cambia la 3ª.' },
+                    ],
+                    songExamples: [
+                        { song: 'No Ordinary Love', artist: 'Sade', moment: 'Dm9 como el acorde principal del groove.' },
+                        { song: 'Pastime Paradise', artist: 'Stevie Wonder', moment: 'Acordes m9 que dan el color característico de la canción.' },
+                        { song: 'Inner City Blues', artist: 'Marvin Gaye', moment: 'Gm9 como centro armónico del groove de soul.' },
+                    ]
+                },
+                'dom9': {
+                    intervals: [0, 4, 7, 10, 14], name: 'Dominant 9', symbol: '9', formula: '1-3-5-b7-9',
+                    essential: true, category: 'color9', difficulty: 'medium', usage: 'Blues, funk, jazz',
+                    soundCharacter: 'Tensión dominante con más color — más suave que el dom7 puro pero igualmente funcional. El sonido del funk por excelencia.',
+                    signature: ['b7', '9'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Centro tonal.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor. Forma el tritono con la b7.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Cuerpo. Omitible en jazz.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'La tensión dominante — sigue pidiendo resolver.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Añade apertura y color. Suaviza ligeramente la aspereza del dominante.' },
+                    ],
+                    omit: { '5': { result: 'dom9 sin 5ª (1-3-b7-9)', effect: 'El voicing estándar de funk y jazz — compacto y efectivo.' } },
+                    context: {
+                        genre: ['Blues', 'Funk', 'Jazz', 'R&B', 'Soul'],
+                        moment: 'Como V en jazz y blues. Como el chord principal en funk — a menudo estático, sin resolver. Mucho más sofisticado que el dom7.',
+                        replaces: 'En lugar del dom7 cuando quieres la misma función pero con más color y sofisticación.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 9ª', result: 'dom7', character: 'Más crudo y directo.', highlightDegree: '9' },
+                        { change: 'Alterar la 9ª (#9)', result: '7#9', character: 'Ambigüedad mayor/menor — el acorde Hendrix.', highlightDegree: '9' },
+                        { change: 'Añadir la 13ª', result: 'dom13', character: 'Aún más rico y denso.', highlightDegree: '13' },
+                    ],
+                    related: [
+                        { key: 'dom7', relation: 'Versión base — sin la 9ª.' },
+                        { key: '7#9', relation: 'Con 9ª alterada — más agresivo.' },
+                        { key: 'dom13', relation: 'Con 13ª además — máxima densidad dominante.' },
+                    ],
+                    songExamples: [
+                        { song: 'Superstition', artist: 'Stevie Wonder', moment: 'Eb9 como el acorde central del riff de clavinet.' },
+                        { song: 'September', artist: 'Earth Wind & Fire', moment: 'Acordes dom9 en el groove funk de la intro.' },
+                        { song: 'Pick Up The Pieces', artist: 'AWB', moment: 'Funk groove construido sobre dominantes 9.' },
+                    ]
+                },
+                '7#9': {
+                    intervals: [0, 4, 7, 10, 15], name: 'Hendrix Chord', symbol: '7#9', formula: '1-3-5-b7-#9',
+                    essential: false, category: 'altered', difficulty: 'advanced', usage: 'Blues-rock, tensión disonante',
+                    soundCharacter: 'Agresivo, ambiguo, eléctrico — la 3ª mayor y la #9 (equivale a b3) coexisten creando una tensión única entre mayor y menor.',
+                    signature: ['b7', '#9'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Define el carácter mayor... pero choca con la #9.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad relativa en medio del caos.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'La tensión dominante.' },
+                        { degree: '#9', role: '9ª Aumentada', contribution: 'La nota característica — enarmónica de la b3. Crea la ambigüedad mayor/menor que lo hace tan especial.' },
+                    ],
+                    omit: {},
+                    context: {
+                        genre: ['Blues-Rock', 'Hard Rock', 'Funk', 'Jazz-Rock'],
+                        moment: 'Como dominante alterado con máxima tensión. En blues-rock, frecuentemente estático (el acorde simplemente suena sin necesitar resolver). El acorde estrella del solo de guitarra eléctrica.',
+                        replaces: 'En lugar del dom7 cuando quieres ambigüedad mayor/menor y mucha más agresividad. No apto para contextos acústicos suaves.'
+                    },
+                    mutations: [
+                        { change: 'Cambiar #9 por 9ª natural', result: 'dom9', character: 'Pierde la ambigüedad — más limpio y directo.', highlightDegree: '#9' },
+                        { change: 'Cambiar #9 por b9', result: '7b9', character: 'Más cromático — la tensión es diferente, más "jazzística".', highlightDegree: '#9' },
+                    ],
+                    related: [
+                        { key: 'dom7', relation: 'La base sin la extensión alterada.' },
+                        { key: '7b9', relation: 'Variante alterada con b9 — tensión diferente.' },
+                        { key: 'dom9', relation: 'Con 9ª natural — menos agresivo.' },
+                    ],
+                    songExamples: [
+                        { song: 'Purple Haze', artist: 'Jimi Hendrix', moment: 'E7#9 es el riff central — el acorde que da nombre al voicing.' },
+                        { song: 'Foxy Lady', artist: 'Jimi Hendrix', moment: 'F#7#9 como acorde principal del riff de introducción.' },
+                        { song: 'Taxman', artist: 'The Beatles', moment: 'G7#9 en el riff de guitarra — George Harrison usando el voicing Hendrix.' },
+                    ]
+                },
+                '7b9': {
+                    intervals: [0, 4, 7, 10, 13], name: 'Dom 7 flat 9', symbol: '7b9', formula: '1-3-5-b7-b9',
+                    essential: false, category: 'altered', difficulty: 'advanced', usage: 'Jazz, resolución cromática',
+                    soundCharacter: 'Tensión máxima, casi dolorosa — la b9 crea la mayor disonancia posible con la raíz. El dominante más dramático que existe.',
+                    signature: ['b7', 'b9'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'El centro desde el que medir toda la tensión.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor. Forma tritono con b7.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'El único punto de estabilidad relativa del acorde.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Tensión dominante. Forma tritono con la 3ª.' },
+                        { degree: 'b9', role: '9ª Bemol', contribution: 'La nota más tensa del sistema — semitono sobre la raíz. Crea fricción máxima que solo el I puede resolver.' },
+                    ],
+                    omit: {},
+                    context: {
+                        genre: ['Jazz', 'Flamenco', 'Jazz Latino', 'Bossa Nova'],
+                        moment: 'Exclusivamente como dominante (V7b9) resolviendo al I. En jazz, el movimiento más dramático antes de la tónica. En flamenco, el acorde E7b9 → Am es el giro más característico del estilo.',
+                        replaces: 'En lugar del dom7 cuando la resolución tiene que ser máximamente dramática y cromática. Uso restringido — siempre resuelve.'
+                    },
+                    mutations: [
+                        { change: 'Subir la b9 un semitono (b9 → 9)', result: 'dom9', character: 'La tensión baja considerablemente — más suave.', highlightDegree: 'b9' },
+                        { change: 'Subir la b9 dos semitonos (b9 → #9)', result: '7#9', character: 'Ambigüedad mayor/menor en lugar de cromatismo puro.', highlightDegree: 'b9' },
+                    ],
+                    related: [
+                        { key: '7#9', relation: 'Variante alterada con #9 — diferente tipo de tensión.' },
+                        { key: 'dom7', relation: 'La base sin la extensión alterada.' },
+                        { key: 'halfDim7', relation: 'Su antecedente típico en jazz: ø7 → 7b9 → im.' },
+                    ],
+                    songExamples: [
+                        { song: 'Autumn Leaves', artist: 'Standard Jazz', moment: 'B7b9 → Em resolviendo — el giro ii°-V-i con máxima tensión.' },
+                        { song: 'Recuerdos de la Alhambra', artist: 'Guitarra Flamenca', moment: 'E7b9 → Am el giro por excelencia del flamenco.' },
+                        { song: 'Giant Steps', artist: 'John Coltrane', moment: '7b9 como dominante alterado en los cambios rápidos de Coltrane.' },
+                    ]
+                },
                 // 11th chords
-                'min11':  { intervals: [0, 3, 7, 10, 14, 17], name: 'Minor 11', symbol: 'm11', formula: '1-b3-5-b7-9-11', essential: false, category: 'suspension11', difficulty: 'medium', usage: 'Jazz modal, ambient' },
-                'dom11':  { intervals: [0, 4, 7, 10, 14, 17], name: 'Dominant 11', symbol: '11', formula: '1-3-5-b7-9-11', essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Jazz, tensión suspendida' },
-                'maj11':  { intervals: [0, 4, 7, 11, 14, 17], name: 'Major 11', symbol: 'maj11', formula: '1-3-5-7-9-11', essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Neo-soul, jazz contemporáneo' },
+                'min11': {
+                    intervals: [0, 3, 7, 10, 14, 17], name: 'Minor 11', symbol: 'm11', formula: '1-b3-5-b7-9-11',
+                    essential: false, category: 'suspension11', difficulty: 'medium', usage: 'Jazz modal, ambient',
+                    soundCharacter: 'Flotante, etéreo, introspectivo — como si el tiempo se detuviese. El acorde que más vive en la suspensión sin necesitar resolver.',
+                    signature: ['11'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje tonal.' },
+                        { degree: 'b3', role: '3ª Menor', contribution: 'Carácter menor oscuro.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad. Casi siempre omitida en voicings.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Fluidez y color del m7.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Apertura — amplía el espacio armónico.' },
+                        { degree: '11', role: '11ª Justa', contribution: 'La nota que crea la suspensión característica. La 4ª una octava arriba — el sonido flotante e indefinido.' },
+                    ],
+                    omit: { '5': { result: 'm11 sin 5ª', effect: 'Más abierto — el voicing estándar para guitarra y teclado.' } },
+                    context: {
+                        genre: ['Jazz Modal', 'Ambient', 'Música de Película', 'Neo-Soul', 'Trip-Hop'],
+                        moment: 'Como acorde estático en jazz modal (pedal point). En ambient y neo-soul como el centro armónico de largas secciones. No ideal para movimiento rápido de acordes.',
+                        replaces: 'En lugar del m7 o m9 cuando quieres suspensión y apertura máxima. Evitar en contextos tonales estrictos.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 11ª', result: 'min9', character: 'Menos flotante — más definido y cálido.', highlightDegree: '11' },
+                        { change: 'Quitar 9ª y 11ª', result: 'min7', character: 'Mucho más oscuro y cerrado.', highlightDegree: '9' },
+                    ],
+                    related: [
+                        { key: 'min9', relation: 'Sin la 11ª — más definido.' },
+                        { key: 'min7', relation: 'La base fundamental.' },
+                        { key: 'dom11', relation: 'Versión dominante — más tensa.' },
+                    ],
+                    songExamples: [
+                        { song: 'Maiden Voyage', artist: 'Herbie Hancock', moment: 'Dm11 como uno de los acordes flotantes del tema modal.' },
+                        { song: 'So What', artist: 'Miles Davis', moment: 'El Dm7 de So What casi funciona como un m11 en la ejecución real.' },
+                        { song: 'Waterfall', artist: 'TLC', moment: 'Acordes m11 en el groove de R&B del estribillo.' },
+                    ]
+                },
+                'dom11': {
+                    intervals: [0, 4, 7, 10, 14, 17], name: 'Dominant 11', symbol: '11', formula: '1-3-5-b7-9-11',
+                    essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Jazz, tensión suspendida',
+                    soundCharacter: 'Suspenso y tenso a la vez — la 11ª choca con la 3ª mayor creando una friccíon única. En la práctica casi siempre se omite la 3ª.',
+                    signature: ['b7', '11'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Teóricamente presente pero problemática — choca con la 11ª (un semitono de distancia). En la práctica se omite.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad. También frecuentemente omitida.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Tensión dominante.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Apertura.' },
+                        { degree: '11', role: '11ª Justa', contribution: 'El carácter suspendido. En la práctica reemplaza a la 3ª — como un sus4 extendido.' },
+                    ],
+                    omit: { '3': { result: 'dom11 sin 3ª (el voicing real)', effect: 'Como un sus4 con 7ª y 9ª — suena más limpio y musical. El voicing preferido.' } },
+                    context: {
+                        genre: ['Jazz', 'Jazz Fusion', 'Funk'],
+                        moment: 'Como dominante suspendido antes de resolver al I. El "tiempo suspendido" antes de la resolución. Menos común que el dom7 pero muy expresivo.',
+                        replaces: 'En lugar del dom7 cuando quieres el drama de la suspensión — la espera antes de la resolución.'
+                    },
+                    mutations: [
+                        { change: 'Omitir la 3ª', result: 'dom11 sin 3ª (preferido)', character: 'Más limpio — suena a sus4 sofisticado.', highlightDegree: '3' },
+                        { change: 'Quitar 9ª y 11ª', result: 'dom7', character: 'La tensión pura sin la suspensión.', highlightDegree: '11' },
+                    ],
+                    related: [
+                        { key: 'dom7', relation: 'La base sin la suspensión.' },
+                        { key: 'min11', relation: 'Versión menor — más flotante, menos tensa.' },
+                        { key: 'dom9', relation: 'Sin la 11ª — menos suspendido.' },
+                    ],
+                    songExamples: [
+                        { song: 'Birdland', artist: 'Weather Report', moment: 'Acordes dom11 en el groove de jazz fusion.' },
+                        { song: 'Spain', artist: 'Chick Corea', moment: 'Dominantes suspendidos en el tema principal.' },
+                        { song: 'Little Wing', artist: 'Jimi Hendrix', moment: 'El feeling suspendido de la intro usa colores de 11ª.' },
+                    ]
+                },
+                'maj11': {
+                    intervals: [0, 4, 7, 11, 14, 17], name: 'Major 11', symbol: 'maj11', formula: '1-3-5-7-9-11',
+                    essential: false, category: 'suspension11', difficulty: 'advanced', usage: 'Neo-soul, jazz contemporáneo',
+                    soundCharacter: 'Etéreo, modal, casi sin gravedad — la 11ª natural sobre un Mayor 7 crea un color único entre el jazz y el ambient.',
+                    signature: ['11'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor. Choca ligeramente con la 11ª — tensión suave que da el carácter único.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Casi siempre omitida en voicings reales.' },
+                        { degree: '7', role: '7ª Mayor', contribution: 'El carácter luminoso del maj7.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Apertura y espacio.' },
+                        { degree: '11', role: '11ª Justa', contribution: 'La nota que da el carácter flotante y modal. Menos problemática aquí que en el dom11 porque no hay función dominante.' },
+                    ],
+                    omit: { '5': { result: 'maj11 sin 5ª', effect: 'El voicing más práctico — más abierto y aéreo.' } },
+                    context: {
+                        genre: ['Neo-Soul', 'Jazz Contemporáneo', 'Ambient', 'Música de Película'],
+                        moment: 'Como acorde I o IV en contextos modales. En neo-soul como el color principal del verso o estribillo. Muy raro en jazz tradicional.',
+                        replaces: 'En lugar del maj7 o maj9 cuando quieres el máximo de apertura y un color etéreo casi ambient.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 11ª', result: 'maj9', character: 'Más definido, menos flotante.', highlightDegree: '11' },
+                        { change: 'Quitar 9ª y 11ª', result: 'maj7', character: 'El carácter luminoso base sin la suspensión.', highlightDegree: '9' },
+                    ],
+                    related: [
+                        { key: 'maj9', relation: 'Sin la 11ª — más definido.' },
+                        { key: 'maj7', relation: 'La base fundamental.' },
+                        { key: 'min11', relation: 'Versión menor — más oscura pero igual de flotante.' },
+                    ],
+                    songExamples: [
+                        { song: 'On The Sunny Side of the Street', artist: 'Jazz Standard', moment: 'Acordes con color maj11 en arreglos de jazz moderno.' },
+                        { song: 'Come Away With Me', artist: 'Norah Jones', moment: 'El color suave y etéreo del verso usa acordes maj11.' },
+                        { song: 'Feels Like Summer', artist: 'Childish Gambino', moment: 'Acordes maj11 en el groove de neo-soul.' },
+                    ]
+                },
                 // 13th chords
-                'maj13':  { intervals: [0, 4, 7, 11, 14, 21], name: 'Major 13', symbol: 'maj13', formula: '1-3-5-7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz, bossa nova avanzada' },
-                'dom13':  { intervals: [0, 4, 7, 10, 14, 21], name: 'Dominant 13', symbol: '13', formula: '1-3-5-b7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Blues-jazz, funk avanzado' },
-                'min13':  { intervals: [0, 3, 7, 10, 14, 21], name: 'Minor 13', symbol: 'm13', formula: '1-b3-5-b7-9-13', essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz modal avanzado' },
+                'maj13': {
+                    intervals: [0, 4, 7, 11, 14, 21], name: 'Major 13', symbol: 'maj13', formula: '1-3-5-7-9-13',
+                    essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz, bossa nova avanzada',
+                    soundCharacter: 'Majestuoso, lujoso, completo — el acorde mayor más rico que existe. El sonido del jazz clásico en su máxima expresión.',
+                    signature: ['13'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje tonal.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor luminoso.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Cuerpo. Casi siempre omitida en voicings de jazz.' },
+                        { degree: '7', role: '7ª Mayor', contribution: 'La luminosidad del maj7.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Apertura y espacio.' },
+                        { degree: '13', role: '13ª Natural', contribution: 'La nota más alta — la 6ª una octava arriba. Añade brillo sin crear tensión. Completa el "arco" armónico.' },
+                    ],
+                    omit: { '5': { result: 'maj13 sin 5ª', effect: 'El voicing estándar — más práctico sin perder el carácter.' } },
+                    context: {
+                        genre: ['Jazz', 'Bossa Nova', 'Swing', 'Big Band'],
+                        moment: 'Como acorde I o IV en jazz sofisticado. El acorde de llegada, de resolución — cuando quieres decir "hemos llegado" con máxima elegancia.',
+                        replaces: 'En lugar del maj7 o maj9 cuando el contexto es jazz clásico y quieres la máxima densidad y riqueza armónica.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 13ª', result: 'maj9', character: 'Más ligero, menos denso.', highlightDegree: '13' },
+                        { change: 'Quitar 9ª y 13ª', result: 'maj7', character: 'El núcleo básico.', highlightDegree: '9' },
+                        { change: 'Cambiar 7M por b7', result: 'dom13', character: 'Aparece función dominante — ahora pide resolver.', highlightDegree: '7' },
+                    ],
+                    related: [
+                        { key: 'maj9', relation: 'Sin la 13ª — más ligero.' },
+                        { key: 'dom13', relation: 'Con b7 — añade función dominante.' },
+                        { key: 'min13', relation: 'Versión menor — más oscura.' },
+                    ],
+                    songExamples: [
+                        { song: 'Take Five', artist: 'Dave Brubeck', moment: 'Acordes maj13 en los cambios armónicos del tema principal.' },
+                        { song: 'Wave', artist: 'Tom Jobim', moment: 'Bossa nova con maj13 en los acordes de llegada.' },
+                        { song: 'Misty', artist: 'Erroll Garner', moment: 'El acorde de resolución final tiene color de maj13.' },
+                    ]
+                },
+                'dom13': {
+                    intervals: [0, 4, 7, 10, 14, 21], name: 'Dominant 13', symbol: '13', formula: '1-3-5-b7-9-13',
+                    essential: false, category: 'density13', difficulty: 'advanced', usage: 'Blues-jazz, funk avanzado',
+                    soundCharacter: 'Poderoso, denso, lleno — el dominante más rico posible. Tensión máxima con máximo color. El sonido del big band y el jazz clásico.',
+                    signature: ['b7', '13'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Centro tonal.' },
+                        { degree: '3', role: '3ª Mayor', contribution: 'Carácter mayor. Forma el tritono con b7.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Cuerpo. Generalmente omitida.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'La tensión dominante — el motor que pide resolver.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Color y apertura.' },
+                        { degree: '13', role: '13ª Natural', contribution: 'Brillo en la cima del acorde. Añade densidad sin cambiar la función dominante.' },
+                    ],
+                    omit: { '5': { result: 'dom13 sin 5ª', effect: 'El voicing estándar en jazz — más ligero y abierto.' } },
+                    context: {
+                        genre: ['Jazz', 'Blues-Jazz', 'Big Band', 'Funk Avanzado'],
+                        moment: 'Como V13 resolviendo al I en jazz. En blues, el acorde dominante más rico para los cambios del 12-bar blues. Requiere buena mano izquierda del pianista.',
+                        replaces: 'En lugar del dom7 o dom9 cuando quieres el máximo de riqueza armónica en la función dominante.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 13ª', result: 'dom9', character: 'Más ligero.', highlightDegree: '13' },
+                        { change: 'Quitar 9ª y 13ª', result: 'dom7', character: 'El dominante básico.', highlightDegree: '9' },
+                        { change: 'Cambiar b7 por 7M', result: 'maj13', character: 'Desaparece la función dominante — se vuelve estático.', highlightDegree: 'b7' },
+                    ],
+                    related: [
+                        { key: 'dom9', relation: 'Sin la 13ª.' },
+                        { key: 'dom7', relation: 'La base fundamental.' },
+                        { key: 'maj13', relation: 'Con 7M — sin función dominante.' },
+                        { key: 'min13', relation: 'Versión menor.' },
+                    ],
+                    songExamples: [
+                        { song: 'Satin Doll', artist: 'Duke Ellington', moment: 'Dom13 en los cambios ii-V-I del jazz de big band.' },
+                        { song: 'All The Things You Are', artist: 'Jerome Kern', moment: 'V13 resolviendo en los cambios clásicos de jazz.' },
+                        { song: 'In the Mood', artist: 'Glenn Miller', moment: 'El dominante pleno de big band usa colores de dom13.' },
+                    ]
+                },
+                'min13': {
+                    intervals: [0, 3, 7, 10, 14, 21], name: 'Minor 13', symbol: 'm13', formula: '1-b3-5-b7-9-13',
+                    essential: false, category: 'density13', difficulty: 'advanced', usage: 'Jazz modal avanzado',
+                    soundCharacter: 'Oscuro y luminoso a la vez — la 13ª brilla sobre la oscuridad del menor. Profundo, complejo, el acorde menor más denso.',
+                    signature: ['13'],
+                    anatomy: [
+                        { degree: '1', role: 'Raíz', contribution: 'Anclaje tonal.' },
+                        { degree: 'b3', role: '3ª Menor', contribution: 'El corazón oscuro del carácter menor.' },
+                        { degree: '5', role: '5ª Justa', contribution: 'Estabilidad. Generalmente omitida.' },
+                        { degree: 'b7', role: '7ª Menor', contribution: 'Fluidez — la capa del m7.' },
+                        { degree: '9', role: '9ª Natural', contribution: 'Apertura hacia el registro medio.' },
+                        { degree: '13', role: '13ª Natural', contribution: 'El brillo en la cima — añade una nota de luz sobre la base oscura del menor. Convierte la melancolía en algo más complejo y hermoso.' },
+                    ],
+                    omit: { '5': { result: 'min13 sin 5ª', effect: 'El voicing práctico — muy abierto, perfecto para guitar o teclado.' } },
+                    context: {
+                        genre: ['Jazz Modal', 'Neo-Soul', 'Jazz Contemporáneo', 'Música de Película'],
+                        moment: 'Como acorde ii o vi en jazz sofisticado. Como el centro armónico estático en jazz modal. La 13ª natural en un acorde menor es una nota característica del modo dórico.',
+                        replaces: 'En lugar del m7 o m9 cuando quieres la máxima riqueza y sofisticación en un acorde menor. El dórico en su forma más completa.'
+                    },
+                    mutations: [
+                        { change: 'Quitar la 13ª', result: 'min9', character: 'Más cerrado, menos luminoso.', highlightDegree: '13' },
+                        { change: 'Quitar 9ª y 13ª', result: 'min7', character: 'El menor más básico.', highlightDegree: '9' },
+                        { change: 'Subir la b3 (b3 → 3)', result: 'dom13', character: 'Aparece función dominante — cambia todo.', highlightDegree: 'b3' },
+                    ],
+                    related: [
+                        { key: 'min9', relation: 'Sin la 13ª — más oscuro.' },
+                        { key: 'min7', relation: 'La base fundamental.' },
+                        { key: 'dom13', relation: 'Con 3ª mayor — función dominante.' },
+                    ],
+                    songExamples: [
+                        { song: 'Impressions', artist: 'John Coltrane', moment: 'Dm13 y Ebm13 como los acordes modales del tema.' },
+                        { song: 'Little Sunflower', artist: 'Freddie Hubbard', moment: 'Fm13 como el centro armónico del groove modal.' },
+                        { song: 'Feels Like Summer', artist: 'Childish Gambino', moment: 'Acordes m13 con la 13ª característica del dórico en el neo-soul.' },
+                    ]
+                },
             },
 
             extendedVoicings: {
                 // 7th chords - múltiples voicings
                 'maj7_voicings': [
-                    { frets: [0, 2, 1, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
-                    { frets: [-1, 3, 2, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Forma A abierta' },
-                    { frets: [-1, -1, 2, 4, 4, 4], shape: 'D', difficulty: 'medium', name: 'Drop 2 en D' }
+                    { frets: [0, 2, 1, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E' },
+                    { frets: [-1, 3, 2, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Forma A' },
+                    { frets: [-1, -1, 2, 4, 4, 4], shape: 'D', difficulty: 'medium', name: 'Forma D' }
                 ],
                 'dom7_voicings': [
-                    { frets: [0, 2, 0, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
-                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'easy', name: 'Forma A abierta' },
-                    { frets: [-1, -1, 1, 2, 1, 2], shape: 'D', difficulty: 'medium', name: 'Forma D cerrada' }
+                    { frets: [0, 2, 0, 1, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E' },
+                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'easy', name: 'Forma A' },
+                    { frets: [-1, -1, 1, 2, 1, 2], shape: 'D', difficulty: 'medium', name: 'Forma D' }
                 ],
                 'min7_voicings': [
-                    { frets: [0, 2, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [0, 2, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E' },
                     { frets: [-1, 0, 2, 2, 1, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' },
-                    { frets: [-1, -1, 0, 2, 1, 1], shape: 'D', difficulty: 'easy', name: 'Forma D abierta' }
+                    { frets: [-1, -1, 0, 2, 1, 1], shape: 'D', difficulty: 'easy', name: 'Forma D' }
                 ],
                 'halfDim7_voicings': [
-                    { frets: [0, 1, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E abierta' },
+                    { frets: [0, 1, 0, 0, 0, 0], shape: 'E', difficulty: 'easy', name: 'Forma E' },
                     { frets: [-1, 0, 1, 2, 1, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' }
                 ],
                 // 9th chords
                 'maj9_voicings': [
-                    { frets: [-1, 0, 2, 1, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A abierta' },
-                    { frets: [0, 2, 1, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' },
-                    { frets: [-1, -1, 2, 4, 3, 4], shape: 'D', difficulty: 'advanced', name: 'Drop 2' }
+                    { frets: [-1, 0, 2, 1, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A' },
+                    { frets: [0, 2, 1, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E' },
+                    { frets: [-1, -1, 2, 4, 3, 4], shape: 'D', difficulty: 'advanced', name: 'Forma D' }
                 ],
                 'min9_voicings': [
-                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A abierta' },
-                    { frets: [0, 2, 0, 0, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' }
+                    { frets: [-1, 0, 2, 0, 2, 0], shape: 'A', difficulty: 'medium', name: 'Forma A' },
+                    { frets: [0, 2, 0, 0, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E' }
                 ],
                 'dom9_voicings': [
-                    { frets: [0, 2, 0, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E con 9ª' },
+                    { frets: [0, 2, 0, 1, 0, 2], shape: 'E', difficulty: 'medium', name: 'Forma E' },
                     { frets: [-1, 0, 2, 0, 3, 3], shape: 'A', difficulty: 'medium', name: 'Forma A' },
-                    { frets: [-1, -1, 2, 1, 3, 3], shape: 'D', difficulty: 'advanced', name: 'Drop 2' }
+                    { frets: [-1, -1, 2, 1, 3, 3], shape: 'D', difficulty: 'advanced', name: 'Forma D' }
                 ],
                 '7#9_voicings': [
-                    { frets: [0, 2, 1, 2, 0, -1], shape: 'E', difficulty: 'advanced', name: 'Hendrix voicing' },
+                    { frets: [0, 2, 1, 2, 0, -1], shape: 'E', difficulty: 'advanced', name: 'Hendrix' },
                     { frets: [-1, 0, 2, 1, 3, -1], shape: 'A', difficulty: 'advanced', name: 'Forma A' }
                 ],
                 '7b9_voicings': [
@@ -3328,8 +3821,8 @@ export const MusicTheory = {
                 ],
                 // 11th chords
                 'min11_voicings': [
-                    { frets: [-1, 0, 0, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Am11 abierto' },
-                    { frets: [0, 0, 0, 0, 1, 0], shape: 'E', difficulty: 'easy', name: 'Em11 abierto' }
+                    { frets: [-1, 0, 0, 0, 0, 0], shape: 'A', difficulty: 'easy', name: 'Forma A' },
+                    { frets: [0, 0, 0, 0, 1, 0], shape: 'E', difficulty: 'easy', name: 'Forma E' }
                 ],
                 'dom11_voicings': [
                     { frets: [-1, 0, 0, 1, 0, 0], shape: 'A', difficulty: 'medium', name: 'Forma A' },

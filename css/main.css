@@ -1350,12 +1350,12 @@
 
         .ext4-picker-btn-label { display: none; }
 
-        /* ========== 2. HERO: Centrado, ancho completo ========== */
+        /* ========== 2. HERO: Diagrama + Info + Notas ========== */
         .ext4-hero {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px;
+            gap: 32px;
             padding: 24px 40px;
             background: #0d0d0d;
             border: 1px solid #1a1a1a;
@@ -1371,6 +1371,13 @@
             flex-direction: column;
             gap: 10px;
             align-items: flex-start;
+        }
+
+        .ext4-hero-anatomy {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .ext4-hero-name {
@@ -1442,45 +1449,18 @@
             color: #0a0a0a;
         }
 
-        .ext4-voicings-toggle {
-            padding: 6px 14px;
-            background: transparent;
-            border: 1px solid #444;
-            border-radius: 5px;
-            color: #ccc;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.12s;
-            width: fit-content;
-        }
-
-        .ext4-voicings-toggle:hover {
-            border-color: #666;
-            color: #fff;
-        }
-
-        /* Panel de voicings expandible */
-        .ext4-voicings-panel {
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 10px 14px;
-        }
-
-        .ext4-voicings-panel.hidden { display: none; }
-
-        .ext4-voicings-grid {
+        /* Voicings inline */
+        .ext4-voicings-inline {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
         }
 
         .ext4-voicing-card {
-            padding: 6px 12px;
+            padding: 4px 10px;
             background: #111;
             border: 1px solid #252525;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.1s;
         }
@@ -1503,10 +1483,10 @@
 
         .ext4-voicing-card.active .ext4-voicing-name { color: #fff; }
 
-        /* ========== 3. GRID DE CONTENIDO: 3-4 columnas ========== */
+        /* ========== 3. GRID DE CONTENIDO: Carácter pequeño, otros grandes ========== */
         .ext4-content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 220px 1fr 1fr 1fr;
             gap: 16px;
         }
 
@@ -1525,22 +1505,16 @@
             margin: 0 0 12px 0;
         }
 
-        /* ========== ANATOMÍA: Notas en grid ========== */
-        .ext4-anatomy {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
-
+        /* ========== ANATOMÍA: Notas inline en hero ========== */
         .ext4-note-card {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 10px 12px;
+            align-items: center;
+            gap: 2px;
+            padding: 8px 12px;
             background: #111;
             border: 1px solid #252525;
-            border-radius: 8px;
-            min-width: 100px;
+            border-radius: 6px;
             cursor: default;
             transition: all 0.1s;
         }
@@ -1566,51 +1540,46 @@
         .ext4-note-card-header {
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 4px;
         }
 
         .ext4-note-card-degree {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
             color: #888;
         }
 
         .ext4-note-card-name {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
         }
 
         .ext4-note-card-role {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 12px;
-            color: #e5e5e5;
-            letter-spacing: 1px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 10px;
+            color: #aaa;
             text-transform: uppercase;
         }
 
         .ext4-note-card-signature-badge {
             color: #d4a574;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         .ext4-note-card-desc {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 12px;
-            color: #999;
-            line-height: 1.4;
-            margin: 2px 0 0;
+            display: none;
         }
 
-        /* ========== 4. CÓMO SUENA ========== */
+        /* ========== 4. CÓMO SUENA (columna estrecha) ========== */
         .ext4-sound {
-            border-left: 3px solid #d97706;
-            padding-left: 14px !important;
+            border-left: 2px solid #d97706;
+            padding-left: 12px !important;
         }
 
         .ext4-sound-desc {
             font-family: 'Barlow Condensed', sans-serif;
-            font-size: 16px;
+            font-size: 14px;
             color: #e5e5e5;
             font-style: italic;
             line-height: 1.5;
