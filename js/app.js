@@ -4603,10 +4603,12 @@ export const App = {
                         const color = isSignature ? '#e5e5e5' : (degreeColors[degree] || '#888');
                         const cardMod = i === 0 ? 'ext4-note-card--root' : isSignature ? 'ext4-note-card--signature' : extensionDegrees.includes(degree) ? 'ext4-note-card--ext' : '';
                         return `<div class="ext4-note-card ${cardMod}">
-                            <div class="ext4-note-card-degree">${degree}</div>
-                            <div class="ext4-note-card-name" style="color:${color};">${noteName}</div>
+                            <div class="ext4-note-card-header">
+                                <span class="ext4-note-card-degree">${degree}</span>
+                                <span class="ext4-note-card-name" style="color:${color};">${noteName}</span>
+                            </div>
                             <div class="ext4-note-card-role">${entry.role}${isSignature ? ' <span class="ext4-note-card-signature-badge">★</span>' : ''}</div>
-                            <p class="ext4-note-card-contribution">${entry.contribution}</p>
+                            <p class="ext4-note-card-desc">${entry.contribution}</p>
                         </div>`;
                     }).join('');
                 } else {
@@ -4761,7 +4763,10 @@ export const App = {
                                     <span class="ext4-chord-root">${rootName}</span><span class="ext4-chord-symbol">${chordData.symbol}</span>
                                 </div>
                                 <div class="ext4-hero-formula">${chordData.formula}</div>
-                                <button class="ext4-play-btn" id="ext4-play-btn">▶ ESCUCHAR</button>
+                                <div class="ext4-hero-btns">
+                                    <button class="ext4-play-btn" id="ext4-play-btn">▶ ESCUCHAR</button>
+                                    <button class="ext4-compare-btn" id="ext4-compare-btn">⇆ COMPARAR</button>
+                                </div>
                                 ${voicings.length > 1 ? `<button class="ext4-voicings-toggle" id="ext4-voicings-toggle">+ ${voicings.length - 1} voicings</button>` : ''}
                             </div>
                         </section>
@@ -4905,6 +4910,38 @@ export const App = {
                 document.getElementById('ext4-play-btn')?.addEventListener('click', () => {
                     const voicing = voicings[activeVoicingIndex];
                     if (voicing) playVoicing(voicing);
+                });
+
+                // Compare button - play basic triad then extended chord
+                document.getElementById('ext4-compare-btn')?.addEventListener('click', () => {
+                    if (!AudioEngine.enabled || !AudioEngine.audioContext) return;
+                    if (AudioEngine.audioContext.state === 'suspended') AudioEngine.audioContext.resume();
+
+                    // Determine basic triad intervals based on chord type
+                    const chordType = this.currentExtendedChordType;
+                    let basicIntervals;
+                    if (chordType.startsWith('m') && !chordType.startsWith('maj')) {
+                        // Minor chord: m7, m9, m11, m13
+                        basicIntervals = [0, 3, 7]; // minor triad
+                    } else if (chordType === 'halfdim7') {
+                        // Half-diminished: m(b5)
+                        basicIntervals = [0, 3, 6]; // diminished triad
+                    } else {
+                        // Major or dominant: maj7, maj9, 7, 9, 13, etc.
+                        basicIntervals = [0, 4, 7]; // major triad
+                    }
+
+                    // Play basic triad
+                    const basicNotes = basicIntervals.map(i => this.currentRoot + i + 48);
+                    AudioEngine.playChord(basicNotes, 0.8);
+
+                    // After 1 second, play extended chord
+                    setTimeout(() => {
+                        const voicing = voicings[activeVoicingIndex];
+                        if (voicing) playVoicing(voicing);
+                    }, 1000);
+
+                    this.showToast(`Tríada básica → ${rootName}${chordData.symbol}`, 'info');
                 });
 
                 // Node map clicks
