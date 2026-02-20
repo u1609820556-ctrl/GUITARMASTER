@@ -23,7 +23,21 @@
       "Bash(timeout /t 3 /nobreak)",
       "Bash(curl:*)",
       "Bash(npx http-server:*)",
-      "Bash(npx browser-sync:*)"
+      "Bash(npx browser-sync:*)",
+      "Bash(git push:*)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:127.0.0.1)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm config set:*)",
+      "Bash(npm:*)",
+      "Bash(set NODE_OPTIONS=--openssl-legacy-provider)",
+      "Bash(git checkout:*)"
     ]
   }
 }
